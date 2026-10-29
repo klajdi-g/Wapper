@@ -31,7 +31,7 @@ swift run --package-path WallperRebuilt WallperRebuilt
 
 ## Try it
 
-1. Click **Try on Desktop** to apply the included Aurora Flow demo offline.
+1. Open **My Media** to preview and apply a local video or the Aurora Flow demo.
 2. Use **Import Video** (or Command-O) to copy your own movies into the library.
 3. Select a display or **All displays**, then apply a video. Preview and favorite
    buttons are available on each imported item.
@@ -39,10 +39,16 @@ swift run --package-path WallperRebuilt WallperRebuilt
    Stop closes only this app's overlay windows and reveals the
    desktop that was already underneath them.
 5. Settings controls audio and battery behavior. Sound is muted by default.
-6. The optional **Aerial Catalog** decodes all 152 entries from the bundled
-   `entries.json`. It uses offline placeholders until you explicitly confirm a
-   video download. Those Apple-hosted 4K files can be very large; remote download
-   availability is not guaranteed and was not exercised during validation.
+6. **Explore** shows 3,026 approved gallery records, with 353 bundled previews.
+   Other previews load on demand. Download a video before applying it; the
+   confirmation can also apply it automatically when ready.
+7. **Home → Explore All → Explore Aerials** opens the optional 152-item aerial
+   catalog. Apple-hosted 4K downloads can be very large.
+8. The dock controls display selection, shuffle, favorites, pause, and speed.
+
+The library opens at 1300×820, rather than fullscreen. If AeroSpace is present,
+the app asks its CLI to float only its own window; global configuration is not
+changed. Smaller displays clamp the initial window to the available space.
 
 Closing the library window leaves the menu-bar player running. Quit with
 Command-Q or the menu-bar menu to close all of this app's desktop windows.
@@ -66,6 +72,8 @@ All application source is in `Sources/WallperRebuilt/`:
 - `Models.swift`: media records, saved-library schema, display identifiers,
   battery options, playback holds, and bundle resource lookup.
 - `SmokeTest.swift`: opt-in native validation using an isolated temporary library.
+- `InstalledLibraryImport.swift`: explicit, copy-only migration of downloaded videos.
+- `WindowPlacement.swift`: per-window AeroSpace floating and initial sizing.
 
 The controller and stores are main-actor isolated. Observable state feeds
 SwiftUI and the menu-bar status. Media inspection, thumbnail extraction, and
@@ -131,21 +139,42 @@ Quit have different persistence behavior as described above.
 
 ## Catalog and networking
 
-`Resources/entries.json` contains 152 aerial records. The app maps their titles,
-categories, IDs, and video URLs into its media model at launch. Catalog cards use
-offline placeholders, so opening the catalog does not fetch preview images.
+`Resources/gallery.json` contains 3,026 approved public gallery records.
+`Resources/Gallery/` contains 353 resized cached JPEG previews. The snapshot
+whitelists public wallpaper fields, excluding account IDs, review details,
+credentials, and declined entries. `Resources/entries.json` adds 152 aerials.
+Uncached preview images load asynchronously from approved CDN hosts into a
+bounded in-memory cache. Favorites stay local; displayed like counts are a snapshot.
 
 A confirmed download uses `URLSession` and accepts only HTTPS video URLs on
-`sylvan.apple.com` from the bundled catalog. A successful HTTP response is passed
-through the same video-validation and import path as a local file. Download
+`sylvan.apple.com` or `cdn.wallper.app` from the bundled catalogs. A successful
+response is staged with its video extension before AVFoundation inspection
+(CFNetwork's `.tmp` extension is not playable for some MP4 assets). The file
+then follows the same validation and import path as a local video. Download
 tasks are cancellable; errors are displayed rather than treated as successful
 imports. Downloaded videos then play from disk. There is no account sign-in or
 app backend in this implementation, and local playback never requires one.
 
 The catalog contains 4K files that may be hundreds of MB or more. Downloads have
 an indeterminate status indicator, not byte-level progress or resume support.
-The current implementation does not enforce a download-size quota or perform
-an up-front free-space check.
+Gallery downloads with a known size check free space before starting. There is
+no library-wide quota, byte-level progress, or resumable transfer support.
+
+To regenerate the public snapshot from an installed cache:
+
+```sh
+swift tools/import-gallery-previews.swift "$HOME/Library/Application Support/Wallper" "$PWD/WallperRebuilt/Sources/WallperRebuilt/Resources"
+```
+
+To copy previously downloaded videos into this app, quit this app first, then:
+
+```sh
+"build/Wallper Rebuilt.app/Contents/MacOS/WallperRebuilt" --import-installed-library "$HOME/Library/Application Support/Wallper" "$PWD/build/installed-import-report.json"
+```
+
+This matches catalog IDs, validates each video, skips already imported IDs, and
+leaves originals unchanged. Nine existing videos were copied and SHA-256 matched
+on the development Mac. They remain in Application Support, not this repository.
 
 ## Resources and packaging
 
@@ -164,8 +193,9 @@ falls back to the package's resource bundle for an unbundled development run.
 - Library: `~/Library/Application Support/WallperRebuilt/`.
 - Imported videos and generated thumbnails live in that library. Originals are
   never moved or deleted. Removing a library item deletes only its copied media.
-- No original Wallper preferences, credentials, user media, licensing, or backend
-  services are accessed. The original binary is never linked or executed.
+- No original preferences, credentials, licensing, or account services are used.
+  The optional migration reads only catalog metadata, previews, and video files.
+  The original binary is never linked into this application.
 - No system desktop wallpaper setting is changed. The live wallpaper uses
   click-through overlay windows, which can coexist with an installed Wallper
   process. If both apps apply wallpapers to the same display, their overlays can
@@ -180,8 +210,10 @@ The source implements the local-video wallpaper core, not every feature of the
 original application or its exact source tree. Account services, licensing,
 uploads, online likes, music/lyrics integration, mesh wallpapers, screen-lock
 integration, fullscreen/CPU throttling, login-item registration, transitions,
-automatic retry, and resolution adaptation are not implemented. The UI and
-local JSON schema are this implementation's own designs.
+automatic retry, and resolution adaptation are not implemented. Explore follows
+the reference window layout; the local JSON schema belongs to this implementation.
+Playlists currently exposes the liked collection, not custom playlist editing.
+Music and online publishing explicitly report that those services are unavailable.
 
 Historical implementation notes and resource inventories remain in
 `../wallper-analysis/` for reference; they are not build dependencies.
@@ -200,8 +232,10 @@ media and corrupt saved state. It restores the underlying desktop by closing
 its own windows. The JSON report is `build/smoke-report.json`.
 
 On October 29, 2026, a release build using Swift 6.3 on macOS 26.5 passed all
-26 smoke checks. The app also passed with the build-tree resource bundle
+34 offline smoke checks and 37 checks with `--check-download`, including a public
+CDN download, playable-track inspection, and cleanup. The app previously passed
+with the build-tree resource bundle
 temporarily unavailable, verifying it loads resources from its own app bundle.
 Code-signature verification passed. Physical sleep/wake, battery transitions,
-external-display hotplug, remote downloads, Xcode, Intel, and other macOS
+external-display hotplug, Apple aerial downloads, Xcode, Intel, and other macOS
 versions have not been independently exercised.

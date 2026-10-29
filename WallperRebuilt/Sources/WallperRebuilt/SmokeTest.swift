@@ -19,6 +19,17 @@ func runSmokeTest(reportURL: URL) async {
     do {
         try check(controller.library.errorMessage == nil, "library initialization")
         try check(controller.library.catalog.count == 152, "all 152 recovered catalog entries decode")
+        try check(controller.library.gallery.count == 3026, "all 3026 approved catalog records decode")
+        let cachedGallery = controller.library.gallery.filter { $0.previewAsset != nil }
+        try check(cachedGallery.count == 353 && cachedGallery.allSatisfy { controller.library.thumbnailURL(for: $0) != nil }, "all 353 cached gallery images resolve inside the app bundle")
+        try check(controller.library.gallery.allSatisfy { $0.source == .gallery && $0.remoteURL?.host == "cdn.wallper.app" && controller.library.mediaURL(for: $0) == nil }, "catalog URLs do not pretend undownloaded videos are local files")
+        var searchSample = Wallpaper.demo
+        searchSample.resolution = "3840x2160"
+        searchSample.tags = ["Aesthetic"]
+        try check(searchSample.matchesSearch("4K") && searchSample.matchesSearch("16:9"), "resolution search chips match video dimensions")
+        try check(searchSample.matchesSearch("Aesthetic") && !searchSample.matchesSearch("32:9"), "tag and aspect-ratio search filters work")
+        let galleryFavorite = controller.library.gallery[0]
+        controller.library.toggleFavorite(galleryFavorite)
         guard let demo = controller.library.mediaURL(for: .demo) else { throw RebuildError.message("Missing bundled demo") }
         let duration = try await AVURLAsset(url: demo).load(.duration).seconds
         try check(duration > 0, "bundled demo decodes")
@@ -34,6 +45,7 @@ func runSmokeTest(reportURL: URL) async {
         try check(controller.playback.active.count == controller.playback.displays.count, "native desktop player on each display")
         let restored = LibraryStore(root: temporaryRoot)
         try check(restored.state.favorites.contains(imported.id), "favorite survives reload")
+        try check(restored.state.favorites.contains(galleryFavorite.id), "gallery favorite survives reload")
         try check(restored.state.volume == 0.25, "audio setting survives reload")
         try check(restored.state.assignments.count == controller.playback.displays.count, "display assignments survive reload")
         controller.setVolume(0)
@@ -46,6 +58,11 @@ func runSmokeTest(reportURL: URL) async {
             try await Task.sleep(nanoseconds: 100_000_000)
         }
         try check(controller.playback.players.values.allSatisfy { $0.currentItem?.status == .readyToPlay && $0.currentTime().seconds > 0.1 }, "video frames advance on every display")
+        controller.playback.setPlaybackRate(0.75)
+        try check(controller.playback.players.values.allSatisfy { $0.rate == 0.75 }, "dock playback speed updates every player")
+        controller.playback.setPlaybackRate(3)
+        try check(controller.playback.playbackRate == 0.75, "unsupported playback speeds are rejected")
+        controller.playback.setPlaybackRate(1)
         controller.togglePlayback()
         try check(controller.playback.players.values.allSatisfy { $0.rate == 0 }, "manual pause")
         controller.togglePlayback()
@@ -69,6 +86,24 @@ func runSmokeTest(reportURL: URL) async {
         var rejected = false
         do { _ = try await controller.library.importVideo(invalid) } catch { rejected = true }
         try check(rejected, "invalid media is rejected")
+        if CommandLine.arguments.contains("--check-download") {
+            guard let remote = controller.library.gallery.first(where: { $0.id == "c2299d79-e541-4261-a9dd-06635e2505a7" }) else {
+                throw RebuildError.message("Missing network-check catalog item")
+            }
+            controller.library.download(remote)
+            let downloadDeadline = Date().addingTimeInterval(60)
+            while controller.library.downloading.contains(remote.id) && Date() < downloadDeadline {
+                try await Task.sleep(nanoseconds: 100_000_000)
+            }
+            if let message = controller.library.errorMessage { throw RebuildError.message(message) }
+            try check(controller.library.isDownloaded(remote), "approved CDN video downloads and imports successfully")
+            guard let downloaded = controller.library.library.first(where: { $0.id == remote.id }),
+                  let downloadedURL = controller.library.mediaURL(for: downloaded) else { throw RebuildError.message("Downloaded file is missing") }
+            let downloadedTracks = try await AVURLAsset(url: downloadedURL).loadTracks(withMediaType: .video)
+            try check(!downloadedTracks.isEmpty, "downloaded CDN media contains a playable video track")
+            controller.remove(downloaded)
+            try check(!FileManager.default.fileExists(atPath: downloadedURL.path), "network-check media is cleaned up")
+        }
         let stateURL = temporaryRoot.appendingPathComponent("library.json")
         let corruptData = Data("invalid saved state".utf8)
         try corruptData.write(to: stateURL)

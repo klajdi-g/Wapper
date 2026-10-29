@@ -3,7 +3,8 @@
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
 or all connected displays. The app works offline with your own videos and an
-included animated demo; an optional aerial catalog provides additional downloads.
+included animated demo. Explore includes 3,026 approved wallpapers with
+on-demand video downloads and 353 bundled previews, plus an optional aerial catalog.
 
 ## Build and run
 
@@ -28,6 +29,9 @@ launching, run `./build-wallper.sh`. For development in Xcode, open
 - Display-sleep holds and configurable battery playback policies.
 - Saved display assignments and reconnection handling.
 - An offline demo and a bundled 152-item aerial catalog with opt-in downloads.
+- Floating Explore interface, category chips, resolution/tag search, and sorting.
+- Recovered gallery artwork, local video previews, and confirmed CDN downloads.
+- Playback speed controls from 0.5× to 2×.
 
 ## How the system works
 
@@ -45,8 +49,10 @@ windows; it does not replace or reset the macOS wallpaper underneath them.
 generates thumbnails, and saves favorites, playback settings, and display
 assignments as JSON. The library lives at
 `~/Library/Application Support/WallperRebuilt/`. Original imported files are
-left untouched. Aerial videos are fetched only after an explicit download
-confirmation; ordinary local playback requires no network or account.
+left untouched. Videos are fetched only after an explicit download confirmation;
+uncached gallery artwork loads on demand from public CDN URLs. Local playback
+requires no network or account. With AeroSpace installed, only this app's library
+window is switched to floating; no global window-manager settings are changed.
 
 See [the system guide](WallperRebuilt/README.md) for source layout, playback
 lifecycle, storage format, build packaging, and validation details.
@@ -60,9 +66,16 @@ lifecycle, storage format, build packaging, and validation details.
 The native smoke mode uses a temporary library and checks imports, thumbnails,
 persistence, view layout, video rendering and looping, playback holds, invalid
 media handling, and cleanup. Reports are written to `build/smoke-report.json`.
-The release build passed all 26 checks on two connected displays on October 29,
-2026. Remote downloads and physical battery/sleep/hotplug transitions were not
-independently exercised.
+The release build passed 37 checks on October 29, 2026, including a real public
+CDN download, video-track validation, and cleanup. Enable that network test with:
+
+```sh
+"build/Wallper Rebuilt.app/Contents/MacOS/WallperRebuilt" --smoke-test "$PWD/build/smoke-report.json" --check-download
+```
+
+The default smoke run has 34 offline checks. Physical battery/sleep/hotplug
+transitions have not been independently exercised. See
+[visual comparison findings](docs/ui-comparison.md) for screenshot-based UI work.
 
 ## Repository layout
 

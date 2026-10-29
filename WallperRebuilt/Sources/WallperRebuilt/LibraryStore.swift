@@ -7,6 +7,7 @@ import UniformTypeIdentifiers
 final class LibraryStore: ObservableObject {
     @Published private(set) var state: SavedLibrary
     @Published private(set) var catalog: [Wallpaper] = []
+    @Published private(set) var gallery: [Wallpaper] = []
     @Published private(set) var downloading: Set<String> = []
     @Published private(set) var importing = false
     @Published var errorMessage: String?
@@ -37,6 +38,7 @@ final class LibraryStore: ObservableObject {
             errorMessage = "Cannot open the library: \(error.localizedDescription) Your saved files have not been overwritten."
         }
         loadCatalog()
+        loadGallery()
     }
 
     var mediaDirectory: URL { root.appendingPathComponent("Media", isDirectory: true) }
@@ -50,6 +52,9 @@ final class LibraryStore: ObservableObject {
 
     func thumbnailURL(for wallpaper: Wallpaper) -> URL? {
         if wallpaper.source == .bundled { return resourceURL("Aurora", extension: "jpg") }
+        if let previewAsset = wallpaper.previewAsset, UUID(uuidString: previewAsset) != nil {
+            return resourceURL(previewAsset, extension: "jpg", subdirectory: "Resources/Gallery")
+        }
         let local = thumbnailDirectory.appendingPathComponent("\(wallpaper.id).jpg")
         return FileManager.default.fileExists(atPath: local.path) ? local : nil
     }
@@ -138,22 +143,33 @@ final class LibraryStore: ObservableObject {
         save()
     }
 
-    func download(_ wallpaper: Wallpaper) {
+    func download(_ wallpaper: Wallpaper, onComplete: (@MainActor () -> Void)? = nil) {
         guard !isDownloaded(wallpaper), !downloading.contains(wallpaper.id),
-              let url = wallpaper.remoteURL, url.scheme == "https", url.host == "sylvan.apple.com" else { return }
+              let url = wallpaper.remoteURL, url.scheme == "https",
+              ["sylvan.apple.com", "cdn.wallper.app"].contains(url.host ?? "") else { return }
         downloading.insert(wallpaper.id)
         downloads[wallpaper.id] = Task {
             defer { downloading.remove(wallpaper.id); downloads[wallpaper.id] = nil }
             var temporaryURL: URL?
             defer { if let temporaryURL { try? FileManager.default.removeItem(at: temporaryURL) } }
             do {
+                if let sizeMB = wallpaper.sizeMB,
+                   let available = try mediaDirectory.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage,
+                   Double(available) < sizeMB * 1_048_576 * 2 + 100_000_000 {
+                    throw RebuildError.message("There is not enough free space for this wallpaper and its temporary download.")
+                }
                 let (file, response) = try await URLSession.shared.download(from: url)
                 temporaryURL = file
                 try Task.checkCancellation()
                 guard let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) else {
                     throw RebuildError.message("The catalog server did not return a video.")
                 }
-                _ = try await importVideo(file, catalogItem: wallpaper)
+                let suffix = ["mp4", "mov", "m4v"].contains(url.pathExtension.lowercased()) ? url.pathExtension.lowercased() : "mp4"
+                let video = file.deletingPathExtension().appendingPathExtension(suffix)
+                try FileManager.default.moveItem(at: file, to: video)
+                temporaryURL = video
+                _ = try await importVideo(video, catalogItem: wallpaper)
+                if !Task.isCancelled { onComplete?() }
             } catch {
                 if !Task.isCancelled { errorMessage = "Download failed: \(error.localizedDescription)" }
             }
@@ -204,6 +220,15 @@ final class LibraryStore: ObservableObject {
                 return Wallpaper(id: id, title: title, category: categoryNames[categoryID] ?? "Aerial",
                                  source: .aerial, remoteURL: mediaURL, previewURL: preview)
             }.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        } catch { errorMessage = error.localizedDescription }
+    }
+
+    private func loadGallery() {
+        do {
+            guard let url = resourceURL("gallery", extension: "json") else {
+                throw RebuildError.message("The bundled preview gallery is missing.")
+            }
+            gallery = try JSONDecoder().decode([Wallpaper].self, from: Data(contentsOf: url))
         } catch { errorMessage = error.localizedDescription }
     }
 }

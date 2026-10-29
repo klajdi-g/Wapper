@@ -9,6 +9,7 @@ final class VideoWallpaperManager: ObservableObject {
     @Published private(set) var active: [String: String] = [:]
     @Published private(set) var holds: Set<PlaybackHold> = []
     @Published private(set) var wantsPlaying = true
+    @Published private(set) var playbackRate: Float = 1
     @Published var errorMessage: String?
     private(set) var players: [String: AVQueuePlayer] = [:]
     private var windows: [String: NSWindow] = [:]
@@ -140,6 +141,12 @@ final class VideoWallpaperManager: ObservableObject {
         synchronizePlayback()
     }
 
+    func setPlaybackRate(_ rate: Float) {
+        guard [Float(0.5), 0.75, 1, 1.25, 1.5, 2].contains(rate) else { return }
+        playbackRate = rate
+        synchronizePlayback()
+    }
+
     func shutdown() {
         stopAll()
         batteryTimer?.cancel()
@@ -151,7 +158,7 @@ final class VideoWallpaperManager: ObservableObject {
         for player in players.values {
             player.volume = volume
             player.isMuted = volume == 0
-            if wantsPlaying && holds.isEmpty { player.play() } else { player.pause() }
+            if wantsPlaying && holds.isEmpty { player.playImmediately(atRate: playbackRate) } else { player.pause() }
         }
     }
 

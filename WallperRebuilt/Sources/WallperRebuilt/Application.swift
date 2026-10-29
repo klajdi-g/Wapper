@@ -3,13 +3,20 @@ import Combine
 import SwiftUI
 
 @MainActor
-final class ApplicationDelegate: NSObject, NSApplicationDelegate {
+final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var controller: AppController!
     private var window: NSWindow?
     private var statusItem: NSStatusItem?
     private var subscriptions: Set<AnyCancellable> = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        if let index = CommandLine.arguments.firstIndex(of: "--import-installed-library"), CommandLine.arguments.count > index + 2 {
+            Task {
+                await importInstalledLibrary(source: URL(fileURLWithPath: CommandLine.arguments[index + 1]),
+                                             reportURL: URL(fileURLWithPath: CommandLine.arguments[index + 2]))
+            }
+            return
+        }
         if let index = CommandLine.arguments.firstIndex(of: "--smoke-test"), CommandLine.arguments.count > index + 1 {
             Task { await runSmokeTest(reportURL: URL(fileURLWithPath: CommandLine.arguments[index + 1])) }
             return
@@ -20,6 +27,16 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate {
         createStatusItem()
         controller.restore()
         NSApp.activate(ignoringOtherApps: true)
+        Task {
+            if let window {
+                _ = await floatLibraryWindowIfNeeded(window)
+                positionWindowButtons(window)
+            }
+            writeLaunchReport()
+        }
+    }
+
+    private func writeLaunchReport() {
         if let index = CommandLine.arguments.firstIndex(of: "--launch-report"), CommandLine.arguments.count > index + 1 {
             let report: [String: Any] = [
                 "pid": ProcessInfo.processInfo.processIdentifier,
@@ -29,6 +46,9 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate {
                 "windowVisible": window?.isVisible ?? false,
                 "libraryCount": controller.library.library.count,
                 "catalogCount": controller.library.catalog.count,
+                "galleryPreviewCount": controller.library.gallery.count,
+                "windowWidth": window?.frame.width ?? 0,
+                "windowHeight": window?.frame.height ?? 0,
                 "connectedDisplays": controller.playback.displays.count
             ]
             if let data = try? JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]) {
@@ -48,19 +68,45 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate {
 
     private func createWindow() {
         let content = ContentView(controller: controller, library: controller.library, playback: controller.playback)
-        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1160, height: 790),
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1300, height: 820),
                               styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
                               backing: .buffered, defer: false)
-        window.title = "Wallper Rebuilt"
-        window.subtitle = "Swift reconstruction"
-        window.minSize = NSSize(width: 960, height: 650)
+        window.title = "Wallper"
+        window.delegate = self
+        window.titleVisibility = .hidden
+        window.minSize = NSSize(width: 1100, height: 680)
         window.isReleasedWhenClosed = false
         window.titlebarAppearsTransparent = true
-        window.contentView = NSHostingView(rootView: content)
+        window.backgroundColor = .clear
+        window.isOpaque = false
+        let hostingView = NSHostingView(rootView: content)
+        hostingView.sizingOptions = []
+        window.contentView = hostingView
         window.center()
-        window.setFrameAutosaveName("WallperRebuiltLibraryWindow")
+        window.setFrameAutosaveName("WallperGalleryWindow")
+        if CommandLine.arguments.contains("--reference-layout") {
+            window.setFrame(NSRect(x: 0, y: 0, width: 1300, height: 820), display: false)
+            window.center()
+        }
         window.makeKeyAndOrderFront(nil)
+        positionWindowButtons(window)
         self.window = window
+    }
+
+    private func positionWindowButtons(_ window: NSWindow) {
+        for (index, kind) in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton].enumerated() {
+            guard let button = window.standardWindowButton(kind), let container = button.superview else { continue }
+            let point = NSPoint(x: 19 + CGFloat(index) * 23, y: window.frame.height - 33)
+            button.setFrameOrigin(container.convert(point, from: nil))
+        }
+    }
+
+    func windowDidResize(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow else { return }
+        Task { @MainActor in
+            await Task.yield()
+            positionWindowButtons(window)
+        }
     }
 
     private func createMenus() {
@@ -145,7 +191,8 @@ struct AppLauncher {
         let application = NSApplication.shared
         let delegate = ApplicationDelegate()
         application.delegate = delegate
-        application.setActivationPolicy(CommandLine.arguments.contains("--smoke-test") ? .accessory : .regular)
+        let backgroundMode = CommandLine.arguments.contains("--smoke-test") || CommandLine.arguments.contains("--import-installed-library")
+        application.setActivationPolicy(backgroundMode ? .accessory : .regular)
         application.appearance = NSAppearance(named: .darkAqua)
         withExtendedLifetime(delegate) { application.run() }
     }
