@@ -1,0 +1,36 @@
+// rea decompile_all
+// name: FUN_10016974c
+// address: 0x10016974c
+// body: available
+// range: 0x10016974c-0x1001697ef inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; Ghidra Listing reports a terminal call at 0x1001697ec to 0x100414810 _swift_deallocClassInstance (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* WARNING: Function: _objc_release replaced with injection: _objc_release_fixup */
+
+void FUN_10016974c(void)
+
+{
+  long lVar1;
+  Date DVar2;
+  long unaff_x20;
+  
+  FUN_10002f6dc(*(undefined8 *)(unaff_x20 + 0x10),*(undefined8 *)(unaff_x20 + 0x18));
+  FUN_10002f6dc(*(undefined8 *)(unaff_x20 + 0x20),*(undefined8 *)(unaff_x20 + 0x28));
+  FUN_10016a8b8(unaff_x20 + _TtC7Wallper21MediaRemoteController::snapshot);
+  _swift_bridgeObjectRelease
+            (*(undefined8 *)
+              (unaff_x20 + _TtC7Wallper21MediaRemoteController::lastEmittedSignature + 8));
+  FUN_100093624(*(undefined8 *)(unaff_x20 + _TtC7Wallper21MediaRemoteController::stdoutBuffer),
+                ((undefined8 *)(unaff_x20 + _TtC7Wallper21MediaRemoteController::stdoutBuffer))[1]);
+  lVar1 = _TtC7Wallper21MediaRemoteController::startedAt;
+  DVar2 = Foundation::Date::typeMetadataAccessor();
+  (**(code **)(*(long *)(DVar2.unknown + -8) + 8))(unaff_x20 + lVar1,DVar2.unknown);
+  _swift_deallocClassInstance();
+  return;
+}
+

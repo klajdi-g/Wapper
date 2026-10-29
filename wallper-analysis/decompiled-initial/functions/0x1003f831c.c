@@ -1,0 +1,31 @@
+// rea decompile_all
+// name: _TtC7Wallper11AppDelegate::applicationShouldHandleReopen:hasVisibleWindows:
+// address: 0x1003f831c
+// body: available
+// range: 0x1003f831c-0x1003f83a3 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* Function Stack Size: 0x1c bytes */
+
+bool _TtC7Wallper11AppDelegate::applicationShouldHandleReopen_hasVisibleWindows_
+               (ID param_1,SEL param_2,ID param_3,bool param_4)
+
+{
+  if (DAT_100557eb0 != -1) {
+    _swift_once(&DAT_100557eb0,FUN_10025a3bc,param_3,param_4);
+  }
+  if (*(char *)(DAT_100577d68 + _TtC7Wallper13WindowManager::canOpenUI) == '\x01') {
+    FUN_10025c09c();
+  }
+  else {
+    FUN_100044230(0,&DAT_100557e00,&PTR__OBJC_CLASS___NSSound_10053fc30);
+    (extension_AppKit)::__C::NSSound::beep();
+  }
+  return 1;
+}
+

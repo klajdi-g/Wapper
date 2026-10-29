@@ -1,0 +1,71 @@
+// rea decompile_all
+// name: thunk_FUN_1002d589c
+// address: 0x1002d69a4
+// body: available
+// range: 0x1002d69a4-0x1002d69a7 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* WARNING: Function: _objc_opt_self replaced with injection: _objc_retain_fixup */
+/* WARNING: Function: _objc_retainAutoreleasedReturnValue replaced with injection:
+   _objc_retain_fixup */
+/* WARNING: Function: _objc_release replaced with injection: _objc_release_fixup */
+
+void thunk_FUN_1002d589c(void)
+
+{
+  byte bVar1;
+  undefined *puVar2;
+  URL UVar3;
+  SEL pcVar4;
+  ID self;
+  NSArray *pNVar5;
+  SEL op;
+  URL op_00;
+  long extraout_x8;
+  long extraout_x8_00;
+  long lVar6;
+  long lVar7;
+  
+  puVar2 = &DAT_100553d90;
+  FUN_100002f94(&DAT_100553d90,&DAT_10041bf10);
+  (*(code *)PTR____chkstk_darwin_100521118)
+            (*(long *)(*(long *)(puVar2 + -8) + 0x40) + 0xfU & 0xfffffffffffffff0);
+  op = &stack0xffffffffffffffc0 + -extraout_x8;
+  UVar3 = Foundation::URL::typeMetadataAccessor();
+  lVar7 = *(long *)(UVar3.unknown + -8);
+  (*(code *)PTR____chkstk_darwin_100521118)(*(undefined8 *)(lVar7 + 0x40));
+  lVar6 = (long)op - (extraout_x8_00 + 0xfU & 0xfffffffffffffff0);
+  FUN_100286760(op);
+  pcVar4 = op;
+  (**(code **)(lVar7 + 0x30))(op,1,UVar3.unknown);
+  if ((int)pcVar4 == 1) {
+    FUN_10002a29c(op,&DAT_100553d90,&DAT_10041bf10);
+    FUN_100044230(0,&DAT_100557e00,&PTR__OBJC_CLASS___NSSound_10053fc30);
+    (extension_AppKit)::__C::NSSound::beep();
+  }
+  else {
+    (**(code **)(lVar7 + 0x20))(lVar6,op,UVar3.unknown);
+    self = NSWorkspace::sharedWorkspace((ID)&_OBJC_CLASS___NSWorkspace,op);
+    puVar2 = &DAT_100556998;
+    FUN_100002f94(&DAT_100556998,&DAT_10042e640);
+    bVar1 = *(byte *)(lVar7 + 0x50);
+    _swift_allocObject();
+    *(undefined8 *)(puVar2 + 0x18) = 2;
+    *(undefined8 *)(puVar2 + 0x10) = 1;
+    (**(code **)(lVar7 + 0x10))
+              (puVar2 + ((ulong)bVar1 + 0x20 & ((ulong)bVar1 ^ 0xffffffffffffffff)),lVar6,
+               UVar3.unknown);
+    op_00 = UVar3;
+    pNVar5 = (extension_Foundation)::Swift::Array<undefined>::_bridgeToObjectiveC();
+    _swift_release(puVar2);
+    NSWorkspace::activateFileViewerSelectingURLs_(self,op_00.unknown,pNVar5);
+    (**(code **)(lVar7 + 8))(lVar6,UVar3.unknown);
+  }
+  return;
+}
+

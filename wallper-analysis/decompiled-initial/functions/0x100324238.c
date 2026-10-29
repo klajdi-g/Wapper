@@ -1,0 +1,292 @@
+// rea decompile_all
+// name: FUN_100324238
+// address: 0x100324238
+// body: available
+// range: 0x100324238-0x100324637 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* WARNING: Function: _objc_opt_self replaced with injection: _objc_retain_fixup */
+/* WARNING: Function: _objc_retainAutoreleasedReturnValue replaced with injection:
+   _objc_retain_fixup */
+
+void FUN_100324238(void)
+
+{
+  undefined *puVar1;
+  ContiguousArray CVar2;
+  undefined *puVar3;
+  ContiguousArray CVar4;
+  ID IVar5;
+  undefined *extraout_x1;
+  undefined *extraout_x1_00;
+  undefined *extraout_x1_01;
+  undefined8 uVar6;
+  undefined8 *unaff_x20;
+  undefined8 uVar7;
+  undefined8 uVar8;
+  undefined8 uVar9;
+  State local_1a0;
+  undefined8 uStack_198;
+  undefined *local_a8;
+  undefined8 local_a0;
+  code *local_98;
+  undefined *puStack_90;
+  code *local_88;
+  undefined *local_80;
+  undefined *local_78;
+  
+  FUN_1003228fc();
+  uStack_198 = unaff_x20[0x18];
+  local_1a0.unknown = (undefined *)unaff_x20[0x17];
+  local_a8 = (undefined *)0x0;
+  CVar2.unknown = &DAT_10054ba40;
+  FUN_100002f94(&DAT_10054ba40,&DAT_100423be0);
+  SwiftUI::State::set_wrappedValue(&local_1a0,&local_a8);
+  local_78 = PTR___swiftEmptyArrayStorage_100524190;
+  Swift::ContiguousArray::_reserveCapacity(3,CVar2);
+  puVar3 = &DAT_10053a9b8;
+  _swift_allocObject(&DAT_10053a9b8,0x110,7);
+  uVar6 = unaff_x20[0x18];
+  uVar8 = unaff_x20[0x1b];
+  uVar7 = unaff_x20[0x1a];
+  *(undefined8 *)(puVar3 + 0xd8) = unaff_x20[0x19];
+  *(undefined8 *)(puVar3 + 0xd0) = uVar6;
+  *(undefined8 *)(puVar3 + 0xe8) = uVar8;
+  *(undefined8 *)(puVar3 + 0xe0) = uVar7;
+  uVar6 = unaff_x20[0x1c];
+  *(undefined8 *)(puVar3 + 0xf8) = unaff_x20[0x1d];
+  *(undefined8 *)(puVar3 + 0xf0) = uVar6;
+  uVar6 = unaff_x20[0x1e];
+  uVar7 = unaff_x20[0x10];
+  uVar9 = unaff_x20[0x13];
+  uVar8 = unaff_x20[0x12];
+  *(undefined8 *)(puVar3 + 0x98) = unaff_x20[0x11];
+  *(undefined8 *)(puVar3 + 0x90) = uVar7;
+  *(undefined8 *)(puVar3 + 0xa8) = uVar9;
+  *(undefined8 *)(puVar3 + 0xa0) = uVar8;
+  uVar7 = unaff_x20[0x14];
+  uVar9 = unaff_x20[0x17];
+  uVar8 = unaff_x20[0x16];
+  *(undefined8 *)(puVar3 + 0xb8) = unaff_x20[0x15];
+  *(undefined8 *)(puVar3 + 0xb0) = uVar7;
+  *(undefined8 *)(puVar3 + 200) = uVar9;
+  *(undefined8 *)(puVar3 + 0xc0) = uVar8;
+  uVar7 = unaff_x20[8];
+  uVar9 = unaff_x20[0xb];
+  uVar8 = unaff_x20[10];
+  *(undefined8 *)(puVar3 + 0x58) = unaff_x20[9];
+  *(undefined8 *)(puVar3 + 0x50) = uVar7;
+  *(undefined8 *)(puVar3 + 0x68) = uVar9;
+  *(undefined8 *)(puVar3 + 0x60) = uVar8;
+  uVar7 = unaff_x20[0xc];
+  uVar9 = unaff_x20[0xf];
+  uVar8 = unaff_x20[0xe];
+  *(undefined8 *)(puVar3 + 0x78) = unaff_x20[0xd];
+  *(undefined8 *)(puVar3 + 0x70) = uVar7;
+  *(undefined8 *)(puVar3 + 0x88) = uVar9;
+  *(undefined8 *)(puVar3 + 0x80) = uVar8;
+  uVar7 = *unaff_x20;
+  uVar9 = unaff_x20[3];
+  uVar8 = unaff_x20[2];
+  *(undefined8 *)(puVar3 + 0x18) = unaff_x20[1];
+  *(undefined8 *)(puVar3 + 0x10) = uVar7;
+  *(undefined8 *)(puVar3 + 0x28) = uVar9;
+  *(undefined8 *)(puVar3 + 0x20) = uVar8;
+  uVar7 = unaff_x20[4];
+  uVar9 = unaff_x20[7];
+  uVar8 = unaff_x20[6];
+  *(undefined8 *)(puVar3 + 0x38) = unaff_x20[5];
+  *(undefined8 *)(puVar3 + 0x30) = uVar7;
+  *(undefined8 *)(puVar3 + 0x48) = uVar9;
+  *(undefined8 *)(puVar3 + 0x40) = uVar8;
+  *(undefined8 *)(puVar3 + 0x100) = uVar6;
+  *(undefined8 *)(puVar3 + 0x108) = 1;
+  puVar1 = PTR___NSConcreteStackBlock_100521110;
+  local_88 = thunk_FUN_10032a67c;
+  local_a8 = PTR___NSConcreteStackBlock_100521110;
+  local_a0 = 0x42000000;
+  local_98 = FUN_10016802c;
+  puStack_90 = &DAT_10053a9d0;
+  local_80 = puVar3;
+  CVar4.unknown = __Block_copy(&local_a8);
+  puVar3 = local_80;
+  FUN_100327eb8();
+  _swift_release(puVar3);
+  IVar5 = NSTimer::scheduledTimerWithTimeInterval_repeats_block_
+                    ((ID)&_OBJC_CLASS___NSTimer,0x3fb47ae147ae147b,0,CVar4.unknown);
+  CVar2.unknown = extraout_x1;
+  __Block_release(CVar4.unknown);
+  Swift::ContiguousArray::__makeUniqueAndReserveCapacityIfNotUnique(CVar4);
+                    /* WARNING: Load size is inaccurate */
+  CVar4.unknown = local_78[0x10];
+  Swift::ContiguousArray::__reserveCapacityAssumingUniqueBuffer((__int64)CVar4.unknown,CVar2);
+  Swift::ContiguousArray::__appendElementAssumeUniqueAndCapacity(CVar4.unknown,IVar5);
+  Swift::ContiguousArray::__endMutation(CVar4);
+  puVar3 = &DAT_10053aa08;
+  _swift_allocObject(&DAT_10053aa08,0x110,7);
+  uVar6 = unaff_x20[0x18];
+  uVar8 = unaff_x20[0x1b];
+  uVar7 = unaff_x20[0x1a];
+  *(undefined8 *)(puVar3 + 0xd8) = unaff_x20[0x19];
+  *(undefined8 *)(puVar3 + 0xd0) = uVar6;
+  *(undefined8 *)(puVar3 + 0xe8) = uVar8;
+  *(undefined8 *)(puVar3 + 0xe0) = uVar7;
+  uVar6 = unaff_x20[0x1c];
+  *(undefined8 *)(puVar3 + 0xf8) = unaff_x20[0x1d];
+  *(undefined8 *)(puVar3 + 0xf0) = uVar6;
+  uVar6 = unaff_x20[0x1e];
+  uVar7 = unaff_x20[0x10];
+  uVar9 = unaff_x20[0x13];
+  uVar8 = unaff_x20[0x12];
+  *(undefined8 *)(puVar3 + 0x98) = unaff_x20[0x11];
+  *(undefined8 *)(puVar3 + 0x90) = uVar7;
+  *(undefined8 *)(puVar3 + 0xa8) = uVar9;
+  *(undefined8 *)(puVar3 + 0xa0) = uVar8;
+  uVar7 = unaff_x20[0x14];
+  uVar9 = unaff_x20[0x17];
+  uVar8 = unaff_x20[0x16];
+  *(undefined8 *)(puVar3 + 0xb8) = unaff_x20[0x15];
+  *(undefined8 *)(puVar3 + 0xb0) = uVar7;
+  *(undefined8 *)(puVar3 + 200) = uVar9;
+  *(undefined8 *)(puVar3 + 0xc0) = uVar8;
+  uVar7 = unaff_x20[8];
+  uVar9 = unaff_x20[0xb];
+  uVar8 = unaff_x20[10];
+  *(undefined8 *)(puVar3 + 0x58) = unaff_x20[9];
+  *(undefined8 *)(puVar3 + 0x50) = uVar7;
+  *(undefined8 *)(puVar3 + 0x68) = uVar9;
+  *(undefined8 *)(puVar3 + 0x60) = uVar8;
+  uVar7 = unaff_x20[0xc];
+  uVar9 = unaff_x20[0xf];
+  uVar8 = unaff_x20[0xe];
+  *(undefined8 *)(puVar3 + 0x78) = unaff_x20[0xd];
+  *(undefined8 *)(puVar3 + 0x70) = uVar7;
+  *(undefined8 *)(puVar3 + 0x88) = uVar9;
+  *(undefined8 *)(puVar3 + 0x80) = uVar8;
+  uVar7 = *unaff_x20;
+  uVar9 = unaff_x20[3];
+  uVar8 = unaff_x20[2];
+  *(undefined8 *)(puVar3 + 0x18) = unaff_x20[1];
+  *(undefined8 *)(puVar3 + 0x10) = uVar7;
+  *(undefined8 *)(puVar3 + 0x28) = uVar9;
+  *(undefined8 *)(puVar3 + 0x20) = uVar8;
+  uVar7 = unaff_x20[4];
+  uVar9 = unaff_x20[7];
+  uVar8 = unaff_x20[6];
+  *(undefined8 *)(puVar3 + 0x38) = unaff_x20[5];
+  *(undefined8 *)(puVar3 + 0x30) = uVar7;
+  *(undefined8 *)(puVar3 + 0x48) = uVar9;
+  *(undefined8 *)(puVar3 + 0x40) = uVar8;
+  *(undefined8 *)(puVar3 + 0x100) = uVar6;
+  *(undefined8 *)(puVar3 + 0x108) = 2;
+  local_88 = thunk_FUN_10032a67c;
+  local_a8 = puVar1;
+  local_a0 = 0x42000000;
+  local_98 = FUN_10016802c;
+  puStack_90 = &DAT_10053aa20;
+  local_80 = puVar3;
+  CVar4.unknown = __Block_copy(&local_a8);
+  puVar3 = local_80;
+  FUN_100327eb8();
+  _swift_release(puVar3);
+  IVar5 = NSTimer::scheduledTimerWithTimeInterval_repeats_block_
+                    ((ID)&_OBJC_CLASS___NSTimer,0x3fc70a3d70a3d70a,0,CVar4.unknown);
+  CVar2.unknown = extraout_x1_00;
+  __Block_release(CVar4.unknown);
+  Swift::ContiguousArray::__makeUniqueAndReserveCapacityIfNotUnique(CVar4);
+                    /* WARNING: Load size is inaccurate */
+  CVar4.unknown = local_78[0x10];
+  Swift::ContiguousArray::__reserveCapacityAssumingUniqueBuffer((__int64)CVar4.unknown,CVar2);
+  Swift::ContiguousArray::__appendElementAssumeUniqueAndCapacity(CVar4.unknown,IVar5);
+  Swift::ContiguousArray::__endMutation(CVar4);
+  puVar3 = &DAT_10053aa58;
+  _swift_allocObject(&DAT_10053aa58,0x110,7);
+  uVar6 = unaff_x20[0x18];
+  uVar8 = unaff_x20[0x1b];
+  uVar7 = unaff_x20[0x1a];
+  *(undefined8 *)(puVar3 + 0xd8) = unaff_x20[0x19];
+  *(undefined8 *)(puVar3 + 0xd0) = uVar6;
+  *(undefined8 *)(puVar3 + 0xe8) = uVar8;
+  *(undefined8 *)(puVar3 + 0xe0) = uVar7;
+  uVar6 = unaff_x20[0x1c];
+  *(undefined8 *)(puVar3 + 0xf8) = unaff_x20[0x1d];
+  *(undefined8 *)(puVar3 + 0xf0) = uVar6;
+  uVar6 = unaff_x20[0x1e];
+  uVar7 = unaff_x20[0x10];
+  uVar9 = unaff_x20[0x13];
+  uVar8 = unaff_x20[0x12];
+  *(undefined8 *)(puVar3 + 0x98) = unaff_x20[0x11];
+  *(undefined8 *)(puVar3 + 0x90) = uVar7;
+  *(undefined8 *)(puVar3 + 0xa8) = uVar9;
+  *(undefined8 *)(puVar3 + 0xa0) = uVar8;
+  uVar7 = unaff_x20[0x14];
+  uVar9 = unaff_x20[0x17];
+  uVar8 = unaff_x20[0x16];
+  *(undefined8 *)(puVar3 + 0xb8) = unaff_x20[0x15];
+  *(undefined8 *)(puVar3 + 0xb0) = uVar7;
+  *(undefined8 *)(puVar3 + 200) = uVar9;
+  *(undefined8 *)(puVar3 + 0xc0) = uVar8;
+  uVar7 = unaff_x20[8];
+  uVar9 = unaff_x20[0xb];
+  uVar8 = unaff_x20[10];
+  *(undefined8 *)(puVar3 + 0x58) = unaff_x20[9];
+  *(undefined8 *)(puVar3 + 0x50) = uVar7;
+  *(undefined8 *)(puVar3 + 0x68) = uVar9;
+  *(undefined8 *)(puVar3 + 0x60) = uVar8;
+  uVar7 = unaff_x20[0xc];
+  uVar9 = unaff_x20[0xf];
+  uVar8 = unaff_x20[0xe];
+  *(undefined8 *)(puVar3 + 0x78) = unaff_x20[0xd];
+  *(undefined8 *)(puVar3 + 0x70) = uVar7;
+  *(undefined8 *)(puVar3 + 0x88) = uVar9;
+  *(undefined8 *)(puVar3 + 0x80) = uVar8;
+  uVar7 = *unaff_x20;
+  uVar9 = unaff_x20[3];
+  uVar8 = unaff_x20[2];
+  *(undefined8 *)(puVar3 + 0x18) = unaff_x20[1];
+  *(undefined8 *)(puVar3 + 0x10) = uVar7;
+  *(undefined8 *)(puVar3 + 0x28) = uVar9;
+  *(undefined8 *)(puVar3 + 0x20) = uVar8;
+  uVar7 = unaff_x20[4];
+  uVar9 = unaff_x20[7];
+  uVar8 = unaff_x20[6];
+  *(undefined8 *)(puVar3 + 0x38) = unaff_x20[5];
+  *(undefined8 *)(puVar3 + 0x30) = uVar7;
+  *(undefined8 *)(puVar3 + 0x48) = uVar9;
+  *(undefined8 *)(puVar3 + 0x40) = uVar8;
+  *(undefined8 *)(puVar3 + 0x100) = uVar6;
+  *(undefined8 *)(puVar3 + 0x108) = 3;
+  local_88 = thunk_FUN_10032a67c;
+  local_a8 = puVar1;
+  local_a0 = 0x42000000;
+  local_98 = FUN_10016802c;
+  puStack_90 = &DAT_10053aa70;
+  local_80 = puVar3;
+  CVar4.unknown = __Block_copy(&local_a8);
+  puVar3 = local_80;
+  FUN_100327eb8();
+  _swift_release(puVar3);
+  IVar5 = NSTimer::scheduledTimerWithTimeInterval_repeats_block_
+                    ((ID)&_OBJC_CLASS___NSTimer,0x3fd1eb851eb851ec,0,CVar4.unknown);
+  CVar2.unknown = extraout_x1_01;
+  __Block_release(CVar4.unknown);
+  Swift::ContiguousArray::__makeUniqueAndReserveCapacityIfNotUnique(CVar4);
+                    /* WARNING: Load size is inaccurate */
+  CVar4.unknown = local_78[0x10];
+  Swift::ContiguousArray::__reserveCapacityAssumingUniqueBuffer((__int64)CVar4.unknown,CVar2);
+  Swift::ContiguousArray::__appendElementAssumeUniqueAndCapacity(CVar4.unknown,IVar5);
+  Swift::ContiguousArray::__endMutation(CVar4);
+  uStack_198 = unaff_x20[0x1e];
+  local_1a0.unknown = (undefined *)unaff_x20[0x1d];
+  local_a8 = local_78;
+  puVar3 = &DAT_10055bd78;
+  FUN_100002f94(&DAT_10055bd78,&DAT_100430b00);
+  SwiftUI::State::set_wrappedValue(&local_1a0,&local_a8,puVar3);
+  return;
+}
+

@@ -1,0 +1,31 @@
+MANUAL RECONSTRUCTION FROM ARM64 DISASSEMBLY, NOT ORIGINAL SWIFT SOURCE
+
+1. Function at 0x1002331c0
+
+global_at_0x100557a98 = Int(CGWindowLevelForKey(2)) + 1
+
+The installed macOS SDK defines key 2 as kCGDesktopWindowLevelKey.
+Evidence: disassembly-arm64.txt, instructions 0x1002331c8..0x1002331dc.
+The assignment is directly recoverable; the global's original name is unknown.
+This snippet alone does not establish every window's final level.
+
+2. VideoWallpaperManager.handleScreensDidSleep: at 0x100236c00
+
+bridge incoming Objective-C notification to Foundation.Notification
+retain manager
+call function_at_0x10023afe8(3, 1), using the retained manager as Swift context
+release manager
+destroy bridged notification and return
+
+3. VideoWallpaperManager.handleScreensDidWake: at 0x100236ca8
+
+bridge incoming Objective-C notification to Foundation.Notification
+retain manager
+call function_at_0x10023afe8(3, 0), using the retained manager as Swift context
+call function_at_0x100236d58(0), using that manager context
+release manager
+destroy bridged notification and return
+
+The paired numeric flags are directly visible. Interpreting them as acquiring
+and releasing a display-sleep playback hold is an inference, not recovered
+source-level semantics. Function names for callees remain unknown.

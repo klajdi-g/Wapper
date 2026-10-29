@@ -1,0 +1,37 @@
+[
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "init",
+    "address": "0x100235c04"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "observeValueForKeyPath:ofObject:change:context:",
+    "address": "0x100235e18"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleWakeFromSleep:",
+    "address": "0x100236b60"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleScreensDidSleep:",
+    "address": "0x100236c00"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleScreensDidWake:",
+    "address": "0x100236ca8"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleSettingsChanged",
+    "address": "0x100237ce8"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": ".cxx_destruct",
+    "address": "0x100255c0c"
+  }
+]

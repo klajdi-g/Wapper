@@ -1,0 +1,1609 @@
+{
+  "provenance": "REA native dispatch metadata, Swift demangler, and binary strings",
+  "limitations": "Not a complete Swift type inventory; methods are Objective-C-visible entry points only",
+  "classes": [
+    {
+      "mangled_name": "_TtC7Wallper21HeroCarouselViewModel",
+      "fields": [
+        "_pageIndex",
+        "_itemIndex",
+        "_currentPage",
+        "_transitionDirection",
+        "_hoverLeft",
+        "_hoverRight",
+        "sourceVideos",
+        "recentlyShownIDs",
+        "pagesCache",
+        "maxCachedPages"
+      ],
+      "methods": [],
+      "name": "Wallper.HeroCarouselViewModel"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_54D9350386DEC93E9C9165595326A3B612FrameEncoder",
+      "fields": [
+        "session",
+        "pool",
+        "fps",
+        "timeScale",
+        "outputURL",
+        "sink",
+        "submitted",
+        "invalidated"
+      ],
+      "methods": [],
+      "name": "Wallper.(FrameEncoder in _54D9350386DEC93E9C9165595326A3B6)"
+    },
+    {
+      "mangled_name": "_TtCC7WallperP33_54D9350386DEC93E9C9165595326A3B612FrameEncoder4Sink",
+      "fields": [
+        "lock",
+        "samples",
+        "failed"
+      ],
+      "methods": [],
+      "name": "Wallper.(FrameEncoder in _54D9350386DEC93E9C9165595326A3B6).Sink"
+    },
+    {
+      "mangled_name": "_TtC7Wallper16MusicThemeHolder",
+      "fields": [
+        "targetTheme",
+        "fromColors",
+        "blendStart",
+        "blendDuration",
+        "cachedColors"
+      ],
+      "methods": [],
+      "name": "Wallper.MusicThemeHolder"
+    },
+    {
+      "mangled_name": "_TtC7Wallper15MeshMotionState",
+      "fields": [
+        "mouseX",
+        "mouseY",
+        "lastTick",
+        "animatedTime",
+        "followRate"
+      ],
+      "methods": [],
+      "name": "Wallper.MeshMotionState"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+      "fields": [],
+      "methods": [
+        {
+          "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+          "selector": "isOpaque",
+          "address": "0x1000452f4"
+        },
+        {
+          "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+          "selector": "viewDidChangeBackingProperties",
+          "address": "0x1000452fc"
+        },
+        {
+          "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+          "selector": "initWithFrame:",
+          "address": "0x100045378"
+        },
+        {
+          "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+          "selector": "initWithCoder:",
+          "address": "0x1000453e4"
+        }
+      ],
+      "name": "Wallper.(MeshRasterLayer in _EA1F53D86E0E79876722E5C615A23FEE).RasterView"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer11Coordinator",
+      "fields": [
+        "view",
+        "link",
+        "themeHolder",
+        "motion",
+        "size",
+        "animating",
+        "frameInterval",
+        "lastDrawn",
+        "drawnOnce",
+        "raster",
+        "renderQueue",
+        "frameInFlight"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer11Coordinator",
+          "selector": "tick:",
+          "address": "0x100045914"
+        }
+      ],
+      "name": "Wallper.(MeshRasterLayer in _EA1F53D86E0E79876722E5C615A23FEE).Coordinator"
+    },
+    {
+      "mangled_name": "_TtC7Wallper10MeshRaster",
+      "fields": [
+        "slabs",
+        "next",
+        "width",
+        "height",
+        "colorSpace"
+      ],
+      "methods": [],
+      "name": "Wallper.MeshRaster"
+    },
+    {
+      "mangled_name": "_TtCC7Wallper10MeshRasterP33_3B8D4A09292D00EC86F207F4B57B220E4Slab",
+      "fields": [
+        "pixels",
+        "count"
+      ],
+      "methods": [],
+      "name": "Wallper.MeshRaster.(Slab in _3B8D4A09292D00EC86F207F4B57B220E)"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+      "fields": [
+        "manager"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+          "selector": "pick:",
+          "address": "0x100066060"
+        },
+        {
+          "class": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+          "selector": "init",
+          "address": "0x1000660b0"
+        },
+        {
+          "class": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+          "selector": ".cxx_destruct",
+          "address": "0x1000660dc"
+        }
+      ],
+      "name": "Wallper.(AutoAdvanceMenuTarget in _1BB0B006840CE298DFD371C13BB55372)"
+    },
+    {
+      "mangled_name": "_TtC7Wallper29WallpaperPreviewContainerView",
+      "fields": [
+        "imageLayer",
+        "hostingView",
+        "currentMusicThemeID",
+        "currentImageURL",
+        "playerLayer",
+        "incomingLayer",
+        "readiness",
+        "fadeFallback"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+          "selector": "initWithFrame:",
+          "address": "0x100075540"
+        },
+        {
+          "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+          "selector": "initWithCoder:",
+          "address": "0x100075560"
+        },
+        {
+          "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+          "selector": "layout",
+          "address": "0x1000756a0"
+        },
+        {
+          "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+          "selector": ".cxx_destruct",
+          "address": "0x1000764ec"
+        }
+      ],
+      "name": "Wallper.WallpaperPreviewContainerView"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+      "fields": [
+        "disc",
+        "label",
+        "labelFraction",
+        "speed"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+          "selector": "initWithFrame:",
+          "address": "0x10007a298"
+        },
+        {
+          "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+          "selector": "initWithCoder:",
+          "address": "0x10007a370"
+        },
+        {
+          "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+          "selector": "layout",
+          "address": "0x10007a520"
+        },
+        {
+          "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x10007a548"
+        },
+        {
+          "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+          "selector": ".cxx_destruct",
+          "address": "0x10007a5a8"
+        }
+      ],
+      "name": "Wallper.(SpinningArtView in _79B11F14DC93343480E42B0FDC124D34)"
+    },
+    {
+      "mangled_name": "_TtC7Wallper19PlaylistToastCenter",
+      "fields": [
+        "_current",
+        "dismissWork"
+      ],
+      "methods": [],
+      "name": "Wallper.PlaylistToastCenter"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+      "fields": [
+        "onStep",
+        "monitor",
+        "pending"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+          "selector": "hitTest:",
+          "address": "0x1000d4860"
+        },
+        {
+          "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x1000d4d24"
+        },
+        {
+          "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+          "selector": "initWithFrame:",
+          "address": "0x1000d4d4c"
+        },
+        {
+          "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+          "selector": "initWithCoder:",
+          "address": "0x1000d4de8"
+        },
+        {
+          "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+          "selector": ".cxx_destruct",
+          "address": "0x1000d4e98"
+        }
+      ],
+      "name": "Wallper.(ScrollCatcher in _DBEE93701475F9840ECC6A125B728EB9).CatcherView"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+      "fields": [
+        "onChange",
+        "scrollView",
+        "contentView",
+        "observer",
+        "lastReportedOffset"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+          "selector": "dealloc",
+          "address": "0x1000e33d0"
+        },
+        {
+          "class": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+          "selector": "init",
+          "address": "0x1000e34dc"
+        },
+        {
+          "class": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+          "selector": ".cxx_destruct",
+          "address": "0x1000e3480"
+        }
+      ],
+      "name": "Wallper.(ScrollOffsetObserver in _1330B9F6895D4718FB619AD4724A9559).Coordinator"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_1330B9F6895D4718FB619AD4724A955917DetailScrollState",
+      "fields": [
+        "_y"
+      ],
+      "methods": [],
+      "name": "Wallper.(DetailScrollState in _1330B9F6895D4718FB619AD4724A9559)"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+      "fields": [
+        "barCount",
+        "bars",
+        "isAnimating"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+          "selector": "initWithFrame:",
+          "address": "0x1000fdc04"
+        },
+        {
+          "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+          "selector": "initWithCoder:",
+          "address": "0x1000fdc24"
+        },
+        {
+          "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+          "selector": "layout",
+          "address": "0x1000fe4c8"
+        },
+        {
+          "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+          "selector": ".cxx_destruct",
+          "address": "0x1000fe4f0"
+        }
+      ],
+      "name": "Wallper.(AudioBarsView in _5363C4867DD4E85C8D4034D5527F5B0A)"
+    },
+    {
+      "mangled_name": "_TtC7Wallper10ImageCache",
+      "fields": [
+        "memoryCache",
+        "pendingClear"
+      ],
+      "methods": [],
+      "name": "Wallper.ImageCache"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+      "fields": [
+        "strip",
+        "copies",
+        "key",
+        "distance",
+        "pause",
+        "speed"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+          "selector": "initWithFrame:",
+          "address": "0x100102110"
+        },
+        {
+          "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+          "selector": "initWithCoder:",
+          "address": "0x100102130"
+        },
+        {
+          "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+          "selector": "layout",
+          "address": "0x1001026a8"
+        },
+        {
+          "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x1001026d0"
+        },
+        {
+          "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+          "selector": ".cxx_destruct",
+          "address": "0x100102748"
+        }
+      ],
+      "name": "Wallper.(ScrollingLabelView in _33CB5CB3CEB588E6D6BBE6B589CE4957)"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+      "fields": [
+        "ring"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+          "selector": "initWithFrame:",
+          "address": "0x1001031e0"
+        },
+        {
+          "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+          "selector": "initWithCoder:",
+          "address": "0x100103200"
+        },
+        {
+          "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+          "selector": "layout",
+          "address": "0x100103554"
+        },
+        {
+          "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x10010357c"
+        },
+        {
+          "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+          "selector": ".cxx_destruct",
+          "address": "0x1001035d8"
+        }
+      ],
+      "name": "Wallper.(SpinningRingView in _B5DA72BA1597CCF89F9E7344D9DD3E3F)"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+      "fields": [
+        "ring",
+        "dot"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+          "selector": "initWithFrame:",
+          "address": "0x10010630c"
+        },
+        {
+          "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+          "selector": "initWithCoder:",
+          "address": "0x10010632c"
+        },
+        {
+          "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+          "selector": "layout",
+          "address": "0x100106850"
+        },
+        {
+          "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x100106878"
+        },
+        {
+          "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+          "selector": ".cxx_destruct",
+          "address": "0x1001068d4"
+        }
+      ],
+      "name": "Wallper.(PulsingDotView in _A6C7C08A4FF86A0F4CBA7032D63FE6EB)"
+    },
+    {
+      "mangled_name": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+      "fields": [
+        "onChange",
+        "observer"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+          "selector": "initWithCoder:",
+          "address": "0x10010e778"
+        },
+        {
+          "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+          "selector": "dealloc",
+          "address": "0x10010e878"
+        },
+        {
+          "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x10010ee10"
+        },
+        {
+          "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+          "selector": "initWithFrame:",
+          "address": "0x10010ee38"
+        },
+        {
+          "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+          "selector": ".cxx_destruct",
+          "address": "0x10010e928"
+        }
+      ],
+      "name": "Wallper.WindowVisibilityReader.Reader"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18ActivityController",
+      "fields": [
+        "_activeIDs",
+        "_items",
+        "_lastCompleted",
+        "_lastFailed"
+      ],
+      "methods": [],
+      "name": "Wallper.ActivityController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper29AddVideoDestinationController",
+      "fields": [
+        "panel"
+      ],
+      "methods": [],
+      "name": "Wallper.AddVideoDestinationController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper23ChooseMonitorController",
+      "fields": [
+        "panel"
+      ],
+      "methods": [],
+      "name": "Wallper.ChooseMonitorController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper22LicensePanelController",
+      "fields": [
+        "panel"
+      ],
+      "methods": [],
+      "name": "Wallper.LicensePanelController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17MenuBarController",
+      "fields": [
+        "statusItem",
+        "popover",
+        "hostingController",
+        "videoLibrary",
+        "shuffleManager",
+        "previewManager",
+        "applicationManager",
+        "updateManager",
+        "playlistManager",
+        "onOpenMain",
+        "onQuit",
+        "currentScreenIDForPreview",
+        "wallpaperObserver",
+        "badgeDot"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper17MenuBarController",
+          "selector": "dealloc",
+          "address": "0x10012a128"
+        },
+        {
+          "class": "_TtC7Wallper17MenuBarController",
+          "selector": "togglePanel:",
+          "address": "0x10012c5d8"
+        },
+        {
+          "class": "_TtC7Wallper17MenuBarController",
+          "selector": "popoverDidClose:",
+          "address": "0x10012c620"
+        },
+        {
+          "class": "_TtC7Wallper17MenuBarController",
+          "selector": "init",
+          "address": "0x10012c800"
+        },
+        {
+          "class": "_TtC7Wallper17MenuBarController",
+          "selector": ".cxx_destruct",
+          "address": "0x10012a14c"
+        }
+      ],
+      "name": "Wallper.MenuBarController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper23PlaylistSheetController",
+      "fields": [
+        "panel"
+      ],
+      "methods": [],
+      "name": "Wallper.PlaylistSheetController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper20SharePanelController",
+      "fields": [
+        "panel"
+      ],
+      "methods": [],
+      "name": "Wallper.SharePanelController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper23TutorialPanelController",
+      "fields": [
+        "panel"
+      ],
+      "methods": [],
+      "name": "Wallper.TutorialPanelController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper23LockScreenRepairMonitor",
+      "fields": [
+        "queue",
+        "watcher",
+        "fallbackTimer",
+        "pendingCheck",
+        "desired",
+        "repairTimes",
+        "pausedUntil",
+        "desiredKey"
+      ],
+      "methods": [],
+      "name": "Wallper.LockScreenRepairMonitor"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18ApplicationManager",
+      "fields": [
+        "_applicationLatestVersion",
+        "_updateURL",
+        "_isApplicationClosed",
+        "_message",
+        "_isLoaded",
+        "_hasUpdate",
+        "_releaseNotes",
+        "backgroundCheckTask"
+      ],
+      "methods": [],
+      "name": "Wallper.ApplicationManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper12CacheManager",
+      "fields": [
+        "defaults"
+      ],
+      "methods": [],
+      "name": "Wallper.CacheManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper13DeviceManager",
+      "fields": [
+        "_devices",
+        "_isLoaded",
+        "_isSyncing",
+        "_lastError",
+        "hwid"
+      ],
+      "methods": [],
+      "name": "Wallper.DeviceManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17ICloudSyncManager",
+      "fields": [
+        "syncedKeys",
+        "kvs",
+        "started",
+        "applyingRemote",
+        "pushWork",
+        "isEnabled"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper17ICloudSyncManager",
+          "selector": "externalChange",
+          "address": "0x10013f564"
+        },
+        {
+          "class": "_TtC7Wallper17ICloudSyncManager",
+          "selector": "localChange",
+          "address": "0x10013f9c0"
+        }
+      ],
+      "name": "Wallper.ICloudSyncManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18LaunchBootstrapper",
+      "fields": [
+        "licenseManager",
+        "deviceManager",
+        "updateManager",
+        "applicationManager",
+        "_phase",
+        "_status",
+        "_isFinished",
+        "_isUpdateAvailable",
+        "_isAppReady",
+        "_didFailWithOffline"
+      ],
+      "methods": [],
+      "name": "Wallper.LaunchBootstrapper"
+    },
+    {
+      "mangled_name": "_TtC7Wallper14LicenseManager",
+      "fields": [
+        "_state",
+        "_currentLicense",
+        "_hasLicense",
+        "_isBanned",
+        "_trialLeft",
+        "_isChecked",
+        "hwid"
+      ],
+      "methods": [],
+      "name": "Wallper.LicenseManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18LockScreenPresence",
+      "fields": [
+        "lock",
+        "locked",
+        "saverRunning"
+      ],
+      "methods": [],
+      "name": "Wallper.LockScreenPresence"
+    },
+    {
+      "mangled_name": "_TtC7Wallper14LockscreenSync",
+      "fields": [],
+      "methods": [],
+      "name": "Wallper.LockscreenSync"
+    },
+    {
+      "mangled_name": "_TtC7Wallper13LyricsManager",
+      "fields": [
+        "_lines",
+        "_activeLine",
+        "_loading",
+        "track",
+        "duration",
+        "provisional",
+        "clock",
+        "fetchTask",
+        "fetchGeneration",
+        "nextLine",
+        "unavailable",
+        "cancellables"
+      ],
+      "methods": [],
+      "name": "Wallper.LyricsManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper21MediaRemoteController",
+      "fields": [
+        "onUpdate",
+        "onActiveChange",
+        "isActive",
+        "snapshot",
+        "lastEmittedSignature",
+        "process",
+        "stdoutBuffer",
+        "isRunning",
+        "restartDelay",
+        "startedAt",
+        "sendCommand",
+        "setElapsedTime"
+      ],
+      "methods": [],
+      "name": "Wallper.MediaRemoteController"
+    },
+    {
+      "mangled_name": "_TtC7Wallper14MonitorManager",
+      "fields": [
+        "_screens",
+        "_configs",
+        "_previewUpdateTick",
+        "_selectedIndex",
+        "_monitorStates",
+        "disabledScreens",
+        "rebuildWorkItem",
+        "previewTickWorkItem"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper14MonitorManager",
+          "selector": "handlePlaybackStateChanged:",
+          "address": "0x10016f01c"
+        },
+        {
+          "class": "_TtC7Wallper14MonitorManager",
+          "selector": "handleScreensListChanged:",
+          "address": "0x10016f218"
+        },
+        {
+          "class": "_TtC7Wallper14MonitorManager",
+          "selector": "handleScreenParametersChanged:",
+          "address": "0x10016f2e8"
+        },
+        {
+          "class": "_TtC7Wallper14MonitorManager",
+          "selector": "handleWallpaperChanged:",
+          "address": "0x100170354"
+        }
+      ],
+      "name": "Wallper.MonitorManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17NowPlayingManager",
+      "fields": [
+        "_isEnabled",
+        "standDownScreens",
+        "standDownRestoresLockScreen",
+        "_enabledMediaSources",
+        "_seenMediaSources",
+        "_musicApplyToLockScreen",
+        "_musicSetDesktopBackground",
+        "_artworkImage",
+        "_artworkVersion",
+        "_trackTitle",
+        "_artistName",
+        "_albumName",
+        "_activePlayer",
+        "_isPlaying",
+        "_trackDuration",
+        "_playback",
+        "amIsPlaying",
+        "spotifyIsPlaying",
+        "_dominantColors",
+        "_currentTheme",
+        "dominantColorTuples",
+        "currentStoreURL",
+        "previousWallpaperURLs",
+        "previousWallpaperTitle",
+        "previousLockscreenURL",
+        "previousLockscreenTitle",
+        "previousDesktopImageURLs",
+        "artworkTask",
+        "lockscreenTask",
+        "lockscreenKey",
+        "lockscreenGeneration",
+        "artworkKey",
+        "mrArtworkWaitKey",
+        "amPauseTask",
+        "spotifyPauseTask",
+        "artworkCache",
+        "artworkCacheOrder",
+        "mediaRemoteActive",
+        "mrLastTrackKey",
+        "mrShowingMusic",
+        "mrPauseTask",
+        "mrArtworkTask",
+        "mrPlayingAnchor",
+        "mrPausedFresh",
+        "clockCheckTask",
+        "automationRefused",
+        "isQuitting",
+        "_activeBundleID",
+        "cancellables",
+        "musicColorsKey",
+        "musicActiveKey",
+        "lockScreenRestorePending"
+      ],
+      "methods": [],
+      "name": "Wallper.NowPlayingManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper15PlaylistManager",
+      "fields": [
+        "storeKey",
+        "activeKey",
+        "queueOffKey",
+        "playingSectionKey",
+        "_playlists",
+        "_activePlaylistID",
+        "_isQueueOff",
+        "_scheduleTick",
+        "queueSourceChanged",
+        "activationChanged",
+        "playingSectionChanged",
+        "transitionTimer",
+        "clockTimer",
+        "observers",
+        "appearanceObserver",
+        "appearanceSettle",
+        "isSchedulingActive",
+        "lastActiveSections"
+      ],
+      "methods": [],
+      "name": "Wallper.PlaylistManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper14PreviewManager",
+      "fields": [
+        "_previewURLs",
+        "cacheDirectory",
+        "fm",
+        "inFlightIDs",
+        "failedIDs",
+        "transparentIDs",
+        "transparentRetryCount",
+        "maxRetries",
+        "maxTransparentRetries",
+        "validatedIDs",
+        "remoteVideoTemplates"
+      ],
+      "methods": [],
+      "name": "Wallper.PreviewManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper15GenerationSlots",
+      "fields": [
+        "$defaultActor",
+        "free",
+        "waiting"
+      ],
+      "methods": [],
+      "name": "Wallper.GenerationSlots"
+    },
+    {
+      "mangled_name": "_TtC7Wallper22ScreenHighlightManager",
+      "fields": [
+        "windows"
+      ],
+      "methods": [],
+      "name": "Wallper.ScreenHighlightManager"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+      "fields": [
+        "starTimer"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+          "selector": "initWithFrame:",
+          "address": "0x1001eea34"
+        },
+        {
+          "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+          "selector": "initWithCoder:",
+          "address": "0x1001eeabc"
+        },
+        {
+          "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+          "selector": "dealloc",
+          "address": "0x1001eeba8"
+        },
+        {
+          "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x1001eee00"
+        },
+        {
+          "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+          "selector": "layout",
+          "address": "0x1001ef404"
+        },
+        {
+          "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+          "selector": ".cxx_destruct",
+          "address": "0x1001eec1c"
+        }
+      ],
+      "name": "Wallper.(HighlightBorderView in _8A1C610580B7CD8A17F7CF76228A6467)"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18ScreensaverManager",
+      "fields": [
+        "kLastInstalledVideoID",
+        "optionObservation",
+        "queueLock",
+        "lastInstall",
+        "latestRequest"
+      ],
+      "methods": [],
+      "name": "Wallper.ScreensaverManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper19CustomAerialCatalog",
+      "fields": [
+        "isSuperseded",
+        "conversionAbandoned",
+        "wallperCategoryID",
+        "wallperSubcategoryID",
+        "kSlotInstalled"
+      ],
+      "methods": [],
+      "name": "Wallper.CustomAerialCatalog"
+    },
+    {
+      "mangled_name": "_TtC7Wallper19ShuffleQueueManager",
+      "fields": [
+        "indexKey",
+        "autoKey",
+        "enabledKey",
+        "playingIDKey",
+        "previousWallpaperKey",
+        "_queue",
+        "_currentIndex",
+        "_autoAdvance",
+        "_isEnabled",
+        "_currentPlayingID",
+        "timerCancellable",
+        "videoLibrary",
+        "playlistManager",
+        "ownApplies",
+        "isRestoringState",
+        "cancellables",
+        "activatingSource",
+        "fetchingForDesktop"
+      ],
+      "methods": [],
+      "name": "Wallper.ShuffleQueueManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper12SteamManager",
+      "fields": [
+        "_isInitialized",
+        "_isOwned",
+        "_steamID",
+        "_playerName",
+        "callbackTimer"
+      ],
+      "methods": [],
+      "name": "Wallper.SteamManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper13UpdateManager",
+      "fields": [
+        "_updateInfo",
+        "_failure",
+        "isUpdating"
+      ],
+      "methods": [],
+      "name": "Wallper.UpdateManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17WallpaperPlayback",
+      "fields": [
+        "_suspendedScreens"
+      ],
+      "methods": [],
+      "name": "Wallper.WallpaperPlayback"
+    },
+    {
+      "mangled_name": "_TtC7Wallper21VideoWallpaperManager",
+      "fields": [
+        "playback",
+        "wantsPlaying",
+        "holds",
+        "globalHolds",
+        "players",
+        "windows",
+        "loopers",
+        "silencers",
+        "playerObservers",
+        "looperObservers",
+        "failureRebuilds",
+        "stallRebuilds",
+        "watchdogRetryCount",
+        "watchdogLastRetryTime",
+        "watchdogResetWorkItem",
+        "shownPlayers",
+        "transitions",
+        "musicThemeHolder",
+        "playbackStateKey",
+        "forcedRebuildScreens",
+        "appliedMaxResolution",
+        "lastLoggedVolume",
+        "savePlaybackWorkItem",
+        "settingsDebounceWorkItem",
+        "appliedWallpaperURL",
+        "adaptedWallpaperURLs"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": "init",
+          "address": "0x100235c04"
+        },
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": "observeValueForKeyPath:ofObject:change:context:",
+          "address": "0x100235e18"
+        },
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": "handleWakeFromSleep:",
+          "address": "0x100236b60"
+        },
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": "handleScreensDidSleep:",
+          "address": "0x100236c00"
+        },
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": "handleScreensDidWake:",
+          "address": "0x100236ca8"
+        },
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": "handleSettingsChanged",
+          "address": "0x100237ce8"
+        },
+        {
+          "class": "_TtC7Wallper21VideoWallpaperManager",
+          "selector": ".cxx_destruct",
+          "address": "0x100255c0c"
+        }
+      ],
+      "name": "Wallper.VideoWallpaperManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper13WindowManager",
+      "fields": [
+        "injectedLicenseManager",
+        "injectedVideoLibrary",
+        "injectedDeviceManager",
+        "injectedShuffleManager",
+        "injectedPreviewManager",
+        "injectedPlaylistManager",
+        "canOpenUI",
+        "cancellables",
+        "licenseCancellables",
+        "mainWindow",
+        "wallpaperWindows",
+        "clickMonitor",
+        "lastRestoreAt",
+        "isShowingAccessDenied",
+        "isBanned"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper13WindowManager",
+          "selector": "windowWillClose:",
+          "address": "0x10025c854"
+        },
+        {
+          "class": "_TtC7Wallper13WindowManager",
+          "selector": "init",
+          "address": "0x10025a4e8"
+        },
+        {
+          "class": "_TtC7Wallper13WindowManager",
+          "selector": "openApp",
+          "address": "0x10025c074"
+        },
+        {
+          "class": "_TtC7Wallper13WindowManager",
+          "selector": ".cxx_destruct",
+          "address": "0x10025c270"
+        }
+      ],
+      "name": "Wallper.WindowManager"
+    },
+    {
+      "mangled_name": "_TtC7Wallper15LocalMediaStore",
+      "fields": [
+        "_customTitles",
+        "metadata",
+        "fileName",
+        "metadataFileName"
+      ],
+      "methods": [],
+      "name": "Wallper.LocalMediaStore"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17VideoLibraryStore",
+      "fields": [
+        "_wallperVideos",
+        "_userGeneratedVideos",
+        "_allVideos",
+        "_downloadedVideos",
+        "_likedVideos",
+        "_isLoaded",
+        "_isCacheLoaded",
+        "_isRemoteLoaded",
+        "isLoadingRemote",
+        "isLoadingAll",
+        "_localPreview",
+        "_likedVideoIDs",
+        "_likesTick",
+        "_titlesTick",
+        "downloadDelegates",
+        "downloadSessions",
+        "titleCache",
+        "cdnBase",
+        "downloadedIDCache",
+        "lookupCache"
+      ],
+      "methods": [],
+      "name": "Wallper.VideoLibraryStore"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+      "fields": [
+        "id",
+        "activity",
+        "destinationURL",
+        "completed",
+        "lastReported",
+        "onComplete"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+          "selector": "URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:",
+          "address": "0x10027e2d0"
+        },
+        {
+          "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+          "selector": "URLSession:downloadTask:didFinishDownloadingToURL:",
+          "address": "0x10027e350"
+        },
+        {
+          "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+          "selector": "URLSession:task:didCompleteWithError:",
+          "address": "0x10027e430"
+        },
+        {
+          "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+          "selector": "init",
+          "address": "0x10027e4b8"
+        },
+        {
+          "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+          "selector": ".cxx_destruct",
+          "address": "0x10027e4e4"
+        }
+      ],
+      "name": "Wallper.(DownloadProgressDelegate in _4537C798EE20D91316D9ABA5C6003379)"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18AudioTrackSilencer",
+      "fields": [
+        "isSilenced",
+        "player",
+        "currentItemObserver",
+        "watched"
+      ],
+      "methods": [],
+      "name": "Wallper.AudioTrackSilencer"
+    },
+    {
+      "mangled_name": "_TtC7Wallper10CPUMonitor",
+      "fields": [
+        "host",
+        "timer",
+        "lastTicks",
+        "highSamples",
+        "lowSamples",
+        "isHolding"
+      ],
+      "methods": [],
+      "name": "Wallper.CPUMonitor"
+    },
+    {
+      "mangled_name": "_TtC7Wallper20ExploreSearchRequest",
+      "fields": [
+        "_pendingQuery"
+      ],
+      "methods": [],
+      "name": "Wallper.ExploreSearchRequest"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17FullscreenMonitor",
+      "fields": [
+        "timer",
+        "observers",
+        "pendingCheck",
+        "heldScreenIDs"
+      ],
+      "methods": [],
+      "name": "Wallper.FullscreenMonitor"
+    },
+    {
+      "mangled_name": "_TtC7Wallper12HWIDProvider",
+      "fields": [],
+      "methods": [],
+      "name": "Wallper.HWIDProvider"
+    },
+    {
+      "mangled_name": "_TtC7Wallper20NetworkStatusMonitor",
+      "fields": [
+        "_isOnline",
+        "_secondsUntilRetry",
+        "monitor",
+        "countdownTimer",
+        "retryInterval",
+        "started",
+        "hasReceivedFirstPath"
+      ],
+      "methods": [],
+      "name": "Wallper.NetworkStatusMonitor"
+    },
+    {
+      "mangled_name": "_TtC7Wallper12PowerMonitor",
+      "fields": [
+        "runLoopSource",
+        "wakeObservers",
+        "isOnBattery",
+        "isLowPower",
+        "isHolding",
+        "hasSampled"
+      ],
+      "methods": [],
+      "name": "Wallper.PowerMonitor"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18ScreenSaverHelpers",
+      "fields": [],
+      "methods": [],
+      "name": "Wallper.ScreenSaverHelpers"
+    },
+    {
+      "mangled_name": "_TtC7Wallper18WallpaperUnlockFix",
+      "fields": [
+        "pending",
+        "lastAppliedAerialUUID"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper18WallpaperUnlockFix",
+          "selector": "onDesktopBack",
+          "address": "0x1002b4974"
+        }
+      ],
+      "name": "Wallper.WallpaperUnlockFix"
+    },
+    {
+      "mangled_name": "_TtC7Wallper17WallpaperRestorer",
+      "fields": [],
+      "methods": [],
+      "name": "Wallper.WallpaperRestorer"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+      "fields": [
+        "onChange",
+        "scrollView",
+        "contentView",
+        "observer",
+        "lastReportedOffset"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+          "selector": "dealloc",
+          "address": "0x100321040"
+        },
+        {
+          "class": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+          "selector": "init",
+          "address": "0x10032114c"
+        },
+        {
+          "class": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+          "selector": ".cxx_destruct",
+          "address": "0x1003210f0"
+        }
+      ],
+      "name": "Wallper.(ScrollOffsetObserver in _10B5BC8A445113D7DE69555D7FD5BD68).Coordinator"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6815HeroScrollState",
+      "fields": [
+        "_offset"
+      ],
+      "methods": [],
+      "name": "Wallper.(HeroScrollState in _10B5BC8A445113D7DE69555D7FD5BD68)"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+      "fields": [
+        "size",
+        "resizeObserver"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+          "selector": "initWithCoder:",
+          "address": "0x1003af730"
+        },
+        {
+          "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+          "selector": "dealloc",
+          "address": "0x1003af830"
+        },
+        {
+          "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+          "selector": "viewDidMoveToWindow",
+          "address": "0x1003afb6c"
+        },
+        {
+          "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+          "selector": "initWithFrame:",
+          "address": "0x1003afca0"
+        },
+        {
+          "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+          "selector": ".cxx_destruct",
+          "address": "0x1003af8e0"
+        }
+      ],
+      "name": "Wallper.(WindowSizeReader in _4C1A01B9C218D1703E7256E92C2C26AB).Reader"
+    },
+    {
+      "mangled_name": "_TtCV7WallperP33_C68C793B309468DD966AC00C0AFFA0A819KeyboardMonitorView11Coordinator",
+      "fields": [
+        "onArrowDown",
+        "onArrowUp",
+        "onSpaceDown",
+        "onSpaceUp",
+        "isActive",
+        "view",
+        "keyDownMonitor",
+        "keyUpMonitor"
+      ],
+      "methods": [],
+      "name": "Wallper.(KeyboardMonitorView in _C68C793B309468DD966AC00C0AFFA0A8).Coordinator"
+    },
+    {
+      "mangled_name": "_TtCV7Wallper13VideoLoopView11Coordinator",
+      "fields": [
+        "hostView",
+        "player",
+        "looper",
+        "currentURL",
+        "silencer",
+        "timeControlObs",
+        "statusObs",
+        "keepUpObs",
+        "readyForDisplayObs",
+        "onFirstFrame",
+        "showsSpinner",
+        "autoplay"
+      ],
+      "methods": [
+        {
+          "class": "_TtCV7Wallper13VideoLoopView11Coordinator",
+          "selector": "init",
+          "address": "0x1003f0d8c"
+        },
+        {
+          "class": "_TtCV7Wallper13VideoLoopView11Coordinator",
+          "selector": ".cxx_destruct",
+          "address": "0x1003f2748"
+        }
+      ],
+      "name": "Wallper.VideoLoopView.Coordinator"
+    },
+    {
+      "mangled_name": "_TtC7Wallper19PlayerContainerView",
+      "fields": [
+        "onLayout",
+        "spinnerHost"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper19PlayerContainerView",
+          "selector": "makeBackingLayer",
+          "address": "0x1003f2a94"
+        },
+        {
+          "class": "_TtC7Wallper19PlayerContainerView",
+          "selector": "initWithFrame:",
+          "address": "0x1003f2c4c"
+        },
+        {
+          "class": "_TtC7Wallper19PlayerContainerView",
+          "selector": "initWithCoder:",
+          "address": "0x1003f2e10"
+        },
+        {
+          "class": "_TtC7Wallper19PlayerContainerView",
+          "selector": "layout",
+          "address": "0x1003f2f08"
+        },
+        {
+          "class": "_TtC7Wallper19PlayerContainerView",
+          "selector": ".cxx_destruct",
+          "address": "0x1003f2f30"
+        }
+      ],
+      "name": "Wallper.PlayerContainerView"
+    },
+    {
+      "mangled_name": "_TtC7Wallper11AppDelegate",
+      "fields": [
+        "licenseManager",
+        "videoLibrary",
+        "deviceManager",
+        "previewManager",
+        "$__lazy_storage_$_shuffleManager",
+        "playlistManager",
+        "applicationManager",
+        "updateManager",
+        "launchedFromLoginItem",
+        "didSetUpUI",
+        "screenChangeObserver",
+        "knownScreenIDs",
+        "knownScreenFrames",
+        "kAskedStartOnLogin",
+        "kHasCompletedOnboarding",
+        "updateObserver",
+        "networkObserver",
+        "didReplyToTerminate"
+      ],
+      "methods": [
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": "init",
+          "address": "0x1003f42ac"
+        },
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": "applicationDidFinishLaunching:",
+          "address": "0x1003f5c64"
+        },
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": "applicationShouldHandleReopen:hasVisibleWindows:",
+          "address": "0x1003f831c"
+        },
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": "applicationShouldTerminate:",
+          "address": "0x1003f8704"
+        },
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": "applicationWillTerminate:",
+          "address": "0x1003f88a8"
+        },
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": "application:openURLs:",
+          "address": "0x1003fa158"
+        },
+        {
+          "class": "_TtC7Wallper11AppDelegate",
+          "selector": ".cxx_destruct",
+          "address": "0x1003fa200"
+        }
+      ],
+      "name": "Wallper.AppDelegate"
+    },
+    {
+      "mangled_name": "_TtC7WallperP33_F0574B9992067F296114576408A81A2119ResourceBundleClass",
+      "fields": [],
+      "methods": [],
+      "name": "Wallper.(ResourceBundleClass in _F0574B9992067F296114576408A81A21)"
+    },
+    {
+      "mangled_name": "NSUserDefaults",
+      "fields": [],
+      "category": "Wallper",
+      "methods": [
+        {
+          "class": "NSUserDefaults",
+          "selector": "advancedWallpaperApply",
+          "address": "0x10020c5fc"
+        },
+        {
+          "class": "NSUserDefaults",
+          "selector": "musicLayout",
+          "address": "0x100078358"
+        }
+      ],
+      "name": "extension NSUserDefaults (Wallper)"
+    }
+  ],
+  "source_paths": [
+    "Wallper/AudioBarsIcon.swift",
+    "Wallper/DisplaysInfoView.swift",
+    "Wallper/LyricsManager.swift",
+    "Wallper/MarqueeText.swift",
+    "Wallper/MeshGradientWallpaperView.swift",
+    "Wallper/MiniSpinner.swift",
+    "Wallper/MusicScenes.swift",
+    "Wallper/MusicSplitArt.swift",
+    "Wallper/RootContentView.swift",
+    "Wallper/ScreenSaverManager.swift",
+    "Wallper/StatusDot.swift",
+    "Wallper/StorageInfoView.swift",
+    "Wallper/TabPages.swift",
+    "Wallper/ValidatedPreviewImage.swift",
+    "Wallper/VideoLibraryStore.swift",
+    "Wallper/VideoListView.swift",
+    "Wallper/WallpaperPreviewView.swift"
+  ],
+  "embedded_urls": [
+    "https://api.github.com/repos/alxndlk/wallper-app/releases/latest",
+    "https://apple.com",
+    "https://cdn.wallper.app",
+    "https://cdn.wallper.app/previews/",
+    "https://cdn.wallper.app/wallper-user-generated/",
+    "https://cdn.wallper.app/wallper-video/",
+    "https://discord.com/invite/SMVPrEzSNs",
+    "https://itunes.apple.com/lookup?id=",
+    "https://itunes.apple.com/search",
+    "https://itunes.apple.com/search?term=",
+    "https://lrclib.net/api/",
+    "https://services.wallper.app/",
+    "https://wallper.app/pricing",
+    "https://wallper.app/pricing?ref=wallper&utm_source=wallper",
+    "https://wallper.app/shared/"
+  ]
+}

@@ -1,0 +1,48 @@
+// rea decompile_all
+// name: FUN_1000cf944
+// address: 0x1000cf944
+// body: available
+// range: 0x1000cf944-0x1000cfa53 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_1000cf944(CGFloat param_1)
+
+{
+  undefined4 uVar1;
+  Design DVar2;
+  Weight WVar3;
+  undefined7 extraout_var;
+  Font FVar5;
+  Font FVar6;
+  long extraout_x8;
+  undefined1 *puVar7;
+  long lVar8;
+  long lVar4;
+  
+  WVar3.unknown = &DAT_10054a828;
+  FUN_100002f94(&DAT_10054a828,&DAT_10041e3c0);
+  (*(code *)PTR____chkstk_darwin_100521118)
+            (*(long *)(*(long *)(WVar3.unknown + -8) + 0x40) + 0xfU & 0xfffffffffffffff0);
+  puVar7 = &stack0xffffffffffffffb0 + -extraout_x8;
+  SwiftUI::Font::Weight::get_regular(WVar3);
+  uVar1 = *(undefined4 *)
+           PTR___enum_case_for_SwiftUI_Font_Design_rounded_SwiftUI_Font_Design_Type___>_SwiftUI_Font_Design_100522cd8
+  ;
+  DVar2 = SwiftUI::Font::Design::typeMetadataAccessor();
+  lVar4 = CONCAT71(extraout_var,DVar2.value);
+  lVar8 = *(long *)(lVar4 + -8);
+  (**(code **)(lVar8 + 0x68))(puVar7,uVar1,lVar4);
+  (**(code **)(lVar8 + 0x38))(puVar7,0,1,lVar4);
+  FVar5 = SwiftUI::Font::_system(param_1,(Font)0x0);
+  FUN_10002a29c(puVar7,&DAT_10054a828,&DAT_10041e3c0);
+  FVar6 = SwiftUI::Font::monospacedDigit(FVar5);
+  _swift_release(FVar5.unknown);
+  DAT_1005515f0 = FVar6.unknown;
+  return;
+}
+

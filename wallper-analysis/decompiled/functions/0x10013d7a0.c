@@ -1,0 +1,65 @@
+// rea decompile_all
+// name: FUN_10013d7a0
+// address: 0x10013d7a0
+// body: available
+// range: 0x10013d7a0-0x10013d8a3 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; Ghidra Listing reports a terminal call at 0x10013d8a0 to 0x100414aa4 _swift_task_switch (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_10013d7a0(undefined8 param_1,undefined8 param_2)
+
+{
+  undefined *puVar1;
+  URLRequest UVar2;
+  ulong uVar3;
+  URL UVar4;
+  ulong uVar5;
+  MainActor *pMVar6;
+  undefined8 *puVar7;
+  UnownedSerialExecutor UVar8;
+  long lVar9;
+  long unaff_x22;
+  
+  *(undefined8 *)(unaff_x22 + 0x10) = param_1;
+  *(undefined8 *)(unaff_x22 + 0x18) = param_2;
+  UVar2 = Foundation::URLRequest::typeMetadataAccessor();
+  *(undefined **)(unaff_x22 + 0x20) = UVar2.unknown;
+  lVar9 = *(long *)(UVar2.unknown + -8);
+  *(long *)(unaff_x22 + 0x28) = lVar9;
+  uVar3 = *(long *)(lVar9 + 0x40) + 0xfU & 0xfffffffffffffff0;
+  _swift_task_alloc();
+  *(ulong *)(unaff_x22 + 0x30) = uVar3;
+  UVar4 = Foundation::URL::typeMetadataAccessor();
+  *(undefined **)(unaff_x22 + 0x38) = UVar4.unknown;
+  lVar9 = *(long *)(UVar4.unknown + -8);
+  *(long *)(unaff_x22 + 0x40) = lVar9;
+  uVar3 = *(long *)(lVar9 + 0x40) + 0xf;
+  uVar5 = uVar3 & 0xfffffffffffffff0;
+  _swift_task_alloc();
+  *(ulong *)(unaff_x22 + 0x48) = uVar5;
+  uVar5 = uVar3 & 0xfffffffffffffff0;
+  _swift_task_alloc();
+  *(ulong *)(unaff_x22 + 0x50) = uVar5;
+  uVar5 = uVar3 & 0xfffffffffffffff0;
+  _swift_task_alloc();
+  *(ulong *)(unaff_x22 + 0x58) = uVar5;
+  uVar3 = uVar3 & 0xfffffffffffffff0;
+  _swift_task_alloc();
+  *(ulong *)(unaff_x22 + 0x60) = uVar3;
+  pMVar6 = Swift::MainActor::typeMetadataAccessor();
+  puVar1 = PTR_typeMetadataAccessor_1005246d8;
+  pMVar6 = Swift::MainActor::get_shared(pMVar6,pMVar6);
+  *(MainActor **)(unaff_x22 + 0x68) = pMVar6;
+  puVar7 = &DAT_100558b80;
+  FUN_1000036d0(&DAT_100558b80,puVar1,PTR_Swift__Swift__MainActor_>Swift__Actor_1005246e0);
+  UVar8 = Swift::Actor::get_unownedExecutor();
+  *(undefined **)(unaff_x22 + 0x70) = UVar8.unknown;
+  *(undefined8 **)(unaff_x22 + 0x78) = puVar7;
+  _swift_task_switch(FUN_10013d8a4,UVar8.unknown,puVar7);
+  return;
+}
+

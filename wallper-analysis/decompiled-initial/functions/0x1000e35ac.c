@@ -1,0 +1,60 @@
+// rea decompile_all
+// name: FUN_1000e35ac
+// address: 0x1000e35ac
+// body: available
+// range: 0x1000e35ac-0x1000e3663 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_1000e35ac(ID *param_1)
+
+{
+  undefined8 *puVar1;
+  class_t *pcVar2;
+  class_t *pcVar3;
+  undefined8 uVar4;
+  ID IVar5;
+  undefined8 *unaff_x20;
+  undefined8 uVar6;
+  objc_super local_40;
+  
+  pcVar2 = (class_t *)0x0;
+  FUN_1000e3508();
+  pcVar3 = pcVar2;
+  _objc_allocWithZone();
+  _swift_unknownObjectWeakInit
+            ((long)&pcVar3->isa +
+             _TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator::
+             scrollView,0);
+  _swift_unknownObjectWeakInit
+            ((long)&pcVar3->isa +
+             _TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator::
+             contentView,0);
+  *(undefined8 *)
+   ((long)&pcVar3->isa +
+   _TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator::observer) =
+       0;
+  *(undefined8 *)
+   ((long)&pcVar3->isa +
+   _TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator::
+   lastReportedOffset) = 0xbff0000000000000;
+  uVar4 = unaff_x20[1];
+  uVar6 = *unaff_x20;
+  puVar1 = (undefined8 *)
+           ((long)&pcVar3->isa +
+           _TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator::
+           onChange);
+  puVar1[1] = unaff_x20[1];
+  *puVar1 = uVar6;
+  local_40.receiver = (ID)pcVar3;
+  local_40.super_class = pcVar2;
+  _swift_retain(uVar4);
+  IVar5 = _objc_msgSendSuper2(&local_40,"init");
+  *param_1 = IVar5;
+  return;
+}
+

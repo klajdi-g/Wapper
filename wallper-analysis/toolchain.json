@@ -1,0 +1,12 @@
+{
+  "node": "v24.22.1",
+  "npm": "11.16.0",
+  "rea_version": "6.8.0",
+  "rea_commit": "c7722c8eebea60ce3399961bc63b226f59876edd",
+  "ghidra_version": "12.1.4",
+  "ghidra_install_dir": "/Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC",
+  "java_home": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+  "java": "openjdk 21.0.11 2026-04-21\nOpenJDK Runtime Environment Homebrew (build 21.0.11)\nOpenJDK 64-Bit Server VM Homebrew (build 21.0.11, mixed mode, sharing)",
+  "node_archive_sha256": "89c682593d76cd44233fa53b1563264e7de9cbb189cad169135c5b4fadfbc0a7",
+  "ghidra_archive_sha256": "ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db"
+}

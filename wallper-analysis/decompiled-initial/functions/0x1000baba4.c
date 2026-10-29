@@ -1,0 +1,49 @@
+// rea decompile_all
+// name: FUN_1000baba4
+// address: 0x1000baba4
+// body: available
+// range: 0x1000baba4-0x1000bac73 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_1000baba4(long param_1)
+
+{
+  code *pcVar1;
+  State SVar2;
+  long local_88;
+  State local_80;
+  undefined8 uStack_78;
+  undefined8 local_70;
+  undefined8 uStack_68;
+  long local_58;
+  undefined8 local_50;
+  undefined8 uStack_48;
+  undefined8 local_38;
+  
+  uStack_48 = *(undefined8 *)(param_1 + 0x18);
+  local_50 = *(undefined8 *)(param_1 + 0x10);
+  uStack_68 = *(undefined8 *)(param_1 + 0x18);
+  local_70 = *(undefined8 *)(param_1 + 0x10);
+  local_38 = uStack_48;
+  FUN_1000087e4(&local_38,&local_80,&DAT_10054d690,&DAT_10041e1d0);
+  SVar2.unknown = &DAT_10054ba40;
+  FUN_100002f94(&DAT_10054ba40,&DAT_100423be0);
+  SwiftUI::State::get_wrappedValue(SVar2);
+  local_88 = local_58 + -1;
+  if (!SBORROW8(local_58,1)) {
+    uStack_78 = *(undefined8 *)(param_1 + 0x18);
+    local_80.unknown = *(undefined **)(param_1 + 0x10);
+    SwiftUI::State::set_wrappedValue(&local_80,&local_88,SVar2.unknown);
+    FUN_10002a29c(&local_50,&DAT_10054ba40,&DAT_100423be0);
+    return;
+  }
+                    /* WARNING: Does not return */
+  pcVar1 = (code *)SoftwareBreakpoint(1,0x1000bac74);
+  (*pcVar1)();
+}
+

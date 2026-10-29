@@ -1,0 +1,16 @@
+{
+  "export_counts": {
+    "written": 16480,
+    "external": 1564
+  },
+  "export_files_hash_checked": 16480,
+  "export_file_errors": [],
+  "original_universal_sha256": "f83b70b43c028278ff71461185afd87780dd5641d7d34edb6344d175aec7585a",
+  "preserved_universal_sha256": "f83b70b43c028278ff71461185afd87780dd5641d7d34edb6344d175aec7585a",
+  "universal_unchanged": true,
+  "preserved_arm64_sha256": "56f18db3581a2636a4fad042b03104d4e363e6020096e62c5fa96d51e8e0020a",
+  "arm64_matches_export": true,
+  "bundle_copy_matches_installed_app": true,
+  "bundle_comparison_output": "",
+  "passed": true
+}

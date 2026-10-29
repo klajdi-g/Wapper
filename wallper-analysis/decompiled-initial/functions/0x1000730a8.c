@@ -1,0 +1,214 @@
+// rea decompile_all
+// name: FUN_1000730a8
+// address: 0x1000730a8
+// body: available
+// range: 0x1000730a8-0x10007345b inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_1000730a8(undefined8 *param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+                  Color param_5)
+
+{
+  long lVar1;
+  undefined4 uVar2;
+  Design DVar3;
+  undefined *puVar4;
+  LocalizedStringKey LVar5;
+  Text TVar6;
+  undefined7 extraout_var;
+  Font FVar7;
+  Text TVar8;
+  Color CVar9;
+  Color CVar10;
+  Weight WVar11;
+  Color CVar12;
+  Text TVar14;
+  uint uVar15;
+  undefined *puVar16;
+  undefined8 uVar17;
+  long extraout_x8;
+  CGFloat size;
+  undefined1 *puVar18;
+  String stringLiteral;
+  undefined8 uStack_260;
+  undefined2 auStack_258 [4];
+  undefined1 auStack_250 [8];
+  undefined *local_248;
+  code *local_240;
+  long lStack_238;
+  undefined4 local_22c;
+  undefined *local_228;
+  undefined8 local_220;
+  undefined *puStack_218;
+  undefined8 local_210;
+  undefined *puStack_208;
+  undefined8 *local_200;
+  undefined1 auStack_1f8 [72];
+  undefined *local_1b0;
+  undefined8 uStack_1a8;
+  undefined8 local_1a0;
+  undefined8 uStack_198;
+  undefined1 local_190;
+  undefined7 uStack_18f;
+  undefined *puStack_188;
+  undefined *puStack_180;
+  undefined *local_178;
+  undefined2 local_170;
+  undefined *local_168;
+  undefined8 uStack_160;
+  undefined8 local_158;
+  undefined8 uStack_150;
+  undefined1 local_148;
+  undefined *local_140;
+  undefined *puStack_138;
+  undefined *local_130;
+  undefined2 local_128;
+  undefined *local_120;
+  undefined8 uStack_118;
+  undefined8 uStack_110;
+  undefined8 uStack_108;
+  undefined8 local_100;
+  undefined *puStack_f8;
+  undefined *puStack_f0;
+  undefined *puStack_e8;
+  undefined2 local_e0;
+  undefined *local_d0;
+  undefined8 uStack_c8;
+  undefined8 local_c0;
+  undefined8 uStack_b8;
+  undefined8 local_b0;
+  undefined *puStack_a8;
+  undefined *puStack_a0;
+  undefined *puStack_98;
+  undefined2 local_90;
+  undefined8 uVar13;
+  
+  puVar4 = &DAT_10054a828;
+  local_210 = param_4;
+  puStack_208 = param_5.unknown;
+  local_200 = param_1;
+  FUN_100002f94(&DAT_10054a828,&DAT_10041e3c0);
+  uVar15 = (uint)param_4;
+  (*(code *)PTR____chkstk_darwin_100521118)
+            (*(long *)(*(long *)(puVar4 + -8) + 0x40) + 0xfU & 0xfffffffffffffff0);
+  lVar1 = -extraout_x8;
+  puVar18 = auStack_250 + lVar1;
+  stringLiteral.bridgeObject = (void *)0xa300000000000000;
+  stringLiteral.str = (char *)0xa280e2;
+  uVar13 = 0xa300000000000000;
+  LVar5 = SwiftUI::LocalizedStringKey::init(stringLiteral);
+  *(undefined2 *)((long)auStack_258 + lVar1) = 0x100;
+  *(undefined8 *)((long)&uStack_260 + lVar1) = 0;
+  puVar16 = (undefined *)(ulong)(uVar15 & 1);
+  TVar6 = SwiftUI::Text::_init(LVar5);
+  DVar3 = SwiftUI::Font::Design::typeMetadataAccessor();
+  lStack_238 = CONCAT71(extraout_var,DVar3.value);
+  local_240 = *(code **)(*(long *)(lStack_238 + -8) + 0x38);
+  (*local_240)(puVar18,1,1,lStack_238);
+  FVar7 = SwiftUI::Font::_system((CGFloat)0x0,(Font)0x1);
+  FUN_10002a29c(puVar18,&DAT_10054a828,&DAT_10041e3c0);
+  TVar14 = TVar6;
+  uVar17 = uVar13;
+  puVar4 = puVar16;
+  TVar8 = SwiftUI::Text::_font(FVar7.unknown);
+  local_248 = puVar4;
+  _swift_release(FVar7.unknown);
+  FUN_100025b34(TVar6.unknown,uVar13,puVar16);
+  _swift_bridgeObjectRelease();
+  CVar9 = SwiftUI::Color::get_white(param_5);
+  size.unknown = (undefined *)0x3fd999999999999a;
+  CVar10 = SwiftUI::Color::opacity(0.4,CVar9);
+  _swift_release(CVar9.unknown);
+  local_d0 = CVar10.unknown;
+  FUN_100028d58();
+  WVar11.unknown = local_248;
+  TVar6 = TVar8;
+  puVar4 = TVar14.unknown;
+  uVar13 = uVar17;
+  puStack_218 = (undefined *)SwiftUI::Text::_foregroundStyle();
+  local_22c = SUB84(puVar4,0);
+  local_228 = TVar6.unknown;
+  local_220 = uVar13;
+  FUN_100025b34(TVar8.unknown,TVar14.unknown,uVar17);
+  _swift_release(CVar10.unknown);
+  _swift_bridgeObjectRelease();
+  SwiftUI::Font::Weight::get_regular(WVar11);
+  FUN_100073828(&local_d0,local_210,puStack_208);
+  puVar4 = local_d0;
+  (*local_240)(puVar18,1,1,lStack_238);
+  FVar7 = SwiftUI::Font::_system(size,(Font)0x0);
+  FUN_10002a29c(puVar18,&DAT_10054a828,&DAT_10041e3c0);
+  CVar9.unknown = &DAT_10041fbb8;
+  _swift_getKeyPath();
+  CVar10 = SwiftUI::Color::get_white(CVar9);
+  CVar12 = SwiftUI::Color::opacity(0.7,CVar10);
+  _swift_release(CVar10.unknown);
+  local_1b0 = puVar4;
+  uStack_1a8 = uStack_c8;
+  local_1a0 = local_c0;
+  uStack_198 = uStack_b8;
+  local_190 = (undefined1)local_b0;
+  local_170 = 0x100;
+  local_168 = puVar4;
+  uStack_160 = uStack_c8;
+  local_158 = local_c0;
+  uStack_150 = uStack_b8;
+  local_148 = (undefined1)local_b0;
+  local_128 = 0x100;
+  puStack_188 = CVar9.unknown;
+  puStack_180 = FVar7.unknown;
+  local_178 = CVar12.unknown;
+  local_140 = CVar9.unknown;
+  puStack_138 = FVar7.unknown;
+  local_130 = CVar12.unknown;
+  FUN_1000087e4(&local_1b0,&local_d0,&DAT_10054e888,&DAT_10041fb28);
+  FUN_10002a29c(&local_168,&DAT_10054e888,&DAT_10041fb28);
+  puVar16 = puStack_218;
+  uVar17 = local_220;
+  puVar4 = local_228;
+  uVar2 = local_22c;
+  local_100 = CONCAT71(uStack_18f,local_190);
+  puStack_a8 = puStack_188;
+  puStack_98 = local_178;
+  puStack_a0 = puStack_180;
+  puStack_f8 = puStack_188;
+  puStack_e8 = local_178;
+  puStack_f0 = puStack_180;
+  uStack_c8 = uStack_1a8;
+  local_d0 = local_1b0;
+  uStack_b8 = uStack_198;
+  local_c0 = local_1a0;
+  uStack_118 = uStack_1a8;
+  local_120 = local_1b0;
+  uStack_108 = uStack_198;
+  uStack_110 = local_1a0;
+  local_90 = local_170;
+  local_e0 = local_170;
+  *local_200 = puStack_218;
+  local_200[1] = local_228;
+  *(char *)(local_200 + 2) = (char)local_22c;
+  local_200[3] = local_220;
+  local_200[9] = puStack_188;
+  local_200[8] = CONCAT71(uStack_18f,local_190);
+  local_200[0xb] = local_178;
+  local_200[10] = puStack_180;
+  *(undefined2 *)(local_200 + 0xc) = local_170;
+  local_200[5] = uStack_1a8;
+  local_200[4] = local_1b0;
+  local_200[7] = uStack_198;
+  local_200[6] = local_1a0;
+  local_b0 = local_100;
+  FUN_100007b14(puStack_218,local_228,local_22c);
+  _swift_bridgeObjectRetain(uVar17);
+  FUN_1000087e4(&local_120,auStack_1f8,&DAT_10054e888,&DAT_10041fb28);
+  FUN_10002a29c(&local_d0,&DAT_10054e888,&DAT_10041fb28);
+  FUN_100025b34(puVar16,puVar4,uVar2);
+  _swift_bridgeObjectRelease(uVar17);
+  return;
+}
+

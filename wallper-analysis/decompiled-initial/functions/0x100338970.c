@@ -1,0 +1,378 @@
+// rea decompile_all
+// name: FUN_100338970
+// address: 0x100338970
+// body: available
+// range: 0x100338970-0x10033901b inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* WARNING: Heritage AFTER dead removal. Example location: x0 : 0x000100338e70 */
+/* WARNING: Restarted to delay deadcode elimination for space: register */
+
+void FUN_100338970(undefined8 param_1)
+
+{
+  int iVar1;
+  undefined8 uVar2;
+  undefined1 *puVar3;
+  undefined8 uVar4;
+  byte bVar5;
+  DefaultGlassEffectShape DVar6;
+  undefined *puVar7;
+  undefined **ppuVar8;
+  AnyView AVar9;
+  undefined *puVar10;
+  undefined *puVar11;
+  Material MVar12;
+  Set SVar13;
+  Color CVar14;
+  Color CVar15;
+  StrokeStyle SVar16;
+  Alignment AVar17;
+  undefined8 uVar18;
+  long extraout_x8;
+  long extraout_x8_00;
+  long extraout_x8_01;
+  long extraout_x8_02;
+  long extraout_x8_03;
+  long extraout_x12;
+  Glass unaff_x20;
+  undefined8 *puVar19;
+  long lVar20;
+  long lVar21;
+  undefined8 *puVar22;
+  long lVar23;
+  long lVar24;
+  long local_390 [2];
+  undefined *local_380;
+  long local_378 [4];
+  undefined1 *local_358 [7];
+  undefined1 auStack_320 [56];
+  undefined *local_2e8;
+  undefined8 uStack_2e0;
+  undefined8 local_2d8;
+  undefined8 uStack_2d0;
+  undefined8 local_2c8;
+  undefined *puStack_2c0;
+  undefined2 local_2b8;
+  undefined6 uStack_2b6;
+  undefined *puStack_2b0;
+  undefined8 local_2a8;
+  undefined *local_2a0;
+  undefined8 uStack_298;
+  undefined8 uStack_290;
+  undefined8 uStack_288;
+  undefined8 local_280;
+  undefined *puStack_278;
+  undefined8 uStack_270;
+  undefined *puStack_268;
+  undefined8 local_260;
+  undefined *local_258;
+  undefined8 uStack_250;
+  undefined *local_220;
+  undefined8 uStack_218;
+  undefined8 uStack_210;
+  undefined8 uStack_208;
+  undefined8 local_200;
+  undefined *puStack_1f8;
+  undefined8 uStack_1f0;
+  undefined *puStack_1e8;
+  undefined8 local_1e0;
+  undefined *puStack_1d8;
+  undefined8 local_1d0;
+  undefined8 uStack_1c8;
+  undefined8 local_1c0;
+  undefined8 uStack_1b8;
+  undefined *local_1b0;
+  undefined8 uStack_1a8;
+  undefined8 uStack_1a0;
+  undefined8 uStack_198;
+  undefined8 local_190;
+  undefined8 uStack_188;
+  undefined8 uStack_180;
+  undefined8 uStack_178;
+  undefined8 local_170;
+  undefined8 uStack_168;
+  undefined8 local_160;
+  undefined8 uStack_158;
+  undefined8 local_150;
+  undefined8 uStack_148;
+  undefined1 local_140;
+  undefined *local_130;
+  undefined *puStack_128;
+  undefined *local_120;
+  undefined *local_118;
+  undefined8 local_110;
+  undefined8 uStack_108;
+  undefined8 uStack_100;
+  undefined8 uStack_f8;
+  undefined8 local_f0;
+  undefined8 uStack_e8;
+  undefined8 uStack_e0;
+  undefined8 uStack_d8;
+  undefined8 local_d0;
+  undefined8 uStack_c8;
+  undefined1 local_c0;
+  undefined *local_b0;
+  undefined8 uStack_a8;
+  undefined8 uStack_a0;
+  undefined8 uStack_98;
+  undefined8 local_90;
+  undefined *puStack_88;
+  undefined8 uStack_80;
+  undefined *puStack_78;
+  undefined8 local_70;
+  
+  local_358[2] = (undefined1 *)param_1;
+  bVar5 = Swift::_stdlib_isOSVersionAtLeast(0x1a,0,0);
+  if ((bVar5 & 1) == 0) {
+    puVar10 = &DAT_10054d870;
+    FUN_100002f94(&DAT_10054d870,&DAT_10041e4e0);
+    (*(code *)PTR____chkstk_darwin_100521118)
+              (*(long *)(*(long *)(puVar10 + -8) + 0x40) + 0xfU & 0xfffffffffffffff0);
+    lVar20 = -extraout_x8_02;
+    puVar22 = (undefined8 *)((long)local_390 + lVar20);
+    puStack_1d8 = *(undefined **)((long)unaff_x20.unknown + 0x48);
+    local_1e0 = *(undefined8 *)((long)unaff_x20.unknown + 0x40);
+    uStack_1c8 = *(undefined8 *)((long)unaff_x20.unknown + 0x58);
+    local_1d0 = *(undefined8 *)((long)unaff_x20.unknown + 0x50);
+    uStack_1b8 = *(undefined8 *)((long)unaff_x20.unknown + 0x68);
+    local_1c0 = *(undefined8 *)((long)unaff_x20.unknown + 0x60);
+                    /* WARNING: Load size is inaccurate */
+    uStack_218 = *(undefined8 *)((long)unaff_x20.unknown + 8);
+    local_220 = *unaff_x20.unknown;
+    uStack_208 = *(undefined8 *)((long)unaff_x20.unknown + 0x18);
+    uStack_210 = *(undefined8 *)((long)unaff_x20.unknown + 0x10);
+    puStack_1f8 = *(undefined **)((long)unaff_x20.unknown + 0x28);
+    local_200 = *(undefined8 *)((long)unaff_x20.unknown + 0x20);
+    puStack_1e8 = *(undefined **)((long)unaff_x20.unknown + 0x38);
+    uStack_1f0 = *(undefined8 *)((long)unaff_x20.unknown + 0x30);
+    puVar11 = &DAT_10054d890;
+    FUN_100002f94(&DAT_10054d890,&DAT_10041e4f0);
+    iVar1 = *(int *)(puVar11 + 0x24);
+    FUN_1000087e4();
+    MVar12 = SwiftUI::Material::get_ultraThin(unaff_x20.unknown);
+    SVar13 = SwiftUI::Edge::Set::get_all(MVar12.unknown);
+    uStack_168 = puStack_1d8;
+    local_170 = local_1e0;
+    uStack_158 = uStack_1c8;
+    local_160 = local_1d0;
+    uStack_148 = uStack_1b8;
+    local_150 = local_1c0;
+    uStack_1a8 = uStack_218;
+    local_1b0 = local_220;
+    uStack_198 = uStack_208;
+    uStack_1a0 = uStack_210;
+    uStack_188 = puStack_1f8;
+    local_190 = local_200;
+    uStack_178 = puStack_1e8;
+    uStack_180 = uStack_1f0;
+    local_140 = 0;
+    puVar11 = &DAT_10054a658;
+    FUN_100002f94(&DAT_10054a658,&DAT_10041b640);
+    *(char *)((long)puVar22 + (long)*(int *)(puVar11 + 0x24) + (long)iVar1) = (char)SVar13.unknown;
+    uVar18 = uStack_178;
+    uVar4 = uStack_180;
+    uVar2 = local_190;
+    *(undefined8 *)((long)local_378 + lVar20 + 0x10) = uStack_188;
+    *(undefined8 *)((long)local_378 + lVar20 + 8) = uVar2;
+    *(undefined8 *)((long)local_378 + lVar20 + 0x20) = uVar18;
+    *(undefined8 *)((long)local_378 + lVar20 + 0x18) = uVar4;
+    uVar4 = uStack_198;
+    uVar2 = uStack_1a0;
+    puVar11 = local_1b0;
+    *(undefined8 *)((long)local_390 + lVar20 + 8) = uStack_1a8;
+    *puVar22 = puVar11;
+    *(undefined8 *)((long)local_378 + lVar20) = uVar4;
+    *(undefined8 *)((long)&local_380 + lVar20) = uVar2;
+    auStack_320[lVar20] = local_140;
+    uVar18 = uStack_148;
+    uVar4 = local_150;
+    uVar2 = local_160;
+    *(undefined8 *)((long)local_358 + lVar20 + 0x20) = uStack_158;
+    *(undefined8 *)((long)local_358 + lVar20 + 0x18) = uVar2;
+    *(undefined8 *)((long)local_358 + lVar20 + 0x30) = uVar18;
+    *(undefined8 *)((long)local_358 + lVar20 + 0x28) = uVar4;
+    uVar2 = local_170;
+    *(undefined8 *)((long)local_358 + lVar20 + 0x10) = uStack_168;
+    *(undefined8 *)((long)local_358 + lVar20 + 8) = uVar2;
+    uStack_e8 = puStack_1d8;
+    local_f0 = local_1e0;
+    uStack_d8 = uStack_1c8;
+    uStack_e0 = local_1d0;
+    uStack_c8 = uStack_1b8;
+    local_d0 = local_1c0;
+    puStack_128 = (undefined *)uStack_218;
+    local_130 = local_220;
+    local_118 = (undefined *)uStack_208;
+    local_120 = (undefined *)uStack_210;
+    uStack_108 = puStack_1f8;
+    local_110 = local_200;
+    uStack_f8 = puStack_1e8;
+    uStack_100 = uStack_1f0;
+    local_c0 = 0;
+    FUN_1000087e4(&local_1b0,&local_2a0,&DAT_10054d8a0,&DAT_10041e4f8);
+    FUN_10002a29c(&local_130,&DAT_10054d8a0,&DAT_10041e4f8);
+    CVar14.unknown = &DAT_10054d880;
+    FUN_100002f94(&DAT_10054d880,&DAT_10041e4e8);
+    *(undefined2 *)((long)puVar22 + (long)*(int *)(CVar14.unknown + 0x24)) = 0x100;
+    CVar14 = SwiftUI::Color::get_white(CVar14);
+    CVar15 = SwiftUI::Color::opacity(0.14,CVar14);
+    _swift_release(CVar14.unknown);
+    uVar18 = 0;
+    SVar16 = SwiftUI::StrokeStyle::init
+                       (&local_2e8,0x3ff0000000000000,0x4024000000000000,0,CVar15.unknown,0,
+                        PTR___swiftEmptyArrayStorage_100524190);
+    puStack_2b0 = (undefined *)SwiftUI::Alignment::get_center(SVar16.unknown);
+    local_2b8 = 0x100;
+    puStack_2c0 = CVar15.unknown;
+    local_2a8 = uVar18;
+    AVar17 = SwiftUI::Alignment::get_center((Alignment)puStack_2b0);
+    puVar11 = puStack_2b0;
+    uVar2 = CONCAT62(uStack_2b6,local_2b8);
+    puStack_88 = puStack_2c0;
+    local_90 = local_2c8;
+    puStack_78 = puStack_2b0;
+    local_70 = local_2a8;
+    uStack_a8 = uStack_2e0;
+    local_b0 = local_2e8;
+    uStack_98 = uStack_2d0;
+    uStack_a0 = local_2d8;
+    puStack_278 = puStack_2c0;
+    local_280 = local_2c8;
+    puStack_268 = puStack_2b0;
+    local_260 = local_2a8;
+    uStack_298 = uStack_2e0;
+    local_2a0 = local_2e8;
+    uStack_288 = uStack_2d0;
+    uStack_290 = local_2d8;
+    puStack_1f8 = puStack_2c0;
+    local_200 = local_2c8;
+    puStack_1e8 = puStack_2b0;
+    uStack_218 = uStack_2e0;
+    local_220 = local_2e8;
+    uStack_208 = uStack_2d0;
+    uStack_210 = local_2d8;
+    local_1e0 = local_2a8;
+    puVar19 = (undefined8 *)((long)puVar22 + (long)*(int *)(puVar10 + 0x24));
+    uStack_270 = uVar2;
+    uStack_1f0 = uVar2;
+    puStack_1d8 = AVar17.unknown;
+    local_1d0 = uVar18;
+    uStack_80 = uVar2;
+    puVar19[5] = puStack_2c0;
+    puVar19[4] = local_2c8;
+    puVar19[7] = puVar11;
+    puVar19[6] = uVar2;
+    uVar2 = local_1e0;
+    puVar19[9] = puStack_1d8;
+    puVar19[8] = uVar2;
+    puVar19[10] = uVar18;
+    uVar4 = uStack_208;
+    uVar2 = uStack_210;
+    puVar10 = local_220;
+    puVar19[1] = uStack_218;
+    *puVar19 = puVar10;
+    puVar19[3] = uVar4;
+    puVar19[2] = uVar2;
+    local_258 = AVar17.unknown;
+    uStack_250 = uVar18;
+    FUN_1000087e4(&local_b0,local_358 + 3,&DAT_10054a798,&DAT_10041f480);
+    FUN_1000087e4(&local_220,local_358 + 3,&DAT_10054a788,&DAT_100425370);
+    FUN_10002a29c(&local_2a0,&DAT_10054a788,&DAT_100425370);
+    FUN_10002a29c(&local_2e8,&DAT_10054a798,&DAT_10041f480);
+    puVar10 = &DAT_10055d1b8;
+    FUN_100002f94(&DAT_10055d1b8,&DAT_100432718);
+    (*(code *)PTR____chkstk_darwin_100521118)
+              (*(long *)(*(long *)(puVar10 + -8) + 0x40) + 0xfU & 0xfffffffffffffff0);
+    lVar20 = (long)puVar22 - extraout_x8_03;
+    FUN_1000087e4(puVar22,lVar20,&DAT_10054d870,&DAT_10041e4e0);
+    _swift_storeEnumTagMultiPayload(lVar20,puVar10,1);
+    FUN_100059628();
+    (extension_SwiftUI)::SwiftUI::_ConditionalContent::_init((Storage)(__int8)lVar20);
+    FUN_10002a29c(puVar22,&DAT_10054d870,&DAT_10041e4e0);
+  }
+  else {
+    puVar10 = &DAT_10055d1c0;
+    FUN_100002f94(&DAT_10055d1c0,&DAT_100432720);
+    local_378[3] = *(long *)(puVar10 + -8);
+    local_378[1] = *(undefined8 *)(local_378[3] + 0x40);
+    local_358[0] = puVar10;
+    local_358[1] = (undefined1 *)local_390;
+    (*(code *)PTR____chkstk_darwin_100521118)();
+    local_378[2] = extraout_x12 + 0xfU & 0xfffffffffffffff0;
+    lVar24 = (long)local_390 - local_378[2];
+    local_c0 = 0;
+    uStack_e8 = *(undefined8 *)((long)unaff_x20.unknown + 0x48);
+    local_f0 = *(undefined8 *)((long)unaff_x20.unknown + 0x40);
+    uStack_d8 = *(undefined8 *)((long)unaff_x20.unknown + 0x58);
+    uStack_e0 = *(undefined8 *)((long)unaff_x20.unknown + 0x50);
+    uStack_c8 = *(undefined8 *)((long)unaff_x20.unknown + 0x68);
+    local_d0 = *(undefined8 *)((long)unaff_x20.unknown + 0x60);
+                    /* WARNING: Load size is inaccurate */
+    puStack_128 = *(undefined **)((long)unaff_x20.unknown + 8);
+    local_130 = *unaff_x20.unknown;
+    local_118 = *(undefined **)((long)unaff_x20.unknown + 0x18);
+    local_120 = *(undefined **)((long)unaff_x20.unknown + 0x10);
+    uStack_108 = *(undefined8 *)((long)unaff_x20.unknown + 0x28);
+    local_110 = *(undefined8 *)((long)unaff_x20.unknown + 0x20);
+    uStack_f8 = *(undefined8 *)((long)unaff_x20.unknown + 0x38);
+    uStack_100 = *(undefined8 *)((long)unaff_x20.unknown + 0x30);
+    local_380 = (undefined *)SwiftUI::Glass::typeMetadataAccessor();
+    local_390[1] = *(long *)(local_380 + -8);
+    local_378[0] = lVar24;
+    (*(code *)PTR____chkstk_darwin_100521118)(*(undefined8 *)(local_390[1] + 0x40));
+    lVar21 = lVar24 - (extraout_x8 + 0xfU & 0xfffffffffffffff0);
+    FUN_1000087e4();
+    SwiftUI::Glass::get_regular(unaff_x20);
+    DVar6 = SwiftUI::DefaultGlassEffectShape::typeMetadataAccessor();
+    lVar23 = *(long *)(DVar6.unknown + -8);
+    local_390[0] = lVar21;
+    (*(code *)PTR____chkstk_darwin_100521118)(*(undefined8 *)(lVar23 + 0x40));
+    lVar20 = lVar21 - (extraout_x8_00 + 0xfU & 0xfffffffffffffff0);
+    SwiftUI::DefaultGlassEffectShape::init();
+    puVar10 = &DAT_10054d8a0;
+    FUN_100002f94(&DAT_10054d8a0,&DAT_10041e4f8);
+    puVar11 = puVar10;
+    FUN_1000597f0();
+    puVar7 = puVar11;
+    FUN_100009808();
+    (extension_SwiftUI)::SwiftUI::View::_glassEffect
+              (lVar24,lVar21,lVar20,puVar10,DVar6.unknown,puVar11,puVar7);
+    (**(code **)(lVar23 + 8))(lVar20,DVar6.unknown);
+    (**(code **)(local_390[1] + 8))(lVar21,local_380);
+    FUN_10002a29c(&local_130,&DAT_10054d8a0,&DAT_10041e4f8);
+    lVar20 = local_378[0];
+    (*(code *)PTR____chkstk_darwin_100521118)();
+    puVar3 = local_358[0];
+    lVar21 = local_378[3];
+    (**(code **)(local_378[3] + 0x10))(lVar20 - local_378[2],lVar24,local_358[0]);
+    ppuVar8 = &local_130;
+    local_130 = puVar10;
+    puStack_128 = DVar6.unknown;
+    local_120 = puVar11;
+    local_118 = puVar7;
+    _swift_getOpaqueTypeConformance2
+              (ppuVar8,
+               PTR___opaque_type_descriptor_for_<<opaque_return_type_of_(extension_in_SwiftUI):SwiftUI_View_glassEffect<A_where_A1:_SwiftUI_Shape>(_:_SwiftUI_Glass,in:_A1)__>_some>>_100522ed0
+               ,1);
+    AVar9 = SwiftUI::AnyView::_init(ppuVar8,puVar3,ppuVar8);
+    puVar10 = &DAT_10055d1b8;
+    FUN_100002f94(&DAT_10055d1b8,&DAT_100432718);
+    (*(code *)PTR____chkstk_darwin_100521118)
+              (*(long *)(*(long *)(puVar10 + -8) + 0x40) + 0xfU & 0xfffffffffffffff0);
+    puVar19 = (undefined8 *)(lVar20 - extraout_x8_01);
+    *puVar19 = AVar9.unknown;
+    _swift_storeEnumTagMultiPayload(puVar19);
+    FUN_100002f94(&DAT_10054d870,&DAT_10041e4e0);
+    FUN_100059628();
+    (extension_SwiftUI)::SwiftUI::_ConditionalContent::_init((Storage)(__int8)puVar19);
+    (**(code **)(lVar21 + 8))(lVar24,puVar3);
+  }
+  return;
+}
+

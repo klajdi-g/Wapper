@@ -1,0 +1,38 @@
+// rea decompile_all
+// name: FUN_1003600f0
+// address: 0x1003600f0
+// body: available
+// range: 0x1003600f0-0x10036018b inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_1003600f0(long param_1,long param_2,undefined8 param_3)
+
+{
+  undefined8 *puVar1;
+  long lVar2;
+  State SVar3;
+  long local_58;
+  undefined8 local_50;
+  undefined8 uStack_48;
+  
+  lVar2 = 0;
+  FUN_100386f18();
+  puVar1 = (undefined8 *)(param_2 + *(int *)(lVar2 + 0x44));
+  uStack_48 = puVar1[1];
+  local_50 = *puVar1;
+  SVar3.unknown = &DAT_10054ba40;
+  FUN_100002f94(&DAT_10054ba40,&DAT_100423be0);
+  SwiftUI::State::get_wrappedValue(SVar3);
+  if (param_1 == local_58) {
+    local_50 = param_3;
+    SwiftUI::State::set_wrappedValue
+              ((State *)(param_2 + *(int *)(lVar2 + 0x40)),&local_50,SVar3.unknown);
+  }
+  return;
+}
+

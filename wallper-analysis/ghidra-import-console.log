@@ -1,0 +1,202 @@
+openjdk version "21.0.11" 2026-04-21
+OpenJDK Runtime Environment Homebrew (build 21.0.11)
+OpenJDK 64-Bit Server VM Homebrew (build 21.0.11, mixed mode)
+INFO  Using log config file: jar:file:/Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: /Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/ghidra-analysis.log (LoggingInitialization)  
+INFO  Loading user preferences: /Users/klajdi/Library/ghidra/ghidra_12.1.4_PUBLIC/preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (552 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: NativePRNGNonBlocking (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Starting cache cleanup: /var/tmp/klajdi-ghidra/fscache2 (FileCacheMaintenanceDaemon)  
+INFO  Finished cache cleanup, estimated storage used: 0 (FileCacheMaintenanceDaemon)  
+INFO  Headless startup complete (1582 ms) (AnalyzeHeadless)  
+INFO  Class searcher loaded 59 extension points (20 false positives) (ClassSearcher)  
+INFO  HEADLESS Script Paths:
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Processors/DATA/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Processors/Atmel/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/VersionTracking/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/BSim/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/Decompiler/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/FunctionID/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Processors/PIC/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/PDB/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/DecompilerDependent/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/PyGhidra/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Debug/Debugger/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/Base/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/BytePatterns/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/FileFormats/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/WildcardAssembler/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Processors/JVM/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Processors/8051/ghidra_scripts
+    /Users/klajdi/.local/share/wallper-recovery/ghidra_12.1.4_PUBLIC/Ghidra/Features/SwiftDemangler/ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Creating project: /Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/ghidra-project/Wallper (HeadlessAnalyzer)  
+INFO  Creating project: /Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/ghidra-project/Wallper (DefaultProject)  
+INFO  REPORT: Processing input files:  (HeadlessAnalyzer)  
+INFO       project: /Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/ghidra-project/Wallper (HeadlessAnalyzer)  
+INFO  IMPORTING: file:///Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/original/Wallper-arm64 (HeadlessAnalyzer)  
+INFO  Using Loader: Mac OS X Mach-O (ProgramLoader)  
+INFO  Using Language/Compiler: AARCH64:LE:64:AppleSilicon:swift (ProgramLoader)  
+INFO  Using Library Search Path: [., /System/Library/dyld/dyld_shared_cache_arm64e, /System/Library/dyld/dyld_shared_cache_x86_64, /System/Library/dyld/dyld_shared_cache_x86_64h, /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_arm64e, /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64, /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h, /Users/klajdi/Library/Java/Extensions, /Library/Java/Extensions, /Network/Library/Java/Extensions, /System/Library/Java/Extensions, /usr/lib/java] (ProgramLoader)  
+INFO  Additional info:
+Loading file:///Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/original/Wallper-arm64?MD5=d09fc7de166b9228c803f6afc349632f...
+Discovered 15250 DYLD_CHAINED_PTR_64_OFFSET chained pointers.
+Fixed up 15250 chained pointers.
+Wallper-arm64: installed 8 objc SpecExtensions
+------------------------------------------------
+
+Linking the External Programs of 'Wallper-arm64' to imported libraries...
+  [/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation] -> not found in project
+  [/usr/lib/libobjc.A.dylib] -> not found in project
+  [/usr/lib/libSystem.B.dylib] -> not found in project
+  [/System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation] -> not found in project
+  [/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit] -> not found in project
+  [/System/Library/Frameworks/Combine.framework/Versions/A/Combine] -> not found in project
+  [/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation] -> not found in project
+  [/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics] -> not found in project
+  [/System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage] -> not found in project
+  [/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia] -> not found in project
+  [/System/Library/Frameworks/CoreTransferable.framework/Versions/A/CoreTransferable] -> not found in project
+  [/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo] -> not found in project
+  [/System/Library/Frameworks/CryptoKit.framework/Versions/A/CryptoKit] -> not found in project
+  [/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit] -> not found in project
+  [/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO] -> not found in project
+  [/System/Library/Frameworks/Network.framework/Versions/A/Network] -> not found in project
+  [/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore] -> not found in project
+  [/System/Library/Frameworks/Security.framework/Versions/A/Security] -> not found in project
+  [/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement] -> not found in project
+  [/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI] -> not found in project
+  [/System/Library/Frameworks/Symbols.framework/Versions/A/Symbols] -> not found in project
+  [/System/Library/Frameworks/UserNotifications.framework/Versions/A/UserNotifications] -> not found in project
+  [/System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox] -> not found in project
+  [/usr/lib/swift/libswiftAVFoundation.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCore.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCoreAudio.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCoreFoundation.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCoreImage.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCoreMIDI.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCoreMedia.dylib] -> not found in project
+  [/usr/lib/swift/libswiftDarwin.dylib] -> not found in project
+  [/usr/lib/swift/libswiftDispatch.dylib] -> not found in project
+  [/usr/lib/swift/libswiftIOKit.dylib] -> not found in project
+  [/usr/lib/swift/libswiftMetal.dylib] -> not found in project
+  [/usr/lib/swift/libswiftOSLog.dylib] -> not found in project
+  [/usr/lib/swift/libswiftObjectiveC.dylib] -> not found in project
+  [/usr/lib/swift/libswiftQuartzCore.dylib] -> not found in project
+  [/usr/lib/swift/libswiftSpatial.dylib] -> not found in project
+  [/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib] -> not found in project
+  [/usr/lib/swift/libswiftVideoToolbox.dylib] -> not found in project
+  [/usr/lib/swift/libswiftXPC.dylib] -> not found in project
+  [/usr/lib/swift/libswift_Concurrency.dylib] -> not found in project
+  [/usr/lib/swift/libswiftos.dylib] -> not found in project
+  [/usr/lib/swift/libswiftsimd.dylib] -> not found in project
+  [/usr/lib/swift/libswiftCoreGraphics.dylib] -> not found in project
+------------------------------------------------
+
+ (ProgramLoader)  
+INFO  IMPORTING: Loaded 0 additional files (HeadlessAnalyzer)  
+INFO  ANALYZING all memory and code: file:///Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/original/Wallper-arm64 (HeadlessAnalyzer)  
+INFO  hit non-returning function, restarting decompiler switch analyzer later (DecompilerSwitchAnalyzer)  
+WARN  Decompiling 100319a9c: Unable to read bytes at ram:d1335f98 (DecompileCallback)  
+WARN  Decompiling 100319a9c: Unable to read bytes at ram:d1336350 (DecompileCallback)  
+WARN  Decompiling 10031a578: Unable to read bytes at ram:f84bb630 (DecompileCallback)  
+WARN  Decompiling 1001d2d80: Unable to read bytes at ram:d11ef23c (DecompileCallback)  
+WARN  Decompiling 1003dfda4: Unable to read bytes at ram:d13fc25c (DecompileCallback)  
+WARN  Decompiling 10002cbb8: Unable to read bytes at ram:d10492fc (DecompileCallback)  
+WARN  Decompiling 1001d11f4: Unable to read bytes at ram:d120d840 (DecompileCallback)  
+WARN  Decompiling 1003de1e0: Unable to read bytes at ram:f857f2dc (DecompileCallback)  
+WARN  Decompiling 1003de1e0: Unable to read bytes at ram:f857f694 (DecompileCallback)  
+WARN  Decompiling 1001c9c94: Unable to read bytes at ram:d11f2240 (DecompileCallback)  
+WARN  Decompiling 1001c8a8c: Unable to read bytes at ram:a9d7f430 (DecompileCallback)  
+WARN  Decompiling 10030e474: Unable to read bytes at ram:a9ee4b38 (DecompileCallback)  
+WARN  Decompiling 1003de1e0: Unable to read bytes at ram:f857f2dc (DecompileCallback)  
+WARN  Decompiling 1003de1e0: Unable to read bytes at ram:f857f694 (DecompileCallback)  
+WARN  Decompiling 10031a578: Unable to read bytes at ram:f84bb630 (DecompileCallback)  
+WARN  Decompiling 1003dfda4: Unable to read bytes at ram:d13fc25c (DecompileCallback)  
+WARN  Decompiling 100319a9c: Unable to read bytes at ram:d1335f98 (DecompileCallback)  
+WARN  Decompiling 100319a9c: Unable to read bytes at ram:d1336350 (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f8582fc0 (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f858343c (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f85830f8 (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f8583574 (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857dea4 (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857e310 (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857dfdc (DecompileCallback)  
+WARN  Decompiling 1003df654: Unable to read bytes at ram:f858079c (DecompileCallback)  
+WARN  Decompiling 1003df654: Unable to read bytes at ram:f858079c (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857dea4 (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857e310 (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857dfdc (DecompileCallback)  
+WARN  Decompiling 10002cbb8: Unable to read bytes at ram:d10492fc (DecompileCallback)  
+WARN  Decompiling 1001c8a8c: Unable to read bytes at ram:a9d7f430 (DecompileCallback)  
+WARN  Decompiling 1001c9c94: Unable to read bytes at ram:d11f2240 (DecompileCallback)  
+WARN  Decompiling 1001d11f4: Unable to read bytes at ram:d120d840 (DecompileCallback)  
+WARN  Decompiling 1001d2d80: Unable to read bytes at ram:d11ef23c (DecompileCallback)  
+WARN  Decompiling 10030e474: Unable to read bytes at ram:a9ee4b38 (DecompileCallback)  
+WARN  Decompiling 10031a578: Unable to read bytes at ram:f84bb630 (DecompileCallback)  
+WARN  Decompiling 100319a9c: Unable to read bytes at ram:d1335f98 (DecompileCallback)  
+WARN  Decompiling 100319a9c: Unable to read bytes at ram:d1336350 (DecompileCallback)  
+WARN  Decompiling 1003de1e0: Unable to read bytes at ram:f857f2dc (DecompileCallback)  
+WARN  Decompiling 1003de1e0: Unable to read bytes at ram:f857f694 (DecompileCallback)  
+WARN  Decompiling 1003dfda4: Unable to read bytes at ram:d13fc25c (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f8582fc0 (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f858343c (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f85830f8 (DecompileCallback)  
+WARN  Decompiling 1003e1e04: Unable to read bytes at ram:f8583574 (DecompileCallback)  
+INFO  Packed database cache: /var/tmp/klajdi-ghidra/packed-db-cache (PackedDatabaseCache)  
+INFO  Applied data type archive: mac_osx (ApplyDataArchiveAnalyzer)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857dea4 (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857e310 (DecompileCallback)  
+WARN  Decompiling 1003df654: Unable to read bytes at ram:f858079c (DecompileCallback)  
+WARN  Decompiling 1003dcb94: Unable to read bytes at ram:f857dfdc (DecompileCallback)  
+INFO  -----------------------------------------------------
+    AARCH64 ELF PLT Thunks                     0.000 secs
+    ASCII Strings                              0.406 secs
+    Apply Data Archives                        0.254 secs
+    Basic Constant Reference Analyzer         12.914 secs
+    Call Convention ID                         1.288 secs
+    Call-Fixup Installer                       0.315 secs
+    Create Address Tables                      0.622 secs
+    Create Address Tables - One Time           0.318 secs
+    Create Function                            0.906 secs
+    Data Reference                             3.192 secs
+    Decompiler Switch Analysis                31.544 secs
+    Decompiler Switch Analysis - One Time      4.297 secs
+    Demangler GNU                              1.964 secs
+    Demangler Swift                           58.028 secs
+    Disassemble                                6.017 secs
+    Disassemble Entry Points                   0.088 secs
+    Embedded Media                             0.039 secs
+    External Entry References                  0.000 secs
+    Function ID                                0.041 secs
+    Function Start Search                      0.250 secs
+    Function Start Search After Code           0.190 secs
+    Function Start Search After Data           0.193 secs
+    Function Start Search delayed - One Time   0.436 secs
+    Mach-O Function Starts                     2.057 secs
+    Non-Returning Functions - Discovered       0.808 secs
+    Non-Returning Functions - Known            0.010 secs
+    Objective-C Message Analyzer              55.885 secs
+    Objective-C Type Metadata Analyzer         1.502 secs
+    Reference                                  1.267 secs
+    Shared Return Calls                        1.255 secs
+    Stack                                     13.712 secs
+    Subroutine References                      2.864 secs
+    Subroutine References - One Time           0.031 secs
+    Swift Type Metadata Analyzer               0.515 secs
+-----------------------------------------------------
+     Total Time   203 secs
+-----------------------------------------------------
+ (AutoAnalysisManager)  
+INFO  REPORT: Analysis succeeded for file: file:///Users/klajdi/Developer/GitHub/DECOMP/wallper-analysis/original/Wallper-arm64 (HeadlessAnalyzer)  
+INFO  /Wallper-arm64: file created (klajdi) (LocalFileSystem)  
+INFO  REPORT: Save succeeded for: /Wallper-arm64 (Wallper:/Wallper-arm64) (HeadlessAnalyzer)  
+INFO  REPORT: Import succeeded (HeadlessAnalyzer)  

@@ -1,0 +1,14 @@
+{
+  "objc_visible_classes": 77,
+  "objc_categories": 1,
+  "objc_visible_methods": 107,
+  "source_path_clues": 17,
+  "named_pseudocode_files": 107,
+  "export_status_counts": {
+    "written": 16480,
+    "external": 1564
+  },
+  "swift_type_declarations": 384,
+  "swift_fields_and_enum_cases": 1886,
+  "decoded_field_types": 1530
+}

@@ -1,0 +1,59 @@
+// rea decompile_all
+// name: FUN_100385834
+// address: 0x100385834
+// body: available
+// range: 0x100385834-0x1003858f3 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_100385834(void)
+
+{
+  undefined *puVar1;
+  undefined *puVar2;
+  DefaultGlassEffectShape DVar3;
+  DefaultGlassEffectShape DVar4;
+  undefined *puVar5;
+  undefined **ppuVar6;
+  undefined8 *local_60;
+  undefined8 *puStack_58;
+  undefined *local_50;
+  undefined *puStack_48;
+  undefined *local_40;
+  undefined *puStack_38;
+  
+  if (DAT_10055dc10 != (undefined *)0x0) {
+    return;
+  }
+  puVar1 = &DAT_10055dbf8;
+  FUN_100002fe4(&DAT_10055dbf8,&DAT_100433360);
+  puVar2 = &DAT_10055c3b0;
+  FUN_100002fe4(&DAT_10055c3b0,&DAT_100433320);
+  DVar3 = SwiftUI::DefaultGlassEffectShape::typeMetadataAccessor();
+  DVar4 = DVar3;
+  FUN_10031fef8();
+  puVar5 = DVar4.unknown;
+  FUN_100009808();
+  ppuVar6 = &local_50;
+  local_50 = puVar2;
+  puStack_48 = DVar3.unknown;
+  local_40 = DVar4.unknown;
+  puStack_38 = puVar5;
+  _swift_getOpaqueTypeConformance2
+            (ppuVar6,
+             PTR___opaque_type_descriptor_for_<<opaque_return_type_of_(extension_in_SwiftUI):SwiftUI_View_glassEffect<A_where_A1:_SwiftUI_Shape>(_:_SwiftUI_Glass,in:_A1)__>_some>>_100522ed0
+             ,1);
+  puVar2 = PTR__SwiftUI__SwiftUI___ConditionalContent<undefined,undefined>_>SwiftUI__View_100522830;
+  local_60 = ppuVar6;
+  puStack_58 = ppuVar6;
+  _swift_getWitnessTable
+            (PTR__SwiftUI__SwiftUI___ConditionalContent<undefined,undefined>_>SwiftUI__View_100522830
+             ,puVar1,&local_60);
+  DAT_10055dc10 = puVar2;
+  return;
+}
+

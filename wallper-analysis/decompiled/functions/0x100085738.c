@@ -1,0 +1,213 @@
+// rea decompile_all
+// name: FUN_100085738
+// address: 0x100085738
+// body: available
+// range: 0x100085738-0x100085967 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_100085738(undefined8 *param_1,undefined8 param_2,undefined8 *param_3,long param_4)
+
+{
+  Alignment AVar1;
+  double dVar2;
+  double dVar3;
+  undefined1 auStack_380 [144];
+  undefined8 local_2f0;
+  undefined8 uStack_2e8;
+  double dStack_2e0;
+  undefined8 uStack_2d8;
+  undefined8 local_2d0;
+  undefined8 uStack_2c8;
+  undefined8 uStack_2c0;
+  undefined8 uStack_2b8;
+  undefined8 local_2b0;
+  undefined8 uStack_2a8;
+  undefined8 uStack_2a0;
+  undefined8 uStack_298;
+  undefined8 local_290;
+  undefined8 uStack_288;
+  undefined8 local_280;
+  undefined8 local_270;
+  undefined8 uStack_268;
+  double dStack_260;
+  undefined8 uStack_258;
+  undefined8 local_250;
+  undefined8 uStack_248;
+  undefined8 uStack_240;
+  undefined8 uStack_238;
+  undefined8 local_230;
+  undefined8 uStack_228;
+  undefined8 uStack_220;
+  undefined8 uStack_218;
+  undefined8 local_210;
+  undefined8 uStack_208;
+  undefined8 local_200;
+  undefined8 local_1f0;
+  undefined8 uStack_1e8;
+  double local_1e0;
+  undefined8 uStack_1d8;
+  undefined8 uStack_1d0;
+  undefined8 uStack_1c8;
+  undefined8 local_1c0;
+  undefined8 uStack_1b8;
+  undefined8 uStack_1b0;
+  undefined8 uStack_1a8;
+  undefined8 local_1a0;
+  undefined8 uStack_198;
+  undefined8 uStack_190;
+  undefined8 uStack_188;
+  undefined8 local_180;
+  undefined8 local_170;
+  undefined8 uStack_168;
+  double dStack_160;
+  undefined8 uStack_158;
+  undefined8 local_150;
+  undefined8 uStack_148;
+  undefined8 uStack_140;
+  undefined8 uStack_138;
+  undefined8 local_130;
+  undefined8 uStack_128;
+  undefined8 uStack_120;
+  undefined8 uStack_118;
+  undefined8 local_110;
+  undefined8 uStack_108;
+  undefined8 local_100;
+  double local_f8;
+  undefined8 local_f0;
+  undefined8 uStack_e8;
+  undefined8 local_e0;
+  undefined8 uStack_d8;
+  double dStack_d0;
+  undefined8 uStack_c8;
+  undefined8 local_c0;
+  undefined8 uStack_b8;
+  undefined8 uStack_b0;
+  undefined8 uStack_a8;
+  undefined8 local_a0;
+  undefined8 uStack_98;
+  undefined8 local_90;
+  undefined8 uStack_88;
+  undefined8 uStack_80;
+  undefined8 uStack_78;
+  undefined8 local_70;
+  double local_68;
+  undefined8 local_60;
+  undefined8 uStack_58;
+  
+  if (DAT_10054f540 != -1) {
+    _swift_once(&DAT_10054f540,FUN_10007c124);
+  }
+  dVar3 = DAT_10054f548;
+  AVar1.unknown = (undefined *)0x0;
+  FUN_100095ec0();
+  dVar2 = *(double *)(param_4 + *(int *)(AVar1.unknown + 0x14));
+  SwiftUI::Alignment::get_center(AVar1);
+  SwiftUI::_FrameLayout::_init((undefined *)(dVar3 * dVar2));
+  uStack_2c8 = param_3[5];
+  local_2d0 = param_3[4];
+  uStack_2b8 = param_3[7];
+  uStack_2c0 = param_3[6];
+  local_2b0 = param_3[8];
+  uStack_2e8 = param_3[1];
+  local_2f0 = *param_3;
+  uStack_2d8 = param_3[3];
+  dVar3 = (double)param_3[2];
+  dStack_2e0 = dVar3;
+  FUN_100093a08(param_3,&local_e0);
+  FUN_10007c624(param_2);
+  uStack_228 = uStack_2a8;
+  local_230 = local_2b0;
+  uStack_218 = uStack_298;
+  uStack_220 = uStack_2a0;
+  uStack_208 = uStack_288;
+  local_210 = local_290;
+  local_200 = local_280;
+  uStack_268 = uStack_2e8;
+  local_270 = local_2f0;
+  uStack_258 = uStack_2d8;
+  dStack_260 = dStack_2e0;
+  uStack_248 = uStack_2c8;
+  local_250 = local_2d0;
+  uStack_238 = uStack_2b8;
+  uStack_240 = uStack_2c0;
+  local_180 = local_280;
+  uStack_198 = uStack_298;
+  local_1a0 = uStack_2a0;
+  uStack_188 = uStack_288;
+  uStack_190 = local_290;
+  uStack_1b8 = uStack_2b8;
+  local_1c0 = uStack_2c0;
+  uStack_1a8 = uStack_2a8;
+  uStack_1b0 = local_2b0;
+  uStack_1d8 = uStack_2d8;
+  local_1e0 = dStack_2e0;
+  uStack_1c8 = uStack_2c8;
+  uStack_1d0 = local_2d0;
+  uStack_1e8 = uStack_2e8;
+  local_1f0 = local_2f0;
+  FUN_1000087e4(&local_270,&local_e0,&DAT_10054ef08,&DAT_100420380);
+  FUN_10002a29c(&local_1f0,&DAT_10054ef08,&DAT_100420380);
+  uStack_128 = uStack_2a8;
+  local_130 = local_2b0;
+  uStack_118 = uStack_298;
+  uStack_120 = uStack_2a0;
+  uStack_108 = uStack_288;
+  local_110 = local_290;
+  uStack_168 = uStack_2e8;
+  local_170 = local_2f0;
+  uStack_158 = uStack_2d8;
+  dStack_160 = dStack_2e0;
+  uStack_148 = uStack_2c8;
+  local_150 = local_2d0;
+  uStack_138 = uStack_2b8;
+  uStack_140 = uStack_2c0;
+  uStack_b8 = uStack_2c8;
+  local_c0 = local_2d0;
+  uStack_a8 = uStack_2b8;
+  uStack_b0 = uStack_2c0;
+  uStack_d8 = uStack_2e8;
+  local_e0 = local_2f0;
+  uStack_c8 = uStack_2d8;
+  dStack_d0 = dStack_2e0;
+  local_100 = local_280;
+  uStack_88 = uStack_298;
+  local_90 = uStack_2a0;
+  uStack_78 = uStack_288;
+  uStack_80 = local_290;
+  uStack_e8 = 0x3fd4b88c73f4915a;
+  local_f0 = 0x3fe86bca1af286bd;
+  local_70 = local_280;
+  uStack_98 = uStack_2a8;
+  local_a0 = local_2b0;
+  uStack_58 = 0x3fd4b88c73f4915a;
+  local_60 = 0x3fe86bca1af286bd;
+  local_f8 = dVar3 * 0.017453292519943295;
+  local_68 = dVar3 * 0.017453292519943295;
+  FUN_1000087e4(&local_170,auStack_380,&DAT_10054f630,&DAT_100420b08);
+  FUN_10002a29c(&local_e0,&DAT_10054f630,&DAT_100420b08);
+  param_1[0xd] = uStack_108;
+  param_1[0xc] = local_110;
+  param_1[0xf] = local_f8;
+  param_1[0xe] = local_100;
+  param_1[0x11] = uStack_e8;
+  param_1[0x10] = local_f0;
+  param_1[5] = uStack_148;
+  param_1[4] = local_150;
+  param_1[7] = uStack_138;
+  param_1[6] = uStack_140;
+  param_1[9] = uStack_128;
+  param_1[8] = local_130;
+  param_1[0xb] = uStack_118;
+  param_1[10] = uStack_120;
+  param_1[1] = uStack_168;
+  *param_1 = local_170;
+  param_1[3] = uStack_158;
+  param_1[2] = dStack_160;
+  return;
+}
+

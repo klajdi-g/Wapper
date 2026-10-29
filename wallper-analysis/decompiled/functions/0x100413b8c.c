@@ -1,0 +1,29 @@
+// rea decompile_all
+// name: /usr/lib/swift/libswiftCore.dylib::Swift::_assertionFailure
+// address: 0x100413b8c
+// body: available
+// range: 0x100413b8c-0x100413b97 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* Swift._assertionFailure(_: Swift.StaticString, _: Swift.String, file: Swift.StaticString, line:
+   Swift.UInt, flags: Swift.UInt32) -> Swift.Never */
+
+Never Swift::_assertionFailure
+                (StaticString param_1,String param_2,StaticString file,__uint64 line,__uint32 flags)
+
+{
+  Never NVar1;
+  
+  NVar1.value = (__int8)param_1.unknown;
+                    /* WARNING: Could not recover jumptable at 0x000100413b94. Too many branches */
+                    /* WARNING: Treating indirect jump as call */
+  (*(code *)PTR__assertionFailure_100523e38)
+            (NVar1.value,param_2.str,param_2.bridgeObject,file.unknown,line,flags);
+  return (Never)NVar1.value;
+}
+

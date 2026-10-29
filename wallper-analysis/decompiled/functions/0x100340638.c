@@ -1,0 +1,67 @@
+// rea decompile_all
+// name: FUN_100340638
+// address: 0x100340638
+// body: available
+// range: 0x100340638-0x100340753 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: fe7f7f034fae92e4f37efb416670af8a170a4ac200be071385829eebf9d0f1f7
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; Ghidra Listing reports a terminal call at 0x100340708 to 0x10041478c _swift_bridgeObjectRelease (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.; Ghidra Listing reports a terminal call at 0x100340750 to 0x1004147a4 _swift_bridgeObjectRetain (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void FUN_100340638(undefined8 param_1,long param_2,ulong param_3,uint param_4)
+
+{
+  code *pcVar1;
+  long lVar2;
+  ulong uVar3;
+  long lVar4;
+  long lVar5;
+  undefined8 uVar6;
+  ulong uVar7;
+  long *unaff_x20;
+  long lVar8;
+  
+  lVar8 = *unaff_x20;
+  lVar2 = param_2;
+  uVar3 = param_3;
+  FUN_10000464c();
+  lVar5 = *(long *)(lVar8 + 0x10);
+  uVar7 = (ulong)~(uint)uVar3 & 1;
+  lVar4 = lVar5 + uVar7;
+  if (SCARRY8(lVar5,uVar7)) {
+                    /* WARNING: Does not return */
+    pcVar1 = (code *)SoftwareBreakpoint(1,0x100340710);
+    (*pcVar1)();
+  }
+  if (*(long *)(lVar8 + 0x18) < lVar4) {
+    FUN_1001ce184(lVar4,param_4 & 1);
+    uVar7 = param_3;
+    FUN_10000464c();
+    lVar2 = param_2;
+    if (((uint)uVar3 & 1) != ((uint)uVar7 & 1)) {
+      Swift::_KEY_TYPE_OF_DICTIONARY_VIOLATES_HASHABLE_REQUIREMENTS();
+                    /* WARNING: Does not return */
+      pcVar1 = (code *)SoftwareBreakpoint(1,0x1003406d8);
+      (*pcVar1)();
+    }
+  }
+  else if ((param_4 & 1) == 0) {
+    FUN_1001cb3a0();
+    lVar4 = *unaff_x20;
+    goto joined_r0x000100340724;
+  }
+  lVar4 = *unaff_x20;
+joined_r0x000100340724:
+  if ((uVar3 & 1) != 0) {
+    uVar6 = *(undefined8 *)(*(long *)(lVar4 + 0x38) + lVar2 * 8);
+    *(undefined8 *)(*(long *)(lVar4 + 0x38) + lVar2 * 8) = param_1;
+    _swift_bridgeObjectRelease(uVar6);
+    return;
+  }
+  thunk_FUN_1002a7954();
+  _swift_bridgeObjectRetain(param_3);
+  return;
+}
+

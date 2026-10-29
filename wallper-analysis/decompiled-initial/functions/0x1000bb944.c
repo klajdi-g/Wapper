@@ -1,0 +1,256 @@
+// rea decompile_all
+// name: FUN_1000bb944
+// address: 0x1000bb944
+// body: available
+// range: 0x1000bb944-0x1000bc243 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.1.4 (ghidra)
+// analysis_profile: 47c783be55ef7cef0f3f91203e0f97c39f602ee9e904ff29f394be658a4f1a11
+// limitations: This session opens a caller-selected existing Ghidra project through a private copy, without import, auto-analysis or repair scripts. Original analysis completeness and settings are unknown.; The original project is never opened by Ghidra or modified. The private copy is read-only to bridge operations and deleted on close; original executable bytes are never written.; The analysis profile records the selected project content fingerprint and program name. The imported program SHA-256 must match the admitted target; the project may contain caller annotations or earlier edits, which are not fresh REA discoveries.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; macOS sessions require a matching executable Ghidra native decompiler; REA checks for it but does not build native components or change Gatekeeper quarantine state.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+/* WARNING: Heritage AFTER dead removal. Example location: x0 : 0x0001000bb9ec */
+/* WARNING: Restarted to delay deadcode elimination for space: register */
+
+void FUN_1000bb944(undefined8 *param_1,undefined8 param_2,undefined8 param_3)
+
+{
+  undefined *puVar1;
+  int iVar2;
+  undefined8 uVar3;
+  Locale LVar4;
+  LocalizationValue LVar5;
+  undefined *puVar6;
+  long lVar7;
+  long extraout_x8;
+  long extraout_x8_00;
+  ulong uVar8;
+  ulong uVar9;
+  long lVar10;
+  LocalizationValue localized;
+  long lVar11;
+  String SVar12;
+  String SVar13;
+  String stringLiteral;
+  String stringLiteral_00;
+  String stringLiteral_01;
+  String stringLiteral_02;
+  String stringLiteral_03;
+  String stringLiteral_04;
+  String stringLiteral_05;
+  String stringLiteral_06;
+  String stringLiteral_07;
+  String stringLiteral_08;
+  String stringLiteral_09;
+  String stringLiteral_10;
+  String SVar14;
+  String SVar15;
+  String SVar16;
+  undefined1 auStack_110 [8];
+  char *local_108;
+  undefined *local_100;
+  undefined *local_f8;
+  undefined *local_f0;
+  undefined *local_e8;
+  undefined8 local_e0;
+  uint local_d4;
+  undefined8 local_d0;
+  undefined8 local_c8;
+  undefined8 uStack_c0;
+  undefined8 *local_b8;
+  undefined8 local_b0;
+  undefined8 local_a8;
+  long local_a0;
+  undefined *local_98;
+  ulong local_90;
+  byte local_88;
+  undefined7 uStack_87;
+  undefined8 local_80;
+  
+  local_b8 = param_1;
+  local_b0 = param_2;
+  local_a8 = param_3;
+  LVar4 = Foundation::Locale::typeMetadataAccessor();
+  (*(code *)PTR____chkstk_darwin_100521118)(*(undefined8 *)(*(long *)(LVar4.unknown + -8) + 0x40));
+  LVar5 = LocalizationValue::_typeMetadataAccessor();
+  (*(code *)PTR____chkstk_darwin_100521118)(*(undefined8 *)(*(long *)(LVar5.unknown + -8) + 0x40));
+  localized.unknown =
+       auStack_110 +
+       (-(extraout_x8_00 + 0xfU & 0xfffffffffffffff0) - (extraout_x8 + 0xfU & 0xfffffffffffffff0));
+  local_90 = 0;
+  SwiftUI::State::init(&local_88,LVar5.unknown,PTR___type_metadata_for_Swift_Int_100523bd8);
+  uStack_c0 = CONCAT71(uStack_87,local_88);
+  local_c8 = local_80;
+  local_90 = 0x3ff0000000000000;
+  SwiftUI::State::init
+            (&local_88,LVar5.unknown,PTR___type_metadata_for_CoreGraphics_CGFloat_100524430);
+  uVar3 = CONCAT71(uStack_87,local_88);
+  local_d0 = local_80;
+  local_90 = local_90 & 0xffffffffffffff00;
+  SwiftUI::State::init(&local_88,LVar5.unknown,PTR___type_metadata_for_Swift_Bool_100523b70);
+  local_d4 = (uint)local_88;
+  local_e0 = local_80;
+  SVar14.bridgeObject = (void *)0xec0000006e69676f;
+  SVar14.str = (char *)0x4c6e4f7472617473;
+  local_e8 = (undefined *)SwiftUI::AppStorage::_init(false,SVar14);
+  SVar15.bridgeObject = (void *)0x80000001004dcf30;
+  SVar15.str = (char *)0xd000000000000014;
+  local_f0 = (undefined *)SwiftUI::AppStorage::_init(false,SVar15);
+  SVar16.bridgeObject = (void *)0x80000001004dbc80;
+  SVar16.str = (char *)0xd000000000000016;
+  local_f8 = (undefined *)SwiftUI::AppStorage::_init(true,SVar16);
+  puVar6 = &DAT_100550748;
+  FUN_100002f94(&DAT_100550748,&DAT_1004220d0);
+  lVar7 = 0;
+  FUN_1000bc244();
+  lVar11 = *(long *)(*(long *)(lVar7 + -8) + 0x48);
+  uVar8 = (ulong)*(byte *)(*(long *)(lVar7 + -8) + 0x50);
+  uVar9 = uVar8 + 0x20 & (uVar8 ^ 0xffffffffffffffff);
+  _swift_allocObject(puVar6,uVar9 + lVar11 * 7,uVar8 | 7);
+  *(undefined8 *)(puVar6 + 0x18) = 0xe;
+  *(undefined8 *)(puVar6 + 0x10) = 7;
+  puVar1 = puVar6 + uVar9;
+  SVar12.bridgeObject = (void *)0x80000001004dcf50;
+  SVar12.str = (char *)0xd000000000000012;
+  local_100 = puVar6;
+  LVar5 = LocalizationValue::_init(SVar12);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  SVar13.bridgeObject = (void *)0x80000001004dcf70;
+  SVar13.str = (char *)0xd00000000000005f;
+  LVar5 = LocalizationValue::_init(SVar13);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x14)) = SVar12;
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x18)) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar1 + iVar2) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar1 + iVar2) + 8) = 0x80000001004dcfd0;
+  stringLiteral.bridgeObject = (void *)0x80000001004dcff0;
+  stringLiteral.str = (char *)0xd000000000000013;
+  local_a0 = lVar11;
+  local_98 = puVar1;
+  LVar5 = LocalizationValue::_init(stringLiteral);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  stringLiteral_00.bridgeObject = (void *)0x80000001004dd010;
+  stringLiteral_00.str = (char *)0xd00000000000005c;
+  LVar5 = LocalizationValue::_init(stringLiteral_00);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  puVar6 = local_98;
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x14) + lVar11) = SVar12;
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x18) + lVar11) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar1 + iVar2 + lVar11) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar1 + iVar2 + lVar11) + 8) = 0x80000001004dd070;
+  lVar11 = lVar11 * 2;
+  stringLiteral_01.bridgeObject = (void *)0x80000001004dd090;
+  stringLiteral_01.str = (char *)0xd00000000000001a;
+  LVar5 = LocalizationValue::_init(stringLiteral_01);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  stringLiteral_02.bridgeObject = (void *)0x80000001004dd0b0;
+  stringLiteral_02.str = (char *)0xd000000000000082;
+  LVar5 = LocalizationValue::_init(stringLiteral_02);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  puVar1 = local_98;
+  lVar10 = local_a0;
+  *(String *)(puVar6 + *(int *)(lVar7 + 0x14) + lVar11) = SVar12;
+  *(String *)(puVar6 + *(int *)(lVar7 + 0x18) + lVar11) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar6 + iVar2 + lVar11) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar6 + iVar2 + lVar11) + 8) = 0x80000001004dd140;
+  lVar11 = lVar11 + local_a0;
+  stringLiteral_03.bridgeObject = (void *)0x80000001004dd160;
+  stringLiteral_03.str = (char *)0xd000000000000013;
+  LVar5 = LocalizationValue::_init(stringLiteral_03);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  local_108 = SVar12.str;
+  stringLiteral_04.bridgeObject = (void *)0x80000001004dd180;
+  stringLiteral_04.str = (char *)0xd00000000000005e;
+  LVar5 = LocalizationValue::_init(stringLiteral_04);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  iVar2 = *(int *)(lVar7 + 0x14);
+  *(char **)(puVar1 + iVar2 + lVar11) = local_108;
+  *(void **)((long)(puVar1 + iVar2 + lVar11) + 8) = SVar12.bridgeObject;
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x18) + lVar11) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar1 + iVar2 + lVar11) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar1 + iVar2 + lVar11) + 8) = 0x80000001004dd1e0;
+  lVar10 = lVar10 * 4;
+  stringLiteral_05.bridgeObject = (void *)0x80000001004dd200;
+  stringLiteral_05.str = (char *)0xd000000000000015;
+  LVar5 = LocalizationValue::_init(stringLiteral_05);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  stringLiteral_06.bridgeObject = (void *)0x80000001004dd220;
+  stringLiteral_06.str = (char *)0xd000000000000059;
+  LVar5 = LocalizationValue::_init(stringLiteral_06);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  puVar6 = local_98;
+  lVar11 = local_a0;
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x14) + lVar10) = SVar12;
+  *(String *)(puVar1 + *(int *)(lVar7 + 0x18) + lVar10) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar1 + iVar2 + lVar10) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar1 + iVar2 + lVar10) + 8) = 0x80000001004dd280;
+  lVar10 = lVar10 + local_a0;
+  stringLiteral_07.bridgeObject = (void *)0x80000001004dd2a0;
+  stringLiteral_07.str = (char *)0xd000000000000013;
+  LVar5 = LocalizationValue::_init(stringLiteral_07);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  stringLiteral_08.bridgeObject = (void *)0x80000001004dd2c0;
+  stringLiteral_08.str = (char *)0xd00000000000005f;
+  LVar5 = LocalizationValue::_init(stringLiteral_08);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  puVar1 = local_98;
+  *(String *)(puVar6 + *(int *)(lVar7 + 0x14) + lVar10) = SVar12;
+  *(String *)(puVar6 + *(int *)(lVar7 + 0x18) + lVar10) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar6 + iVar2 + lVar10) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar6 + iVar2 + lVar10) + 8) = 0x80000001004dd320;
+  stringLiteral_09.bridgeObject = (void *)0x80000001004dd340;
+  stringLiteral_09.str = (char *)0xd000000000000012;
+  LVar5 = LocalizationValue::_init(stringLiteral_09);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar12 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  stringLiteral_10.bridgeObject = (void *)0x80000001004dd360;
+  stringLiteral_10.str = (char *)0xd00000000000005d;
+  LVar5 = LocalizationValue::_init(stringLiteral_10);
+  Foundation::Locale::get_current((Locale)LVar5.unknown);
+  SVar13 = (extension_Foundation)::Swift::String::_init(localized,(Locale)0x0);
+  Foundation::UUID::init();
+  *(String *)(puVar1 + (long)*(int *)(lVar7 + 0x14) + lVar11 * 6) = SVar12;
+  *(String *)(puVar1 + (long)*(int *)(lVar7 + 0x18) + lVar11 * 6) = SVar13;
+  iVar2 = *(int *)(lVar7 + 0x1c);
+  *(undefined8 *)(puVar1 + (long)iVar2 + lVar11 * 6) = 0xd000000000000012;
+  *(undefined8 *)((long)(puVar1 + (long)iVar2 + lVar11 * 6) + 8) = 0x80000001004dd3c0;
+  *local_b8 = local_b0;
+  local_b8[1] = local_a8;
+  local_b8[2] = uStack_c0;
+  local_b8[3] = local_c8;
+  local_b8[4] = uVar3;
+  local_b8[5] = local_d0;
+  *(char *)(local_b8 + 6) = (char)local_d4;
+  local_b8[7] = local_e0;
+  local_b8[8] = local_e8;
+  local_b8[9] = local_f0;
+  local_b8[10] = local_f8;
+  local_b8[0xb] = local_100;
+  return;
+}
+

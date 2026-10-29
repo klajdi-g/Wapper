@@ -1,0 +1,537 @@
+[
+  {
+    "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+    "selector": "isOpaque",
+    "address": "0x1000452f4"
+  },
+  {
+    "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+    "selector": "viewDidChangeBackingProperties",
+    "address": "0x1000452fc"
+  },
+  {
+    "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+    "selector": "initWithFrame:",
+    "address": "0x100045378"
+  },
+  {
+    "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer10RasterView",
+    "selector": "initWithCoder:",
+    "address": "0x1000453e4"
+  },
+  {
+    "class": "_TtCV7WallperP33_EA1F53D86E0E79876722E5C615A23FEE15MeshRasterLayer11Coordinator",
+    "selector": "tick:",
+    "address": "0x100045914"
+  },
+  {
+    "class": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+    "selector": "pick:",
+    "address": "0x100066060"
+  },
+  {
+    "class": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+    "selector": "init",
+    "address": "0x1000660b0"
+  },
+  {
+    "class": "_TtC7WallperP33_1BB0B006840CE298DFD371C13BB5537221AutoAdvanceMenuTarget",
+    "selector": ".cxx_destruct",
+    "address": "0x1000660dc"
+  },
+  {
+    "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+    "selector": "initWithFrame:",
+    "address": "0x100075540"
+  },
+  {
+    "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+    "selector": "initWithCoder:",
+    "address": "0x100075560"
+  },
+  {
+    "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+    "selector": "layout",
+    "address": "0x1000756a0"
+  },
+  {
+    "class": "_TtC7Wallper29WallpaperPreviewContainerView",
+    "selector": ".cxx_destruct",
+    "address": "0x1000764ec"
+  },
+  {
+    "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+    "selector": "initWithFrame:",
+    "address": "0x10007a298"
+  },
+  {
+    "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+    "selector": "initWithCoder:",
+    "address": "0x10007a370"
+  },
+  {
+    "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+    "selector": "layout",
+    "address": "0x10007a520"
+  },
+  {
+    "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x10007a548"
+  },
+  {
+    "class": "_TtC7WallperP33_79B11F14DC93343480E42B0FDC124D3415SpinningArtView",
+    "selector": ".cxx_destruct",
+    "address": "0x10007a5a8"
+  },
+  {
+    "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+    "selector": "hitTest:",
+    "address": "0x1000d4860"
+  },
+  {
+    "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x1000d4d24"
+  },
+  {
+    "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+    "selector": "initWithFrame:",
+    "address": "0x1000d4d4c"
+  },
+  {
+    "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+    "selector": "initWithCoder:",
+    "address": "0x1000d4de8"
+  },
+  {
+    "class": "_TtCV7WallperP33_DBEE93701475F9840ECC6A125B728EB913ScrollCatcher11CatcherView",
+    "selector": ".cxx_destruct",
+    "address": "0x1000d4e98"
+  },
+  {
+    "class": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+    "selector": "dealloc",
+    "address": "0x1000e33d0"
+  },
+  {
+    "class": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+    "selector": "init",
+    "address": "0x1000e34dc"
+  },
+  {
+    "class": "_TtCV7WallperP33_1330B9F6895D4718FB619AD4724A955920ScrollOffsetObserver11Coordinator",
+    "selector": ".cxx_destruct",
+    "address": "0x1000e3480"
+  },
+  {
+    "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+    "selector": "initWithFrame:",
+    "address": "0x1000fdc04"
+  },
+  {
+    "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+    "selector": "initWithCoder:",
+    "address": "0x1000fdc24"
+  },
+  {
+    "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+    "selector": "layout",
+    "address": "0x1000fe4c8"
+  },
+  {
+    "class": "_TtC7WallperP33_5363C4867DD4E85C8D4034D5527F5B0A13AudioBarsView",
+    "selector": ".cxx_destruct",
+    "address": "0x1000fe4f0"
+  },
+  {
+    "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+    "selector": "initWithFrame:",
+    "address": "0x100102110"
+  },
+  {
+    "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+    "selector": "initWithCoder:",
+    "address": "0x100102130"
+  },
+  {
+    "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+    "selector": "layout",
+    "address": "0x1001026a8"
+  },
+  {
+    "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x1001026d0"
+  },
+  {
+    "class": "_TtC7WallperP33_33CB5CB3CEB588E6D6BBE6B589CE495718ScrollingLabelView",
+    "selector": ".cxx_destruct",
+    "address": "0x100102748"
+  },
+  {
+    "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+    "selector": "initWithFrame:",
+    "address": "0x1001031e0"
+  },
+  {
+    "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+    "selector": "initWithCoder:",
+    "address": "0x100103200"
+  },
+  {
+    "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+    "selector": "layout",
+    "address": "0x100103554"
+  },
+  {
+    "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x10010357c"
+  },
+  {
+    "class": "_TtC7WallperP33_B5DA72BA1597CCF89F9E7344D9DD3E3F16SpinningRingView",
+    "selector": ".cxx_destruct",
+    "address": "0x1001035d8"
+  },
+  {
+    "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+    "selector": "initWithFrame:",
+    "address": "0x10010630c"
+  },
+  {
+    "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+    "selector": "initWithCoder:",
+    "address": "0x10010632c"
+  },
+  {
+    "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+    "selector": "layout",
+    "address": "0x100106850"
+  },
+  {
+    "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x100106878"
+  },
+  {
+    "class": "_TtC7WallperP33_A6C7C08A4FF86A0F4CBA7032D63FE6EB14PulsingDotView",
+    "selector": ".cxx_destruct",
+    "address": "0x1001068d4"
+  },
+  {
+    "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+    "selector": "initWithCoder:",
+    "address": "0x10010e778"
+  },
+  {
+    "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+    "selector": "dealloc",
+    "address": "0x10010e878"
+  },
+  {
+    "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x10010ee10"
+  },
+  {
+    "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+    "selector": "initWithFrame:",
+    "address": "0x10010ee38"
+  },
+  {
+    "class": "_TtCV7Wallper22WindowVisibilityReader6Reader",
+    "selector": ".cxx_destruct",
+    "address": "0x10010e928"
+  },
+  {
+    "class": "_TtC7Wallper17MenuBarController",
+    "selector": "dealloc",
+    "address": "0x10012a128"
+  },
+  {
+    "class": "_TtC7Wallper17MenuBarController",
+    "selector": "togglePanel:",
+    "address": "0x10012c5d8"
+  },
+  {
+    "class": "_TtC7Wallper17MenuBarController",
+    "selector": "popoverDidClose:",
+    "address": "0x10012c620"
+  },
+  {
+    "class": "_TtC7Wallper17MenuBarController",
+    "selector": "init",
+    "address": "0x10012c800"
+  },
+  {
+    "class": "_TtC7Wallper17MenuBarController",
+    "selector": ".cxx_destruct",
+    "address": "0x10012a14c"
+  },
+  {
+    "class": "_TtC7Wallper17ICloudSyncManager",
+    "selector": "externalChange",
+    "address": "0x10013f564"
+  },
+  {
+    "class": "_TtC7Wallper17ICloudSyncManager",
+    "selector": "localChange",
+    "address": "0x10013f9c0"
+  },
+  {
+    "class": "_TtC7Wallper14MonitorManager",
+    "selector": "handlePlaybackStateChanged:",
+    "address": "0x10016f01c"
+  },
+  {
+    "class": "_TtC7Wallper14MonitorManager",
+    "selector": "handleScreensListChanged:",
+    "address": "0x10016f218"
+  },
+  {
+    "class": "_TtC7Wallper14MonitorManager",
+    "selector": "handleScreenParametersChanged:",
+    "address": "0x10016f2e8"
+  },
+  {
+    "class": "_TtC7Wallper14MonitorManager",
+    "selector": "handleWallpaperChanged:",
+    "address": "0x100170354"
+  },
+  {
+    "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+    "selector": "initWithFrame:",
+    "address": "0x1001eea34"
+  },
+  {
+    "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+    "selector": "initWithCoder:",
+    "address": "0x1001eeabc"
+  },
+  {
+    "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+    "selector": "dealloc",
+    "address": "0x1001eeba8"
+  },
+  {
+    "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x1001eee00"
+  },
+  {
+    "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+    "selector": "layout",
+    "address": "0x1001ef404"
+  },
+  {
+    "class": "_TtC7WallperP33_8A1C610580B7CD8A17F7CF76228A646719HighlightBorderView",
+    "selector": ".cxx_destruct",
+    "address": "0x1001eec1c"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "init",
+    "address": "0x100235c04"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "observeValueForKeyPath:ofObject:change:context:",
+    "address": "0x100235e18"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleWakeFromSleep:",
+    "address": "0x100236b60"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleScreensDidSleep:",
+    "address": "0x100236c00"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleScreensDidWake:",
+    "address": "0x100236ca8"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": "handleSettingsChanged",
+    "address": "0x100237ce8"
+  },
+  {
+    "class": "_TtC7Wallper21VideoWallpaperManager",
+    "selector": ".cxx_destruct",
+    "address": "0x100255c0c"
+  },
+  {
+    "class": "_TtC7Wallper13WindowManager",
+    "selector": "windowWillClose:",
+    "address": "0x10025c854"
+  },
+  {
+    "class": "_TtC7Wallper13WindowManager",
+    "selector": "init",
+    "address": "0x10025a4e8"
+  },
+  {
+    "class": "_TtC7Wallper13WindowManager",
+    "selector": "openApp",
+    "address": "0x10025c074"
+  },
+  {
+    "class": "_TtC7Wallper13WindowManager",
+    "selector": ".cxx_destruct",
+    "address": "0x10025c270"
+  },
+  {
+    "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+    "selector": "URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:",
+    "address": "0x10027e2d0"
+  },
+  {
+    "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+    "selector": "URLSession:downloadTask:didFinishDownloadingToURL:",
+    "address": "0x10027e350"
+  },
+  {
+    "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+    "selector": "URLSession:task:didCompleteWithError:",
+    "address": "0x10027e430"
+  },
+  {
+    "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+    "selector": "init",
+    "address": "0x10027e4b8"
+  },
+  {
+    "class": "_TtC7WallperP33_4537C798EE20D91316D9ABA5C600337924DownloadProgressDelegate",
+    "selector": ".cxx_destruct",
+    "address": "0x10027e4e4"
+  },
+  {
+    "class": "_TtC7Wallper18WallpaperUnlockFix",
+    "selector": "onDesktopBack",
+    "address": "0x1002b4974"
+  },
+  {
+    "class": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+    "selector": "dealloc",
+    "address": "0x100321040"
+  },
+  {
+    "class": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+    "selector": "init",
+    "address": "0x10032114c"
+  },
+  {
+    "class": "_TtCV7WallperP33_10B5BC8A445113D7DE69555D7FD5BD6820ScrollOffsetObserver11Coordinator",
+    "selector": ".cxx_destruct",
+    "address": "0x1003210f0"
+  },
+  {
+    "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+    "selector": "initWithCoder:",
+    "address": "0x1003af730"
+  },
+  {
+    "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+    "selector": "dealloc",
+    "address": "0x1003af830"
+  },
+  {
+    "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+    "selector": "viewDidMoveToWindow",
+    "address": "0x1003afb6c"
+  },
+  {
+    "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+    "selector": "initWithFrame:",
+    "address": "0x1003afca0"
+  },
+  {
+    "class": "_TtCV7WallperP33_4C1A01B9C218D1703E7256E92C2C26AB16WindowSizeReader6Reader",
+    "selector": ".cxx_destruct",
+    "address": "0x1003af8e0"
+  },
+  {
+    "class": "_TtCV7Wallper13VideoLoopView11Coordinator",
+    "selector": "init",
+    "address": "0x1003f0d8c"
+  },
+  {
+    "class": "_TtCV7Wallper13VideoLoopView11Coordinator",
+    "selector": ".cxx_destruct",
+    "address": "0x1003f2748"
+  },
+  {
+    "class": "_TtC7Wallper19PlayerContainerView",
+    "selector": "makeBackingLayer",
+    "address": "0x1003f2a94"
+  },
+  {
+    "class": "_TtC7Wallper19PlayerContainerView",
+    "selector": "initWithFrame:",
+    "address": "0x1003f2c4c"
+  },
+  {
+    "class": "_TtC7Wallper19PlayerContainerView",
+    "selector": "initWithCoder:",
+    "address": "0x1003f2e10"
+  },
+  {
+    "class": "_TtC7Wallper19PlayerContainerView",
+    "selector": "layout",
+    "address": "0x1003f2f08"
+  },
+  {
+    "class": "_TtC7Wallper19PlayerContainerView",
+    "selector": ".cxx_destruct",
+    "address": "0x1003f2f30"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": "init",
+    "address": "0x1003f42ac"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": "applicationDidFinishLaunching:",
+    "address": "0x1003f5c64"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": "applicationShouldHandleReopen:hasVisibleWindows:",
+    "address": "0x1003f831c"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": "applicationShouldTerminate:",
+    "address": "0x1003f8704"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": "applicationWillTerminate:",
+    "address": "0x1003f88a8"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": "application:openURLs:",
+    "address": "0x1003fa158"
+  },
+  {
+    "class": "_TtC7Wallper11AppDelegate",
+    "selector": ".cxx_destruct",
+    "address": "0x1003fa200"
+  },
+  {
+    "class": "NSUserDefaults",
+    "selector": "advancedWallpaperApply",
+    "address": "0x10020c5fc"
+  },
+  {
+    "class": "NSUserDefaults",
+    "selector": "musicLayout",
+    "address": "0x100078358"
+  }
+]
