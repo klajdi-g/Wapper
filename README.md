@@ -8,6 +8,7 @@ on-demand downloads. The public package excludes historical recovered media.
 
 Website: https://motion.voltrum.co. Installation and signing status:
 [installation guide](docs/INSTALL.md). Deployment: [operations guide](docs/DEPLOYMENT.md).
+Checksums, screenshots, and remaining release gates: [release validation](docs/RELEASE-VALIDATION.md).
 
 ## Build and run
 

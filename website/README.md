@@ -13,7 +13,7 @@ Dependency-free static website for **https://motion.voltrum.co**. No package ins
 
 nginx can serve these files directly. Set `.mjs` to a JavaScript MIME type (`text/javascript` or `application/javascript`), `.json` to `application/json`, and SVG to `image/svg+xml`. Missing JSON endpoints should return a real 404, not an HTML fallback. The website intentionally has no service worker or client-side router. All help/legal links are ordinary page fragments.
 
-Publish static assets along with publisher-generated `/catalog.json` and `/release.json`. Absent or invalid manifests show honest unavailable states rather than fabricated media or download links. The generated catalog currently includes source-credited public NASA media. Release downloads must remain empty until their artifacts are publicly available. No proprietary assets or personal videos are included.
+Publish static assets along with publisher-generated `/catalog.json` and `/release.json`. Absent or invalid manifests show honest unavailable states rather than fabricated media or download links. The generated catalog currently includes source-credited public NASA media. The deployment packager checks installer URLs with unauthenticated HTTPS HEAD requests and omits inaccessible downloads from its snapshot, leaving source release-candidate metadata unchanged. No proprietary assets or personal videos are included.
 
 Keep manifests revalidated (`Cache-Control: no-cache` is appropriate); do not cache HTML indefinitely. Prefer `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and `Permissions-Policy: camera=(), microphone=(), geolocation=()`. Do not add cross-origin isolation headers without checking third-party media compatibility. A suitable baseline CSP is:
 

@@ -1,5 +1,8 @@
 # Voltrum Motion operations
 
+See [release validation](RELEASE-VALIDATION.md) for checksums, test results,
+browser screenshots, and remaining production-release gates.
+
 ## Public surfaces
 
 - Website: https://motion.voltrum.co (the existing root Voltrum website is unchanged).

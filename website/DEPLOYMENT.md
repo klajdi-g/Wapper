@@ -9,7 +9,7 @@ The website is deployed at `https://motion.voltrum.co` on the backbone Kubernete
 - Generated declarative resources: `apps/voltrum-motion/resources.json` in the sibling Nix repository.
 - Existing Nix bootstrap integration: `modules/outputs/bootstrap/voltrum-motion.nix` and its registration in `modules/outputs/default.nix`.
 
-The source files and generated Nix resources are intentionally not committed by this deployment. Preserve the existing unrelated native-app and Nix edits when committing later. A later Nix deployment must include the generated manifest and bootstrap integration to retain this application.
+The source files, generated resources, and bootstrap integration are versioned in their respective repositories. Preserve unrelated native-app and infrastructure edits when publishing changes. The remote Nix working tree also contains unrelated Prisma work; only the Motion module, manifest, runbook, and scoped bootstrap additions belong to this deployment.
 
 ## Republish
 
@@ -30,6 +30,6 @@ The immutable content-addressed ConfigMap name and pod-template digest cover bot
 
 The public catalog contains 179 source-credited NASA entries. URL normalization supports spaces in NASA filenames without weakening scheme or credential validation.
 
-The generated native release candidate is version `0.2.0`, not Developer ID signed or Apple notarized. Its intended GitHub prerelease was not publicly available when this website was published. Consequently `website/release.json` deliberately has an empty `downloads` array: the live site does not advertise a broken installer link. The complete candidate artifact metadata remains in `build/releases/release.json`; publishing the app remains a separate release-owner task. After the app release becomes public, verify its URL and artifact SHA-256, update the website release manifest, validate, and republish. Do not replace the empty list with an unverified or private download URL.
+Version `0.2.0` is published as GitHub prerelease `motion-v0.2.0-preview` in `klajdi-g/Wapper`. It includes a universal macOS DMG, checksum, and release manifest. The public DMG was downloaded and its SHA-256 matched `website/release.json`; the live site advertises this verified preview. It is ad-hoc signed, not Developer ID signed or Apple notarized, as explicitly stated on the website. The packager withholds inaccessible installer links from its deployed snapshot without modifying source metadata. Its HEAD availability check is not an independent signature or checksum verification.
 
-Verification completed: 15 dependency-free behavior and packaging tests; all 179 catalog entries accepted; public HTML/CSS/modules/SVG/manifests returned HTTP 200 and matched local SHA-256 hashes; a nonexistent resource returned HTTP 404; both replicas became ready. No browser tools were used. Real-browser layout, codecs, VoiceOver, and native video-control behavior still require manual QA.
+Verification includes 15 dependency-free behavior and packaging tests, all 179 catalog entries accepted, public endpoint checks, installer checksum validation, and two healthy nginx replicas. Browser evidence and native release validation are described in `../docs/DEPLOYMENT.md`. VoiceOver, physical Intel playback, battery transitions, and hotplug remain manual QA items.

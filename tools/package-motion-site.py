@@ -6,16 +6,40 @@ import json
 import pathlib
 import sys
 import tarfile
+import urllib.parse
+import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SITE = ROOT / "website"
 NIX = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT.parent / "nix"
 namespace = "voltrum-motion"
+
+
+def public_download(url):
+    try:
+        parsed = urllib.parse.urlparse(url)
+        if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+            return False
+        request = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "VoltrumMotion-Publisher/1.0"})
+        with urllib.request.urlopen(request, timeout=15) as response:
+            return response.status == 200
+    except (OSError, ValueError):
+        return False
+
+
 archive = io.BytesIO()
 with tarfile.open(fileobj=archive, mode="w") as bundle:
     for path in sorted(SITE.rglob("*")):
         if path.is_file() and path.suffix in {".html", ".css", ".js", ".mjs", ".json", ".svg", ".png", ".txt", ".ico"} and not {"node_modules", "tests"}.intersection(path.parts) and path.name != "validate.mjs":
             data = path.read_bytes()
+            if path.relative_to(SITE).as_posix() == "release.json":
+                release = json.loads(data)
+                available = [entry for entry in release.get("downloads", []) if public_download(entry.get("url", ""))]
+                if len(available) != len(release.get("downloads", [])):
+                    print("Withheld unavailable installer links from the deployed release manifest; source metadata is unchanged.")
+                    release["downloads"] = available
+                    release["publicationStatus"] = "Awaiting publicly available app downloads"
+                    data = (json.dumps(release, indent=2) + "\n").encode()
             info = tarfile.TarInfo(str(path.relative_to(SITE)))
             info.size = len(data)
             info.mode = 0o644
