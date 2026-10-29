@@ -51,6 +51,9 @@ test('release requires explicit notarization and complete download integrity fie
   const good = { version: '0.1.0', notarized: false, downloads: [{ label: 'Download for Apple silicon', architecture: 'arm64', url: '/releases/Motion.zip', sha256: 'A'.repeat(64) }] };
   const parsed = parseRelease(good);
   assert.equal(parsed.notarized, false);
+  assert.equal(parsed.publicationStatus, '');
+  assert.equal(parseRelease({ ...good, publicationStatus: 'App downloads paused pending media-rights review' }).publicationStatus, 'App downloads paused pending media-rights review');
+  assert.equal(parseRelease({ ...good, publicationStatus: {} }).publicationStatus, '');
   assert.equal(parsed.downloads[0].sha256, 'a'.repeat(64));
   assert.equal(parseRelease({ ...good, downloads: [null, {}, { ...good.downloads[0], sha256: 'invalid' }, { ...good.downloads[0], architecture: '' }, { ...good.downloads[0], url: 'javascript:evil()' }] }).downloads.length, 0);
   for (const payload of [null, [], {}, { ...good, notarized: undefined }, { ...good, notarized: 'true' }, { ...good, version: '' }, { ...good, downloads: {} }]) assert.throws(() => parseRelease(payload));

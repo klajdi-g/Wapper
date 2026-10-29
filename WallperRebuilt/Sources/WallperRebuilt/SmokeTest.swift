@@ -18,22 +18,54 @@ func runSmokeTest(reportURL: URL) async {
     var failure: String?
     do {
         try check(controller.library.errorMessage == nil, "library initialization")
-        let recoveredResources = resourceURL("gallery", extension: "json") != nil
-        try check(controller.library.catalog.count == (recoveredResources ? 152 : 0), "only explicitly included recovered aerial resources decode")
-        try check(controller.library.gallery.filter { $0.license == nil }.count == (recoveredResources ? 3026 : 0), "public packages exclude recovered gallery records")
+        let policy = MediaPublicationPolicy.bundled()
+        try check(controller.library.catalog.allSatisfy { policy.approves($0) }, "aerial catalog requires explicit item approval")
+        try check(controller.library.gallery.allSatisfy { policy.approves($0) }, "gallery catalog requires explicit item approval")
         let publicGallery = controller.library.gallery.filter { $0.license != nil }
-        try check(publicGallery.count >= 100, "public catalog provides at least 100 additional videos")
+        try check(policy.isEnabled || (controller.library.catalog.isEmpty && controller.library.gallery.isEmpty), "paused media policy exposes no remote catalog")
         try check(publicGallery.allSatisfy { $0.creator != nil && $0.sourceURL?.host == "images.nasa.gov" && $0.licenseURL?.host == "www.nasa.gov" }, "public catalog retains source credits and usage guidelines")
         let cachedGallery = controller.library.gallery.filter { $0.previewAsset != nil }
-        try check(cachedGallery.count == (recoveredResources ? 353 : 0) && cachedGallery.allSatisfy { controller.library.thumbnailURL(for: $0) != nil }, "only explicitly included cached gallery images resolve")
+        try check(cachedGallery.allSatisfy { policy.approves($0) && controller.library.thumbnailURL(for: $0) != nil }, "only approved cached gallery images resolve")
         try check(controller.library.gallery.allSatisfy { $0.source == .gallery && ["cdn.wallper.app", "images-assets.nasa.gov"].contains($0.remoteURL?.host ?? "") && controller.library.mediaURL(for: $0) == nil }, "catalog URLs do not pretend undownloaded videos are local files")
         var searchSample = Wallpaper.demo
         searchSample.resolution = "3840x2160"
         searchSample.tags = ["Aesthetic"]
         try check(searchSample.matchesSearch("4K") && searchSample.matchesSearch("16:9"), "resolution search chips match video dimensions")
         try check(searchSample.matchesSearch("Aesthetic") && !searchSample.matchesSearch("32:9"), "tag and aspect-ratio search filters work")
-        let galleryFavorite = controller.library.gallery[0]
+        let galleryFavorite = controller.library.gallery.first ?? .demo
         controller.library.toggleFavorite(galleryFavorite)
+        var unapproved = Wallpaper.demo
+        unapproved.id = "unapproved-policy-fixture"
+        unapproved.source = .gallery
+        unapproved.filename = nil
+        unapproved.remoteURL = URL(string: "https://images-assets.nasa.gov/unapproved.mp4")
+        unapproved.previewURL = URL(string: "https://images-assets.nasa.gov/unapproved.jpg")
+        unapproved.sourceURL = URL(string: "https://images.nasa.gov/details/unapproved")
+        unapproved.creator = "Smoke test fixture, not an approved work"
+        try check(!MediaPublicationPolicy.paused.approves(unapproved), "paused policy rejects unapproved media")
+        controller.library.download(unapproved)
+        try check(!controller.library.downloading.contains(unapproved.id), "unapproved media cannot start a network download")
+        var approval = MediaApproval(id: unapproved.id, previewURL: unapproved.previewURL!.absoluteString,
+                                     remoteURL: unapproved.remoteURL!.absoluteString, sourceURL: unapproved.sourceURL!.absoluteString,
+                                     reviewer: "Smoke fixture", reviewedAt: "2026-10-29T00:00:00Z", rightsBasis: "Synthetic smoke fixture only",
+                                     credit: unapproved.creator!, evidenceURLs: ["https://example.org/fixture"],
+                                     permittedUses: ["website-preview", "video-download", "native-library"])
+        var fixturePolicy = MediaPublicationPolicy(publication: "enabled", allowNativeDownloads: false, approvedMedia: [approval])
+        try check(fixturePolicy.approves(unapproved), "native approval requires an exact reviewed item, independent of installer publication")
+        approval.evidenceURLs = []
+        fixturePolicy.approvedMedia = [approval]
+        try check(!fixturePolicy.approves(unapproved), "native approval rejects missing rights evidence")
+        approval.evidenceURLs = ["https://user:password@example.org/evidence"]
+        fixturePolicy.approvedMedia = [approval]
+        try check(!fixturePolicy.approves(unapproved), "native approval rejects credential-bearing evidence")
+        approval.evidenceURLs = ["https://example.org/evidence"]
+        approval.permittedUses = ["website-preview", "video-download"]
+        fixturePolicy.approvedMedia = [approval]
+        try check(!fixturePolicy.approves(unapproved), "website approval does not grant native library use")
+        approval.permittedUses.append("native-library")
+        approval.remoteURL += "?changed"
+        fixturePolicy.approvedMedia = [approval]
+        try check(!fixturePolicy.approves(unapproved), "native approval rejects changed media URLs")
         guard let demo = controller.library.mediaURL(for: .demo) else { throw RebuildError.message("Missing bundled demo") }
         let duration = try await AVURLAsset(url: demo).load(.duration).seconds
         try check(duration > 0, "bundled demo decodes")
@@ -49,7 +81,7 @@ func runSmokeTest(reportURL: URL) async {
         try check(controller.playback.active.count == controller.playback.displays.count, "native desktop player on each display")
         let restored = LibraryStore(root: temporaryRoot)
         try check(restored.state.favorites.contains(imported.id), "favorite survives reload")
-        try check(restored.state.favorites.contains(galleryFavorite.id), "gallery favorite survives reload")
+        try check(restored.state.favorites.contains(galleryFavorite.id), "catalog or demo favorite survives reload")
         try check(restored.state.volume == 0.25, "audio setting survives reload")
         try check(restored.state.assignments.count == controller.playback.displays.count, "display assignments survive reload")
         controller.setVolume(0)
@@ -90,7 +122,9 @@ func runSmokeTest(reportURL: URL) async {
         var rejected = false
         do { _ = try await controller.library.importVideo(invalid) } catch { rejected = true }
         try check(rejected, "invalid media is rejected")
-        if CommandLine.arguments.contains("--check-download") {
+        if CommandLine.arguments.contains("--check-download") && publicGallery.isEmpty {
+            try check(controller.library.downloading.isEmpty, "network media check is withheld without an approved item")
+        } else if CommandLine.arguments.contains("--check-download") {
             guard let remote = publicGallery.min(by: { ($0.sizeMB ?? .infinity) < ($1.sizeMB ?? .infinity) }) else {
                 throw RebuildError.message("Missing network-check catalog item")
             }

@@ -40,9 +40,9 @@ swift run --package-path WallperRebuilt WallperRebuilt
    Stop closes only this app's overlay windows and reveals the
    desktop that was already underneath them.
 5. Settings controls audio and battery behavior. Sound is muted by default.
-6. **Explore** shows 159 credited NASA videos in the public package.
-   Previews load on demand. Download a video before applying it; the
-   confirmation can also apply it automatically when ready.
+6. **Explore** is paused pending item-by-item rights review. No third-party
+   preview or download is available without explicit approval. Use My Media
+   for your own videos and the original demo.
 7. The historical aerial/gallery catalogs are excluded from public releases.
 8. The dock controls display selection, shuffle, favorites, pause, and speed.
 
@@ -139,15 +139,24 @@ Quit have different persistence behavior as described above.
 
 ## Catalog and networking
 
-`Resources/public-gallery.json` contains 159 source-credited NASA video records,
-including preview, video, creator, source, and usage-guideline URLs. Regenerate it
-with `python3 tools/import-public-catalog.py` from the repository root.
-Previews load asynchronously into a bounded in-memory cache. Favorites stay local.
+The source `Resources/public-gallery.json` retains 159 screened candidate records
+for review, not approved media. The app packager filters it using the shared
+`website/media-policy.json`; the currently paused/empty policy produces an empty
+packaged catalog. Candidate generation with `tools/import-public-catalog.py`
+does not approve or publish anything.
 
-Historical `gallery.json`, `Gallery/`, and `entries.json` resources remain available
-for private development but are removed from public app packaging. Explicitly set
-`INCLUDE_RECOVERED_CATALOG=1` only for a private local build. Those resources and
-the original app icon are not included in the public installer.
+Historical `gallery.json`, `Gallery/`, and `entries.json` resources are always
+removed from app packaging, along with the original app icon. The old
+`INCLUDE_RECOVERED_CATALOG` environment variable cannot bypass this containment.
+Runtime catalog loading and remote downloads independently check the bundled
+policy. Missing/malformed/paused policies deny all third-party items even in an
+unbundled development run. Existing user-imported local files are not deleted.
+
+An enabled approval must exactly match item ID, preview/video/source URLs and
+creator credit, identify its reviewer, review timestamp, rights basis, and valid
+HTTPS evidence, and explicitly grant website-preview, video-download, and
+native-library uses. An installer additionally requires the separate publication
+gate; a catalog metadata match is not independent legal clearance.
 
 A confirmed download uses `URLSession` and accepts only HTTPS video URLs on
 `images-assets.nasa.gov` from the public catalog (or `sylvan.apple.com` and
@@ -236,8 +245,9 @@ media and corrupt saved state. It restores the underlying desktop by closing
 its own windows. The JSON report is `build/smoke-report.json`.
 
 On October 29, 2026, a release build using Swift 6.3 on macOS 26.5 passed all
-36 offline smoke checks and 39 checks with `--check-download`, including a public
-CDN download, playable-track inspection, and cleanup. The app previously passed
+43 offline smoke checks and 44 checks with `--check-download`, including explicit
+approval regressions and verification that unapproved downloads cannot start.
+The conditional network check is withheld when no item is approved. The app previously passed
 with the build-tree resource bundle
 temporarily unavailable, verifying it loads resources from its own app bundle.
 Code-signature verification passed. Physical sleep/wake, battery transitions,

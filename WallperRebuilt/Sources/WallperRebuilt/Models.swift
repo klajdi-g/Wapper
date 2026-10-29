@@ -5,6 +5,56 @@ enum MediaSource: String, Codable {
     case bundled, local, aerial, gallery
 }
 
+struct MediaPublicationPolicy: Decodable {
+    var publication: String
+    var allowNativeDownloads: Bool
+    var approvedMedia: [MediaApproval]
+
+    static let paused = MediaPublicationPolicy(publication: "paused", allowNativeDownloads: false, approvedMedia: [])
+
+    var isEnabled: Bool { publication == "enabled" }
+
+    static func bundled() -> MediaPublicationPolicy {
+        guard let url = resourceURL("media-policy", extension: "json"),
+              let data = try? Data(contentsOf: url),
+              let policy = try? JSONDecoder().decode(MediaPublicationPolicy.self, from: data) else { return .paused }
+        return policy
+    }
+
+    func approves(_ wallpaper: Wallpaper) -> Bool {
+        guard isEnabled, !wallpaper.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              [wallpaper.previewURL, wallpaper.remoteURL, wallpaper.sourceURL].allSatisfy({ candidate in
+                  guard let url = candidate else { return false }
+                  return url.scheme == "https" && url.host != nil && url.user == nil && url.password == nil && !url.absoluteString.contains("\\")
+              }) else { return false }
+        return approvedMedia.contains { approval in
+            approval.id == wallpaper.id && approval.previewURL == wallpaper.previewURL?.absoluteString &&
+            approval.remoteURL == wallpaper.remoteURL?.absoluteString && approval.sourceURL == wallpaper.sourceURL?.absoluteString &&
+            approval.credit == wallpaper.creator &&
+            [approval.reviewer, approval.reviewedAt, approval.rightsBasis, approval.credit].allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } &&
+            !approval.evidenceURLs.isEmpty && approval.evidenceURLs.allSatisfy { raw in
+                guard !raw.contains("\\"), raw.rangeOfCharacter(from: .whitespacesAndNewlines.union(.controlCharacters)) == nil,
+                      let url = URL(string: raw), url.scheme == "https", url.host != nil, url.user == nil, url.password == nil else { return false }
+                return true
+            } &&
+            Set(["website-preview", "video-download", "native-library"]).isSubset(of: Set(approval.permittedUses))
+        }
+    }
+}
+
+struct MediaApproval: Decodable {
+    var id: String
+    var previewURL: String
+    var remoteURL: String
+    var sourceURL: String
+    var reviewer: String
+    var reviewedAt: String
+    var rightsBasis: String
+    var credit: String
+    var evidenceURLs: [String]
+    var permittedUses: [String]
+}
+
 struct Wallpaper: Codable, Identifiable, Equatable {
     var id: String
     var title: String

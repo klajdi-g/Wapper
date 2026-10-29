@@ -120,7 +120,7 @@ function renderGallery() {
   const count = `${visible.length} ${visible.length === 1 ? 'atmosphere' : 'atmospheres'}`;
   element('results-status').textContent = `${count}${savedOnly ? ' in your saved collection' : ''}${rejected ? ` · ${rejected} incomplete ${rejected === 1 ? 'entry' : 'entries'} omitted` : ''}`;
   if (!items.length) {
-    setCollectionState('A little quiet, for now.', rejected ? 'No entries have complete media links and creator credits. Please check back after the catalog is updated.' : 'The public collection has not been published yet. Check back soon for credited motion wallpapers.', 'retry');
+    setCollectionState('A considered pause.', rejected ? 'No entries have complete media links and creator credits. Please check back after the catalog is updated.' : 'The collection is paused while media rights are reviewed. Only explicitly approved works will return.', 'retry');
   } else if (!visible.length) {
     setCollectionState(savedOnly ? 'Your next favorite is out there.' : 'A different atmosphere awaits.', savedOnly ? 'Save a wallpaper with the heart button, or reset your filters to explore the collection.' : 'No wallpapers match these filters. Try a different search or explore all atmospheres.', 'reset');
   }
@@ -249,7 +249,7 @@ async function loadRelease() {
     const release = parseRelease(await fetchJSON('/release.json'));
     element('release-version').textContent = `Version ${release.version}`;
     const security = release.notarized ? 'The publisher marks this release as Apple-notarized. Follow the security checks shown by macOS.' : 'Developer ID signing and Apple notarization are unavailable for this release. macOS may block it; wait for a signed, notarized release if blocked. Do not disable Gatekeeper.';
-    element('release-status').textContent = release.downloads.length ? security : `No complete public download is available for this release. ${security}`;
+    element('release-status').textContent = release.downloads.length ? security : `${release.publicationStatus || 'No complete public download is available for this release.'} ${security}`;
     element('release-downloads').replaceChildren(...release.downloads.map(renderDownload));
     retry.hidden = release.downloads.length > 0;
   } catch {

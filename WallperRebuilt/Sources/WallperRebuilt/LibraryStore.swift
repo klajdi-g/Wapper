@@ -15,6 +15,9 @@ final class LibraryStore: ObservableObject {
     private var downloads: [String: Task<Void, Never>] = [:]
     private let stateURL: URL
     private var canSave = true
+    private let mediaPolicy = MediaPublicationPolicy.bundled()
+
+    var mediaPublicationPaused: Bool { !mediaPolicy.isEnabled }
 
     var library: [Wallpaper] { [.demo] + state.wallpapers }
 
@@ -144,7 +147,7 @@ final class LibraryStore: ObservableObject {
     }
 
     func download(_ wallpaper: Wallpaper, onComplete: (@MainActor () -> Void)? = nil) {
-        guard !isDownloaded(wallpaper), !downloading.contains(wallpaper.id),
+        guard mediaPolicy.approves(wallpaper), !isDownloaded(wallpaper), !downloading.contains(wallpaper.id),
               let url = wallpaper.remoteURL, url.scheme == "https",
               ["sylvan.apple.com", "cdn.wallper.app", "images-assets.nasa.gov"].contains(url.host ?? "") else { return }
         downloading.insert(wallpaper.id)
@@ -199,6 +202,7 @@ final class LibraryStore: ObservableObject {
     }
 
     private func loadCatalog() {
+        guard mediaPolicy.isEnabled else { return }
         guard resourceURL("entries", extension: "json") != nil else { return }
         do {
             guard let url = resourceURL("entries", extension: "json"),
@@ -220,11 +224,12 @@ final class LibraryStore: ObservableObject {
                 let preview = (asset["previewImage"] as? String).flatMap(URL.init(string:))
                 return Wallpaper(id: id, title: title, category: categoryNames[categoryID] ?? "Aerial",
                                  source: .aerial, remoteURL: mediaURL, previewURL: preview)
-            }.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+            }.filter { mediaPolicy.approves($0) }.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
         } catch { errorMessage = error.localizedDescription }
     }
 
     private func loadGallery() {
+        guard mediaPolicy.isEnabled else { return }
         do {
             var records: [Wallpaper] = []
             for name in ["public-gallery", "gallery"] {
@@ -232,9 +237,8 @@ final class LibraryStore: ObservableObject {
                     records += try JSONDecoder().decode([Wallpaper].self, from: Data(contentsOf: url))
                 }
             }
-            guard !records.isEmpty else { throw RebuildError.message("The bundled wallpaper catalog is missing.") }
             var identifiers: Set<String> = []
-            gallery = records.filter { identifiers.insert($0.id).inserted }
+            gallery = records.filter { mediaPolicy.approves($0) && identifiers.insert($0.id).inserted }
         } catch { errorMessage = error.localizedDescription }
     }
 }

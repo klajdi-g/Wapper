@@ -212,9 +212,13 @@ test('catalog failures, wrong response shape, empty catalog, and unavailable rel
     assert.equal(get('release-retry').hidden, false);
   }
   const { get } = await setup({ catalog: [], release: { ...manifest, downloads: [] } });
-  assert.match(get('state-description').textContent, /not been published/u);
+  assert.match(get('state-description').textContent, /paused while media rights are reviewed/u);
   assert.equal(get('release-downloads').children.length, 0);
   assert.match(get('release-status').textContent, /No complete public download/u);
+  const paused = await setup({ catalog: [], release: { ...manifest, downloads: [], publicationStatus: 'App downloads paused pending media-rights review' } });
+  assert.equal(paused.get('release-downloads').children.length, 0);
+  assert.match(paused.get('release-status').textContent, /App downloads paused pending media-rights review/u);
+  assert.match(paused.get('release-status').textContent, /Do not disable Gatekeeper/u);
 });
 
 test('catalog retries recover, and unsigned release status never becomes a notarization claim', async () => {

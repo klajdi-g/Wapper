@@ -3,8 +3,9 @@
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
 or all connected displays. The app works offline with your own videos and an
-included animated demo. Explore includes 159 source-credited NASA videos with
-on-demand downloads. The public package excludes historical recovered media.
+included original animated demo. The third-party collection and public app
+downloads are paused pending item-by-item rights approval. The packaged app
+contains zero third-party catalog entries; historical recovered media is excluded.
 
 Website: https://motion.voltrum.co. Installation and signing status:
 [installation guide](docs/INSTALL.md). Deployment: [operations guide](docs/DEPLOYMENT.md).
@@ -32,9 +33,9 @@ launching, run `./build-wallper.sh`. For development in Xcode, open
 - Pause, resume, stop, audio volume, and menu-bar controls.
 - Display-sleep holds and configurable battery playback policies.
 - Saved display assignments and reconnection handling.
-- An offline demo and 159 credited NASA videos with opt-in downloads.
+- An original offline demo and private local-video imports.
 - Floating Explore interface, category chips, resolution/tag search, and sorting.
-- On-demand artwork, local video previews, and confirmed NASA downloads.
+- Local video previews and fail-closed approval gates for future remote media.
 - Playback speed controls from 0.5× to 2×.
 
 ## How the system works
@@ -70,14 +71,17 @@ lifecycle, storage format, build packaging, and validation details.
 The native smoke mode uses a temporary library and checks imports, thumbnails,
 persistence, view layout, video rendering and looping, playback holds, invalid
 media handling, and cleanup. Reports are written to `build/smoke-report.json`.
-The release build passed 39 checks on October 29, 2026, including a real public
-CDN download, video-track validation, and cleanup. Enable that network test with:
+The quarantined build passed 44 checks on October 29, 2026, including approval
+regressions and verification that no unapproved download starts. Request the
+conditional network check with:
 
 ```sh
 "build/Voltrum Motion.app/Contents/MacOS/WallperRebuilt" --smoke-test "$PWD/build/smoke-report.json" --check-download
 ```
 
-The default public-package smoke run has 36 offline checks. Physical battery/sleep/hotplug
+The default public-package smoke run has 43 offline checks. With no approved
+items, `--check-download` verifies withholding instead of contacting a media host.
+Physical battery/sleep/hotplug
 transitions have not been independently exercised. See
 [visual comparison findings](docs/ui-comparison.md) for screenshot-based UI work.
 
@@ -97,14 +101,17 @@ Account services, uploads, music/lyrics integration, mesh wallpapers, and
 fullscreen/CPU throttling are not implemented. The app uses a separate bundle
 identifier and storage location so an existing Wallper installation is untouched.
 
-The historical analysis archive is retained for reference. Its full ZIP is
-available on the `recovery-2026-10-29` release; it predates the runnable Swift
-app. After downloading it, verify it with
-`shasum -a 256 -c Wallper-Recovery.zip.sha256`.
+The historical analysis archive is retained as evidence. Its earlier recovery
+release is now a draft because redistribution rights for original resources
+are unreviewed. It is not an approved public media download. No source history
+or user-local media was deleted by the publication quarantine.
 
 ## Release status
 
-Version 0.2.1 is a universal Apple silicon/Intel preview for macOS 14+.
+Version 0.2.2 is a local-only universal Apple silicon/Intel preview for macOS 14+.
+The earlier 0.2.0/0.2.1 installers were withdrawn to draft. No native app download
+is currently approved for publication. Media approval policy is
+`website/media-policy.json`, currently paused with an empty allowlist.
 It is ad-hoc signed, not Developer ID signed or Apple notarized. Gatekeeper may
 block downloads; build locally instead of disabling system protections.
 `./release-motion.sh` packages both architectures. A trusted public release

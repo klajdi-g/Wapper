@@ -3,6 +3,10 @@
 Requires macOS 14 or newer. The universal application includes both Apple silicon
 and Intel executables. Drag Voltrum Motion into Applications to install.
 
+Public downloads are currently withheld. Version 0.2.2 is a local-only build with
+the original demo and local-video imports; zero third-party catalog entries are
+approved or bundled. The earlier 0.2.0/0.2.1 public previews were withdrawn.
+
 ## Preview signing status
 
 The initial preview is locally ad-hoc signed, **not Developer ID signed or Apple
@@ -20,13 +24,13 @@ Install Apple's Command Line Tools, clone the source repository, then run:
 ```
 
 The build creates `build/Voltrum Motion.app`. There are no external Swift package
-dependencies. The default packaged app includes the source-credited NASA catalog,
-not the historical recovered catalog or cached original artwork.
+dependencies. The packaged app includes an empty third-party catalog under the
+paused rights-review policy, not candidate NASA or historical recovered media.
 
 ## Use
 
 Open My Media to apply the included offline Aurora Flow demo or import your own
-video. Explore offers source-credited NASA videos for optional download. Select
+video. Explore is paused pending item-by-item rights approval. Select
 the target display in the dock, then apply a downloaded or imported wallpaper.
 Playback starts muted. Stop from the menu-bar menu to close desktop overlays;
 Quit closes them as well. Original macOS wallpaper settings are not replaced.
@@ -37,10 +41,10 @@ The website does not upload this library or expose your local videos.
 
 ## Media credits
 
-NASA media is sourced from the NASA Image and Video Library, with each catalog
-entry linking to its source and NASA's media-use guidelines. NASA does not
-endorse this app. Some clips include narration or edits and are not seamless
-loops; playback in the app repeats the selected file and is muted by default.
+The original Aurora Flow demo is included. Third-party NASA candidates are
+quarantined: hosting on NASA and a generic media-use policy are not individual
+clearance for soundtracks, stock footage, performers, or other components.
+No third-party media is approved for the current native package.
 
 ## Release maintainers
 

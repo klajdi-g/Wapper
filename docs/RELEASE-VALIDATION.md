@@ -1,85 +1,89 @@
-# Voltrum Motion 0.2.1 preview validation
+# Voltrum Motion quarantine validation
 
-Validated on October 29, 2026. Website: https://motion.voltrum.co.
-GitHub prerelease: `klajdi-g/Wapper`, tag `motion-v0.2.1-preview`.
-The published release tag identifies the native source snapshot. Infrastructure
-is versioned under `apps/voltrum-motion/` in the Nix repository.
+Validated on October 29, 2026. The website remains live at
+https://motion.voltrum.co, but third-party media and installer publication are
+paused. No real catalog IDs have been approved. Native version 0.2.2 is a local
+demo/import build, not a public release.
 
-## Installer
+## Publication boundary
 
-- File: `Voltrum-Motion-0.2.1-preview-universal.dmg`.
-- SHA-256: `4cc4ae04da4ec4b10902d22adca48347bb59fda5881487cd98dcc79a75d55996`.
-- Size: 4,142,063 bytes.
-- Universal executable contains `x86_64` and `arm64`; minimum macOS is 14.0.
-- `codesign --verify --deep --strict` and `hdiutil verify` passed.
-- Downloaded the public GitHub artifact and matched its bytes to the published hash.
-- Signature is ad-hoc, with no Team Identifier. Apple notarization is **not** complete.
-- Public resources contain the NASA catalog and original demo/icon, not recovered
-  gallery artwork, historical catalogs, or personal imported videos.
+- Public `catalog.json` is `[]`; public `release.json` has `downloads: []`.
+- Shared `media-policy.json` is paused, with `allowNativeDownloads: false` and
+  `approvedMedia: []`. Only exact `publication: "enabled"` can activate approval.
+- Native packaging and runtime independently deny unapproved catalog access and
+  downloads. The packaged third-party gallery contains zero entries.
+- Both preview releases, `motion-v0.2.0-preview` and `motion-v0.2.1-preview`, and
+  the historical `recovery-2026-10-29` archive release are drafts. No 0.2.2 release
+  is published. Historical source tags and candidate manifests are not clearance.
+- The 159 source candidates remain for review only. The initial exclusion of 20
+  flagged items from 179 did not establish rights for the remainder. No blanket
+  public-domain or redistribution-permission claim is made.
 
-There is no Developer ID signing identity installed on the build machine.
-This is a published preview, not a production-trusted installer. Gatekeeper may
-block downloaded copies. No security-bypass instruction is included in the site
-or installation guide. Use a local source build if the preview is blocked.
+See [the audit](../website/MEDIA-LICENSE-AUDIT.md) and
+[the shared approval contract](../website/MEDIA-POLICY.md). Individual approval
+must address images, video, soundtrack, third-party components, attribution, and
+the intended uses. Do not manufacture approval records to enable publication.
 
-## Native checks
+## Local-only installer
 
-The packaged universal app passed 39 smoke checks, including a real NASA video
-download, playable video-track validation, and temporary-media cleanup. The
-offline subset contains 36 checks. The launched library reported bundle ID
-`co.voltrum.motion`, a visible 1300 by 820 window, 159 gallery entries, one
-connected display, and the existing 12-item local library preserved.
+- File: `build/releases/Voltrum-Motion-0.2.2-preview-universal.dmg`.
+- SHA-256: `43177df163df6c25c2c7a59d283b3e9c0405057f3c41a45b89edf2f47cb5a3d9`.
+- Size: 4,154,281 bytes. Rebuilding can change these bytes and the checksum.
+- Universal executable contains `arm64` and `x86_64`; minimum macOS is 14.0.
+- Strict code-signature verification and `hdiutil verify` passed. The signature
+  is ad-hoc; no Developer ID identity is installed and notarization is incomplete.
+- The original procedural Aurora demo and Voltrum icon are bundled. Recovered
+  catalogs/artwork and unapproved remote media are stripped from the app bundle.
+- Generated local release metadata contains a candidate URL, not a public asset.
+  Do not publish that manifest or installer while publication remains paused.
 
-Generated local reports are `build/motion-release-smoke.json` and
-`build/motion-launch.json`. The original installed wallpaper app is untouched.
+The app was relaunched locally as `co.voltrum.motion`, with a visible 1300 by 820
+window, zero aerial entries, zero gallery previews, one connected display, and
+the existing 12-item local library preserved. The original installed wallpaper
+app and user-imported files were not removed.
 
-## Website checks
+## Automated checks
 
-- All 159 catalog entries pass URL, unique-ID, and attribution validation.
-- All 15 Node behavior/packaging tests pass.
-- Real headless Chromium tested desktop 1440 by 1000 and phone 390 by 844 layouts.
-- No video requests occur before an explicit preview click.
-- Real video playback decoded a 1280 by 490 NASA clip; closing with Escape removes
-  its source and returns keyboard focus to the preview button.
-- Search, empty results, category filtering, saving favorites, saved-only filtering,
-  and persisted favorites after reload pass.
-- Searching `earth` returned 59 entries; the Moon category returned 28.
-- No JavaScript page errors or horizontal overflow occurred at either width.
-- The release download link is visible and clearly labeled an unnotarized preview.
-- The namespace has two ready nginx replicas. JavaScript modules have a JavaScript
-  MIME type, and source/release manifests are served as JSON.
+- Native: 43 offline smoke checks; 44 with `--check-download`. With no approved
+  entries the additional check verifies that network downloading is withheld;
+  it does not download or legally clear a sample. Demo decoding, video looping,
+  desktop rendering, imports, persistence, policy denial, and cleanup pass.
+- Native packaging: all four Python tests pass, including exact synthetic
+  approvals, missing/malformed/paused policy, changed URLs/scopes/credit, and unsafe
+  evidence URLs. Synthetic fixtures never approve real catalog entries.
+- Website: all 16 Node behavior/packaging tests pass, including fail-closed shared
+  schema tests, content/configuration hashing, and paused-download messaging.
+- Live Chromium: desktop 1440 by 1000 and phone 390 by 844 show zero media cards,
+  zero installer links, explicit pause messaging, no horizontal overflow, and no
+  JavaScript page errors. Search and saved filtering do not initiate media loads.
+- No external image/video requests or completed external requests occurred.
+  Cloudflare attempted to inject its analytics beacon; the site's self-only
+  script CSP blocked it. No analytics exception was added to the CSP.
+- Deployment: two ready nginx replicas; public manifests reflect the paused
+  policy. CSP includes `media-src 'none'` and `img-src 'self'`; runtime manifests
+  and assets are served with revalidation headers, and missing resources return 404.
 
-Local reports: `build/site-qa/report.json` and `build/deployment-validation.json`.
-The origin sends revalidation headers. Previously cached Cloudflare SVG responses
-may retain their earlier four-hour edge TTL until expiry; the current public SVG
-bytes match source. Version asset URLs or purge affected edge entries when changing
-those images in a future release.
+The verified content/configuration snapshot is `motion-site-c9ab4bdb8d56`, SHA-256
+`c9ab4bdb8d569663e5428fd34c1abd4cf7c4989e3a1ef3022990f68fec48c45e`.
+Never roll back to a pre-quarantine snapshot with unreviewed media or downloads.
 
-## Screenshot evidence
+## Reports and screenshots
+
+Local reports: `build/motion-quarantine-smoke.json`,
+`build/motion-quarantine-launch.json`, and `build/site-quarantine-qa/report.json`.
+Audit evidence is preserved privately under `build/media-audit-evidence/`,
+including the original 179-item catalog, source metadata, and prior screenshots.
+These ignored files are not website assets or release attachments.
 
 - [Desktop landing](images/motion-site-desktop.png).
-- [Desktop collection](images/motion-site-collection.png).
+- [Paused desktop collection](images/motion-site-collection.png).
 - [Phone landing](images/motion-site-mobile.png).
-- [Phone collection](images/motion-site-mobile-collection.png).
-- [Explicit video preview](images/motion-site-preview.png).
+- [Paused phone collection](images/motion-site-mobile-collection.png).
+- [Paused installer panel](images/motion-site-download-paused.png).
 
 ## Remaining release gates
 
-Developer ID signing and Apple notarization are required before advertising a
-trusted production installer. Physical Intel playback, display hotplug, actual
-battery/sleep transitions, VoiceOver, and Safari video controls need manual QA.
-NASA clips are credited source media, not all seamless ambient loops; review each
-source and its usage conditions before redistributing modified media.
-
-## Media screening correction
-
-The initial 0.2.0 preview contained 179 source-linked entries. A deeper audit of
-official per-item metadata identified music, third-party/rights, restricted-use,
-and JPL credit-review flags missed by the description-only filter. All 20 flagged
-entries are excluded from both the 159-item website and the 0.2.1 native package.
-The initial public release was withdrawn rather than retaining its installer.
-The generator now checks source metadata and fails closed when it cannot be read.
-
-See `media-screening.json` for the exclusions and `../website/MEDIA-LICENSE-AUDIT.md`
-for the historical evidence. Screening is not legal clearance or frame-by-frame
-audio/video review; no blanket public-domain or rights-cleared claim is made.
+Item-specific rights review and explicit installer publication approval remain
+required. Developer ID signing and Apple notarization are separate outstanding
+gates; do not disable Gatekeeper. Physical Intel playback, display hotplug, actual
+battery/sleep transitions, VoiceOver, and Safari controls need manual QA.

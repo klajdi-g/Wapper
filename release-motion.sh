@@ -5,9 +5,9 @@ version=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$root/W
 destination="$root/build/releases"
 app="$root/build/Voltrum Motion.app"
 mkdir -p "$destination"
-ARCH=arm64 INCLUDE_RECOVERED_CATALOG=0 "$root/build-wallper.sh"
+ARCH=arm64 "$root/build-wallper.sh"
 cp "$app/Contents/MacOS/WallperRebuilt" "$destination/motion-arm64"
-ARCH=x86_64 INCLUDE_RECOVERED_CATALOG=0 "$root/build-wallper.sh"
+ARCH=x86_64 "$root/build-wallper.sh"
 cp "$app/Contents/MacOS/WallperRebuilt" "$destination/motion-x86_64"
 lipo -create "$destination/motion-arm64" "$destination/motion-x86_64" -output "$app/Contents/MacOS/WallperRebuilt"
 notarized=false

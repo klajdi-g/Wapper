@@ -2,19 +2,22 @@
 
 ## Remediation update
 
-The findings below describe the initial 179-entry catalog. All 20 candidates with
-music, third-party/rights, or JPL-review flags have since been withheld from both
-the website and the 0.2.1 native package, leaving 159 entries. The 0.2.0 public
-installer was withdrawn. The generator now screens official per-item metadata,
-not just search descriptions. See `../docs/media-screening.json` for the exact
-exclusions. This containment is not independent legal clearance of the remainder;
-the historical audit and its manual-review limitations remain applicable.
+The findings below describe the initial 179-entry catalog. An intermediate
+screen withheld 20 candidates, leaving 159 unreviewed candidates. On October 29,
+2026, publication of the entire remaining collection and all website installer
+links was paused. `media-policy.json` contains no approved IDs; the deployment
+packager publishes an empty catalog and download list. Both 0.2.0 and 0.2.1
+prereleases and the historical recovery archive release are withdrawn to draft.
+The local-only native 0.2.2 build contains zero remote entries and independently
+enforces approval at packaging/runtime. See `MEDIA-POLICY.md` for the shared gate
+and `../docs/RELEASE-VALIDATION.md` for current native/browser verification.
+This containment is not independent legal clearance of any candidate.
 
 ## Conclusion
 
 **The existing catalog must not be represented as rights-cleared.** The NASA-only source filter and generic `NASA media-use guidelines` label are not a sufficient record of permission for each video, its soundtrack, its preview image, or its third-party components. This is a metadata and policy audit, not legal advice or an infringement determination.
 
-The recommended containment is to pause the public collection and native catalog distribution, then republish an explicitly reviewed allowlist. At an absolute minimum, quarantine the five specific entries below until written permission, an applicable license, or a separately cleared replacement is documented. Removing those five alone does not clear the remainder. This audit does **not** modify production, delete media, or change the native catalog.
+The recommended containment is to pause the public collection and native catalog distribution, then republish an explicitly reviewed allowlist. At an absolute minimum, quarantine the five specific entries below until written permission, an applicable license, or a separately cleared replacement is documented. Removing those five alone does not clear the remainder. The original audit was read-only; subsequent website containment is described above. The historical evidence does not describe the current public catalog.
 
 ## Scope and evidence
 
@@ -23,9 +26,9 @@ The recommended containment is to pause the public collection and native catalog
 - Catalog SHA-256: `08a6909f9dd97fd73dd6a29ff562f88c011b067ddee14b7cd2a2407668e0f390`.
 - Checked at `2026-10-29T18:56:00.207Z`.
 - All 179 entries were matched to exact NASA Image and Video Library API records; each original `metadata.json` was also fetched. No video bodies were downloaded.
-- The native `public-gallery.json` also contains 179 entries and includes the internally restricted candidate identified below. Website containment alone would not correct the native catalog.
-- Machine-readable evidence, including original descriptions, rights fields, source credits, and metadata URLs: `build/media-license-audit.json` in the repository. This generated evidence file is not published by the website packager.
-- Reproducible audit command: `node tools/audit-public-media.mjs`. It refuses to proceed if local and live catalogs differ.
+- At audit time the native `public-gallery.json` also contained 179 entries, including the internally restricted candidate below. Current packaged native resources contain zero remote entries; source candidates remain review material only.
+- Local evidence is preserved under `build/media-audit-evidence/`: `original-catalog-179.json`, `screened-159-source-metadata.json`, and `withheld-20-source-metadata.json`. The 20-item metadata was re-retrieved with dated provenance, not preserved as an exact original audit dump. Generated evidence is not published by the website packager.
+- Historical source-matched audit command: `node tools/audit-public-media.mjs`. It refuses to proceed if local and live catalogs differ, so it intentionally cannot audit the paused empty live catalog against source candidates. Do not unpause publication merely to run it.
 
 The public catalog points at remotely hosted NASA preview/video URLs; that is not an upload of the video files themselves. Remote hosting does not establish redistribution, embedding, commercial-use, publicity, music, or stock-footage rights.
 

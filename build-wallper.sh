@@ -12,10 +12,9 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 install -m 755 "$binary_dir/WallperRebuilt" "$app/Contents/MacOS/WallperRebuilt"
 rm -rf "$app/Contents/Resources/WallperRebuilt_WallperRebuilt.bundle"
 ditto "$binary_dir/WallperRebuilt_WallperRebuilt.bundle" "$app/Contents/Resources/WallperRebuilt_WallperRebuilt.bundle"
-if [ "${INCLUDE_RECOVERED_CATALOG:-0}" != 1 ]; then
-    resources="$app/Contents/Resources/WallperRebuilt_WallperRebuilt.bundle/Resources"
-    rm -rf "$resources/Gallery" "$resources/gallery.json" "$resources/entries.json"
-fi
+resources="$app/Contents/Resources/WallperRebuilt_WallperRebuilt.bundle/Resources"
+rm -rf "$resources/Gallery" "$resources/gallery.json" "$resources/entries.json"
+python3 "$root/tools/package-approved-catalog.py" "$root/website/media-policy.json" "$resources"
 cp "$root/WallperRebuilt/Info.plist" "$app/Contents/Info.plist"
 swift "$root/tools/generate-motion-icon.swift" "$root/build/Motion.iconset"
 iconutil --convert icns --output "$app/Contents/Resources/AppIcon.icns" "$root/build/Motion.iconset"

@@ -296,8 +296,8 @@ struct ContentView: View {
                 }
             }.padding(.top, page == .explore ? 36 : 24).padding(.bottom, 18)
             if items.isEmpty {
-                ContentUnavailableView("No wallpapers found", systemImage: "photo.on.rectangle",
-                                       description: Text("Import a video, like a wallpaper, or try another search."))
+                ContentUnavailableView(page == .explore && library.mediaPublicationPaused ? "Collection paused for rights review" : "No wallpapers found", systemImage: "photo.on.rectangle",
+                                       description: Text(page == .explore && library.mediaPublicationPaused ? "Third-party media is withheld until individually approved. Use My Media to import your own video or play the original demo." : "Import a video, like a wallpaper, or try another search."))
                     .frame(maxWidth: .infinity, minHeight: 280)
             } else { wallpaperGrid(items) }
         }

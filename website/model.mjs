@@ -70,7 +70,7 @@ export function parseRelease(payload) {
     const sha256 = text(entry.sha256).toLowerCase();
     return url && label && architecture && /^[a-f0-9]{64}$/u.test(sha256) ? [{ url, label, architecture, sha256 }] : [];
   });
-  return { version: text(payload.version), notarized: payload.notarized, downloads };
+  return { version: text(payload.version), notarized: payload.notarized, publicationStatus: text(payload.publicationStatus), downloads };
 }
 
 export function readFavorites(storage) {
