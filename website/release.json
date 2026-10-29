@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "tag": "motion-v0.2.0-preview",
+  "notarized": false,
+  "minimumMacOS": "14.0",
+  "downloads": [
+    {
+      "label": "macOS \u00b7 Apple silicon + Intel \u00b7 unnotarized preview",
+      "architecture": "universal",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.2.0-preview/Voltrum-Motion-0.2.0-preview-universal.dmg",
+      "sha256": "17435d69ff065e7d25746c3898dd18b5ebc3c889f0ed71509430cc1361d976be",
+      "bytes": 4145049
+    }
+  ]
+}

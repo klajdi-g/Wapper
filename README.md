@@ -1,10 +1,13 @@
-# Wallper
+# Voltrum Motion
 
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
 or all connected displays. The app works offline with your own videos and an
-included animated demo. Explore includes 3,026 approved wallpapers with
-on-demand video downloads and 353 bundled previews, plus an optional aerial catalog.
+included animated demo. Explore includes 179 source-credited NASA videos with
+on-demand downloads. The public package excludes historical recovered media.
+
+Website: https://motion.voltrum.co. Installation and signing status:
+[installation guide](docs/INSTALL.md). Deployment: [operations guide](docs/DEPLOYMENT.md).
 
 ## Build and run
 
@@ -15,7 +18,7 @@ later. There are no external Swift package dependencies.
 ./run-wallper.sh
 ```
 
-The script builds and launches `build/Wallper Rebuilt.app`. To build without
+The script builds and launches `build/Voltrum Motion.app`. To build without
 launching, run `./build-wallper.sh`. For development in Xcode, open
 `WallperRebuilt/Package.swift` as a Swift package.
 
@@ -28,9 +31,9 @@ launching, run `./build-wallper.sh`. For development in Xcode, open
 - Pause, resume, stop, audio volume, and menu-bar controls.
 - Display-sleep holds and configurable battery playback policies.
 - Saved display assignments and reconnection handling.
-- An offline demo and a bundled 152-item aerial catalog with opt-in downloads.
+- An offline demo and 179 credited NASA videos with opt-in downloads.
 - Floating Explore interface, category chips, resolution/tag search, and sorting.
-- Recovered gallery artwork, local video previews, and confirmed CDN downloads.
+- On-demand artwork, local video previews, and confirmed NASA downloads.
 - Playback speed controls from 0.5× to 2×.
 
 ## How the system works
@@ -66,14 +69,14 @@ lifecycle, storage format, build packaging, and validation details.
 The native smoke mode uses a temporary library and checks imports, thumbnails,
 persistence, view layout, video rendering and looping, playback holds, invalid
 media handling, and cleanup. Reports are written to `build/smoke-report.json`.
-The release build passed 37 checks on October 29, 2026, including a real public
+The release build passed 39 checks on October 29, 2026, including a real public
 CDN download, video-track validation, and cleanup. Enable that network test with:
 
 ```sh
-"build/Wallper Rebuilt.app/Contents/MacOS/WallperRebuilt" --smoke-test "$PWD/build/smoke-report.json" --check-download
+"build/Voltrum Motion.app/Contents/MacOS/WallperRebuilt" --smoke-test "$PWD/build/smoke-report.json" --check-download
 ```
 
-The default smoke run has 34 offline checks. Physical battery/sleep/hotplug
+The default public-package smoke run has 36 offline checks. Physical battery/sleep/hotplug
 transitions have not been independently exercised. See
 [visual comparison findings](docs/ui-comparison.md) for screenshot-based UI work.
 
@@ -83,11 +86,12 @@ transitions have not been independently exercised. See
 - `build-wallper.sh`, `run-wallper.sh`, `check-wallper.sh`: build, launch, and validation entry points.
 - `wallper-analysis/`: archived implementation notes, metadata, resources, and analysis artifacts.
 - `build/`: generated app and reports, excluded from Git.
+- `website/`: static catalog, download page, privacy information, and browser tests.
+- `release-motion.sh`: universal DMG packaging and optional Apple notarization.
 
 ## Project status
 
-The runnable source implements the local-video wallpaper core. It is not the
-exact original source tree or a complete restoration of every original feature.
+The runnable source implements the local-video wallpaper core.
 Account services, uploads, music/lyrics integration, mesh wallpapers, and
 fullscreen/CPU throttling are not implemented. The app uses a separate bundle
 identifier and storage location so an existing Wallper installation is untouched.
@@ -96,3 +100,16 @@ The historical analysis archive is retained for reference. Its full ZIP is
 available on the `recovery-2026-10-29` release; it predates the runnable Swift
 app. After downloading it, verify it with
 `shasum -a 256 -c Wallper-Recovery.zip.sha256`.
+
+## Release status
+
+Version 0.2.0 is a universal Apple silicon/Intel preview for macOS 14+.
+It is ad-hoc signed, not Developer ID signed or Apple notarized. Gatekeeper may
+block downloads; build locally instead of disabling system protections.
+`./release-motion.sh` packages both architectures. A trusted public release
+requires an installed Developer ID identity and a notarytool keychain profile,
+provided through `SIGN_IDENTITY` and `NOTARY_PROFILE`.
+
+Each NASA catalog item links to its original source and media-use guidelines.
+NASA does not endorse this product. Clips may contain edits or narration and
+are not guaranteed seamless. Local imports remain on your Mac.

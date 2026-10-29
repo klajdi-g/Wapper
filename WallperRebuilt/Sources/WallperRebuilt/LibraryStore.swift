@@ -146,7 +146,7 @@ final class LibraryStore: ObservableObject {
     func download(_ wallpaper: Wallpaper, onComplete: (@MainActor () -> Void)? = nil) {
         guard !isDownloaded(wallpaper), !downloading.contains(wallpaper.id),
               let url = wallpaper.remoteURL, url.scheme == "https",
-              ["sylvan.apple.com", "cdn.wallper.app"].contains(url.host ?? "") else { return }
+              ["sylvan.apple.com", "cdn.wallper.app", "images-assets.nasa.gov"].contains(url.host ?? "") else { return }
         downloading.insert(wallpaper.id)
         downloads[wallpaper.id] = Task {
             defer { downloading.remove(wallpaper.id); downloads[wallpaper.id] = nil }
@@ -199,6 +199,7 @@ final class LibraryStore: ObservableObject {
     }
 
     private func loadCatalog() {
+        guard resourceURL("entries", extension: "json") != nil else { return }
         do {
             guard let url = resourceURL("entries", extension: "json"),
                   let json = try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any],
@@ -225,10 +226,15 @@ final class LibraryStore: ObservableObject {
 
     private func loadGallery() {
         do {
-            guard let url = resourceURL("gallery", extension: "json") else {
-                throw RebuildError.message("The bundled preview gallery is missing.")
+            var records: [Wallpaper] = []
+            for name in ["public-gallery", "gallery"] {
+                if let url = resourceURL(name, extension: "json") {
+                    records += try JSONDecoder().decode([Wallpaper].self, from: Data(contentsOf: url))
+                }
             }
-            gallery = try JSONDecoder().decode([Wallpaper].self, from: Data(contentsOf: url))
+            guard !records.isEmpty else { throw RebuildError.message("The bundled wallpaper catalog is missing.") }
+            var identifiers: Set<String> = []
+            gallery = records.filter { identifiers.insert($0.id).inserted }
         } catch { errorMessage = error.localizedDescription }
     }
 }

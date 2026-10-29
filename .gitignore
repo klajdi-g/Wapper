@@ -7,3 +7,4 @@ __pycache__/
 /WallperRebuilt/.build/
 /WallperRebuilt/.swiftpm/
 /build/
+WallperRebuilt/.build-*/

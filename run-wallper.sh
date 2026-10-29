@@ -2,4 +2,4 @@
 set -eu
 root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 "$root/build-wallper.sh"
-open "$root/build/Wallper Rebuilt.app" --args --launch-report "$root/build/launch-status.json"
+open "$root/build/Voltrum Motion.app" --args --launch-report "$root/build/launch-status.json"

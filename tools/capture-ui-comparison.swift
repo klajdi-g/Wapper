@@ -4,7 +4,7 @@ import CoreGraphics
 let destination = URL(fileURLWithPath: CommandLine.arguments.dropFirst().first ?? "build/design-reference", isDirectory: true)
 try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
 let windows = CGWindowListCopyWindowInfo([.optionAll, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
-let targets = [("original", "sandimax.Wallper"), ("rebuilt", "local.wallper.rebuilt")]
+let targets = [("original", "sandimax.Wallper"), ("rebuilt", "co.voltrum.motion")]
 var captures: [(String, NSImage)] = []
 var measurements: [[String: Any]] = []
 

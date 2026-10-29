@@ -71,7 +71,7 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1300, height: 820),
                               styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
                               backing: .buffered, defer: false)
-        window.title = "Wallper"
+        window.title = "Voltrum Motion"
         window.delegate = self
         window.titleVisibility = .hidden
         window.minSize = NSSize(width: 1100, height: 680)
@@ -113,13 +113,13 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         let menu = NSMenu()
         let appItem = NSMenuItem()
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: "About Wallper Rebuilt", action: #selector(showAbout), keyEquivalent: "")
+        appMenu.addItem(withTitle: "About Voltrum Motion", action: #selector(showAbout), keyEquivalent: "")
         appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "Show Library", action: #selector(showWindow), keyEquivalent: "0")
         appMenu.addItem(withTitle: "Import Video…", action: #selector(importVideo), keyEquivalent: "o")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Hide Wallper Rebuilt", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        appMenu.addItem(withTitle: "Quit Wallper Rebuilt", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "Hide Voltrum Motion", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: "Quit Voltrum Motion", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         for item in appMenu.items where [#selector(showAbout), #selector(showWindow), #selector(importVideo)].contains(item.action) {
             item.target = self
         }
@@ -141,7 +141,7 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
 
     private func createStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem?.button?.image = NSImage(systemSymbolName: "play.rectangle.on.rectangle", accessibilityDescription: "Wallper Rebuilt")
+        statusItem?.button?.image = NSImage(systemSymbolName: "play.rectangle.on.rectangle", accessibilityDescription: "Voltrum Motion")
         refreshStatusMenu()
         controller.playback.objectWillChange.merge(with: controller.library.objectWillChange)
             .receive(on: DispatchQueue.main).sink { [weak self] _ in self?.refreshStatusMenu() }.store(in: &subscriptions)
@@ -158,7 +158,7 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         addMenuItem(controller.library.state.wantsPlaying ? "Pause Wallpapers" : "Resume Wallpapers", action: #selector(togglePlayback), to: menu)
         addMenuItem("Stop Wallpapers", action: #selector(stopWallpapers), to: menu)
         menu.addItem(.separator())
-        addMenuItem("Quit Wallper Rebuilt", action: #selector(NSApplication.terminate(_:)), to: menu)
+        addMenuItem("Quit Voltrum Motion", action: #selector(NSApplication.terminate(_:)), to: menu)
         statusItem?.menu = menu
     }
 
@@ -178,8 +178,8 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
     @objc private func stopWallpapers() { controller.stop() }
     @objc private func showAbout() {
         NSApp.orderFrontStandardAboutPanel(options: [
-            .applicationName: "Wallper Rebuilt",
-            .applicationVersion: "0.1.0",
+            .applicationName: "Voltrum Motion",
+            .applicationVersion: "0.2.0",
             .credits: NSAttributedString(string: "Independent Swift reconstruction from recovered metadata and behavior. Not the original source or complete original feature set.")
         ])
     }

@@ -165,7 +165,7 @@ struct ContentView: View {
                  ? "These Apple-hosted 4K videos may use hundreds of MB or more. Downloads use your network and disk space."
                  : "The video will be downloaded from the catalog CDN and saved in your local library. \(pendingDownload?.sizeMB.map { String(format: "Estimated size: %.1f MB.", $0) } ?? "")")
         }
-        .alert("Wallper", isPresented: Binding(
+        .alert("Voltrum Motion", isPresented: Binding(
             get: { library.errorMessage != nil || playback.errorMessage != nil },
             set: { if !$0 { library.errorMessage = nil; playback.errorMessage = nil } }
         )) {
@@ -218,8 +218,8 @@ struct ContentView: View {
                     Button { showAppInfo.toggle() } label: { Image(systemName: "key").frame(width: 34, height: 36) }
                         .popover(isPresented: $showAppInfo) {
                             VStack(alignment: .leading, spacing: 10) {
-                                Text("Wallper").font(.title2.bold())
-                                Text("Local video wallpapers · 0.1.0").foregroundStyle(.secondary)
+                                Text("Voltrum Motion").font(.title2.bold())
+                                Text("Local video wallpapers · 0.2.0").foregroundStyle(.secondary)
                                 Text("This build uses its own library and does not connect to account or licensing services.")
                                     .fixedSize(horizontal: false, vertical: true)
                                 Button("Show Library in Finder") { NSWorkspace.shared.open(library.root) }
@@ -236,7 +236,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 0) {
             if page == .explore {
                 Text("\(greeting) 👋").font(.system(size: 14, weight: .semibold)).foregroundStyle(.white.opacity(0.65))
-                Text(showAerials ? "Explore Aerial Library" : "Explore Wallper Library")
+                Text(showAerials ? "Explore Aerial Library" : "Explore Motion Library")
                     .font(.custom("TimesNewRomanPS-BoldMT", size: 42)).padding(.top, 8)
                 Text("Discover \(source.count.formatted()) stunning live wallpapers curated for your desktop")
                     .font(.system(size: 14)).foregroundStyle(.white.opacity(0.6)).padding(.top, 10)
@@ -503,7 +503,7 @@ struct WallpaperArtwork: View {
         }.task(id: url) {
             remoteImage = nil
             if CommandLine.arguments.contains("--smoke-test") && !CommandLine.arguments.contains("--check-download") { return }
-            guard let url, url.scheme == "https", ["cdn.wallper.app", "sylvan.apple.com"].contains(url.host ?? "") else { return }
+            guard let url, url.scheme == "https", ["cdn.wallper.app", "sylvan.apple.com", "images-assets.nasa.gov"].contains(url.host ?? "") else { return }
             if let cached = GalleryImageCache.shared.images.object(forKey: url as NSURL) { remoteImage = cached; return }
             guard let (data, response) = try? await URLSession.shared.data(from: url),
                   let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode),
@@ -599,6 +599,9 @@ struct WallpaperDetail: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(wallpaper.title).font(.title2.bold())
                     Text(displayCategory(wallpaper.category)).foregroundStyle(.secondary)
+                    if let creator = wallpaper.creator { Text(creator).font(.caption).foregroundStyle(.secondary) }
+                    if let source = wallpaper.sourceURL { Link("View original source", destination: source).font(.caption) }
+                    if let license = wallpaper.license, let url = wallpaper.licenseURL { Link(license, destination: url).font(.caption) }
                     if wallpaper.source == .gallery && local == nil {
                         Text("Download this wallpaper to play it locally. \(wallpaper.sizeMB.map { String(format: "%.1f MB", $0) } ?? "")")
                             .font(.caption).foregroundStyle(.secondary)
@@ -668,7 +671,7 @@ struct SettingsPanel: View {
                     Text(library.root.path).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
                 }
                 Section("About") {
-                    Text("Wallper · 0.1.0").font(.headline)
+                    Text("Voltrum Motion · 0.2.0").font(.headline)
                     Text("Native video wallpapers, local imports, favorites, and per-display playback.")
                     Text("The gallery uses a bundled catalog snapshot with on-demand media downloads. Online publishing, licensing, music synchronization, and custom playlists are not connected.")
                         .foregroundStyle(.secondary)

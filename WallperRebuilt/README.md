@@ -1,4 +1,4 @@
-# Wallper system guide
+# Voltrum Motion system guide
 
 This directory contains the native Swift application: a SwiftUI library and
 settings interface, an AppKit desktop-window layer, and an AVFoundation video
@@ -12,14 +12,15 @@ From the repository root:
 ./run-wallper.sh
 ```
 
-Build only: `./build-wallper.sh`. Output: `build/Wallper Rebuilt.app`.
+Build only: `./build-wallper.sh`. Output: `build/Voltrum Motion.app`.
 The script builds a release executable, bundles its resources, and applies and
 verifies a local ad-hoc code signature. There are no external Swift package
 dependencies, and an original Wallper installation is not required.
 
 Requirements: macOS 14 or later and Apple Command Line Tools with Swift 5.9 or
-later. The build targets the current Mac's architecture; it is not a universal
-binary. Full Xcode is optional: open `Package.swift` as a Swift package to work
+later. The development build targets the current Mac's architecture;
+`../release-motion.sh` builds a universal Apple silicon/Intel release.
+Full Xcode is optional: open `Package.swift` as a Swift package to work
 in Xcode, or use the Command Line Tools for the shell build. A separate
 `.xcodeproj` is not required or supplied.
 
@@ -39,11 +40,10 @@ swift run --package-path WallperRebuilt WallperRebuilt
    Stop closes only this app's overlay windows and reveals the
    desktop that was already underneath them.
 5. Settings controls audio and battery behavior. Sound is muted by default.
-6. **Explore** shows 3,026 approved gallery records, with 353 bundled previews.
-   Other previews load on demand. Download a video before applying it; the
+6. **Explore** shows 179 credited NASA videos in the public package.
+   Previews load on demand. Download a video before applying it; the
    confirmation can also apply it automatically when ready.
-7. **Home → Explore All → Explore Aerials** opens the optional 152-item aerial
-   catalog. Apple-hosted 4K downloads can be very large.
+7. The historical aerial/gallery catalogs are excluded from public releases.
 8. The dock controls display selection, shuffle, favorites, pause, and speed.
 
 The library opens at 1300×820, rather than fullscreen. If AeroSpace is present,
@@ -139,15 +139,19 @@ Quit have different persistence behavior as described above.
 
 ## Catalog and networking
 
-`Resources/gallery.json` contains 3,026 approved public gallery records.
-`Resources/Gallery/` contains 353 resized cached JPEG previews. The snapshot
-whitelists public wallpaper fields, excluding account IDs, review details,
-credentials, and declined entries. `Resources/entries.json` adds 152 aerials.
-Uncached preview images load asynchronously from approved CDN hosts into a
-bounded in-memory cache. Favorites stay local; displayed like counts are a snapshot.
+`Resources/public-gallery.json` contains 179 source-credited NASA video records,
+including preview, video, creator, source, and usage-guideline URLs. Regenerate it
+with `python3 tools/import-public-catalog.py` from the repository root.
+Previews load asynchronously into a bounded in-memory cache. Favorites stay local.
+
+Historical `gallery.json`, `Gallery/`, and `entries.json` resources remain available
+for private development but are removed from public app packaging. Explicitly set
+`INCLUDE_RECOVERED_CATALOG=1` only for a private local build. Those resources and
+the original app icon are not included in the public installer.
 
 A confirmed download uses `URLSession` and accepts only HTTPS video URLs on
-`sylvan.apple.com` or `cdn.wallper.app` from the bundled catalogs. A successful
+`images-assets.nasa.gov` from the public catalog (or `sylvan.apple.com` and
+`cdn.wallper.app` for optional private catalogs). A successful
 response is staged with its video extension before AVFoundation inspection
 (CFNetwork's `.tmp` extension is not playable for some MP4 assets). The file
 then follows the same validation and import path as a local video. Download
@@ -160,7 +164,7 @@ an indeterminate status indicator, not byte-level progress or resume support.
 Gallery downloads with a known size check free space before starting. There is
 no library-wide quota, byte-level progress, or resumable transfer support.
 
-To regenerate the public snapshot from an installed cache:
+To regenerate the historical private snapshot from an installed cache:
 
 ```sh
 swift tools/import-gallery-previews.swift "$HOME/Library/Application Support/Wallper" "$PWD/WallperRebuilt/Sources/WallperRebuilt/Resources"
@@ -169,7 +173,7 @@ swift tools/import-gallery-previews.swift "$HOME/Library/Application Support/Wal
 To copy previously downloaded videos into this app, quit this app first, then:
 
 ```sh
-"build/Wallper Rebuilt.app/Contents/MacOS/WallperRebuilt" --import-installed-library "$HOME/Library/Application Support/Wallper" "$PWD/build/installed-import-report.json"
+"build/Voltrum Motion.app/Contents/MacOS/WallperRebuilt" --import-installed-library "$HOME/Library/Application Support/Wallper" "$PWD/build/installed-import-report.json"
 ```
 
 This matches catalog IDs, validates each video, skips already imported IDs, and
@@ -178,9 +182,9 @@ on the development Mac. They remain in Application Support, not this repository.
 
 ## Resources and packaging
 
-`Resources/` includes the catalog, application icon, and an original four-second
-procedural Aurora Flow demo with a JPEG poster. The catalog and icon are also
-preserved in the historical resource archive; the demo is newly generated.
+Public `Resources/` includes the NASA catalog and an original four-second
+procedural Aurora Flow demo with a JPEG poster. Packaging generates an original
+Voltrum icon with `tools/generate-motion-icon.swift`.
 
 Swift Package Manager copies these assets into a resource bundle. The build
 script assembles the executable, resource bundle, icon, and `Info.plist` into a
@@ -189,7 +193,7 @@ falls back to the package's resource bundle for an unbundled development run.
 
 ## Isolation and distribution
 
-- Bundle identifier: `local.wallper.rebuilt`, not `sandimax.Wallper`.
+- Bundle identifier: `co.voltrum.motion`, not `sandimax.Wallper`.
 - Library: `~/Library/Application Support/WallperRebuilt/`.
 - Imported videos and generated thumbnails live in that library. Originals are
   never moved or deleted. Removing a library item deletes only its copied media.
@@ -232,7 +236,7 @@ media and corrupt saved state. It restores the underlying desktop by closing
 its own windows. The JSON report is `build/smoke-report.json`.
 
 On October 29, 2026, a release build using Swift 6.3 on macOS 26.5 passed all
-34 offline smoke checks and 37 checks with `--check-download`, including a public
+36 offline smoke checks and 39 checks with `--check-download`, including a public
 CDN download, playable-track inspection, and cleanup. The app previously passed
 with the build-tree resource bundle
 temporarily unavailable, verifying it loads resources from its own app bundle.

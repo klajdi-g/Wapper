@@ -19,6 +19,10 @@ struct Wallpaper: Codable, Identifiable, Equatable {
     var resolution: String?
     var sizeMB: Double?
     var publishedAt: String?
+    var license: String?
+    var licenseURL: URL?
+    var creator: String?
+    var sourceURL: URL?
 
     var publishedDate: Date? {
         guard let publishedAt else { return nil }

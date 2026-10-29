@@ -18,11 +18,15 @@ func runSmokeTest(reportURL: URL) async {
     var failure: String?
     do {
         try check(controller.library.errorMessage == nil, "library initialization")
-        try check(controller.library.catalog.count == 152, "all 152 recovered catalog entries decode")
-        try check(controller.library.gallery.count == 3026, "all 3026 approved catalog records decode")
+        let recoveredResources = resourceURL("gallery", extension: "json") != nil
+        try check(controller.library.catalog.count == (recoveredResources ? 152 : 0), "only explicitly included recovered aerial resources decode")
+        try check(controller.library.gallery.filter { $0.license == nil }.count == (recoveredResources ? 3026 : 0), "public packages exclude recovered gallery records")
+        let publicGallery = controller.library.gallery.filter { $0.license != nil }
+        try check(publicGallery.count >= 100, "public catalog provides at least 100 additional videos")
+        try check(publicGallery.allSatisfy { $0.creator != nil && $0.sourceURL?.host == "images.nasa.gov" && $0.licenseURL?.host == "www.nasa.gov" }, "public catalog retains source credits and usage guidelines")
         let cachedGallery = controller.library.gallery.filter { $0.previewAsset != nil }
-        try check(cachedGallery.count == 353 && cachedGallery.allSatisfy { controller.library.thumbnailURL(for: $0) != nil }, "all 353 cached gallery images resolve inside the app bundle")
-        try check(controller.library.gallery.allSatisfy { $0.source == .gallery && $0.remoteURL?.host == "cdn.wallper.app" && controller.library.mediaURL(for: $0) == nil }, "catalog URLs do not pretend undownloaded videos are local files")
+        try check(cachedGallery.count == (recoveredResources ? 353 : 0) && cachedGallery.allSatisfy { controller.library.thumbnailURL(for: $0) != nil }, "only explicitly included cached gallery images resolve")
+        try check(controller.library.gallery.allSatisfy { $0.source == .gallery && ["cdn.wallper.app", "images-assets.nasa.gov"].contains($0.remoteURL?.host ?? "") && controller.library.mediaURL(for: $0) == nil }, "catalog URLs do not pretend undownloaded videos are local files")
         var searchSample = Wallpaper.demo
         searchSample.resolution = "3840x2160"
         searchSample.tags = ["Aesthetic"]
@@ -87,7 +91,7 @@ func runSmokeTest(reportURL: URL) async {
         do { _ = try await controller.library.importVideo(invalid) } catch { rejected = true }
         try check(rejected, "invalid media is rejected")
         if CommandLine.arguments.contains("--check-download") {
-            guard let remote = controller.library.gallery.first(where: { $0.id == "c2299d79-e541-4261-a9dd-06635e2505a7" }) else {
+            guard let remote = publicGallery.min(by: { ($0.sizeMB ?? .infinity) < ($1.sizeMB ?? .infinity) }) else {
                 throw RebuildError.message("Missing network-check catalog item")
             }
             controller.library.download(remote)
@@ -96,7 +100,7 @@ func runSmokeTest(reportURL: URL) async {
                 try await Task.sleep(nanoseconds: 100_000_000)
             }
             if let message = controller.library.errorMessage { throw RebuildError.message(message) }
-            try check(controller.library.isDownloaded(remote), "approved CDN video downloads and imports successfully")
+            try check(controller.library.isDownloaded(remote), "public source video downloads and imports successfully")
             guard let downloaded = controller.library.library.first(where: { $0.id == remote.id }),
                   let downloadedURL = controller.library.mediaURL(for: downloaded) else { throw RebuildError.message("Downloaded file is missing") }
             let downloadedTracks = try await AVURLAsset(url: downloadedURL).loadTracks(withMediaType: .video)
