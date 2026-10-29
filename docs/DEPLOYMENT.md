@@ -7,7 +7,7 @@ browser screenshots, and remaining production-release gates.
 
 - Website: https://motion.voltrum.co (the existing root Voltrum website is unchanged).
 - Source and preview downloads: https://github.com/klajdi-g/Wapper.
-- Native bundle: `co.voltrum.motion`, version 0.2.0, macOS 14+, universal Intel/Apple silicon.
+- Native bundle: `co.voltrum.motion`, version 0.2.1, macOS 14+, universal Intel/Apple silicon.
 - Preview builds are ad-hoc signed and unnotarized, not production-trusted installers.
 
 ## Publish an update

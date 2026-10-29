@@ -1,31 +1,5 @@
 [
   {
-    "id": "8fc33b27-7c0b-56d5-b4e6-3bafc686a013",
-    "title": "AIRS: NASA Advances Our Understanding of Earth’s Climate",
-    "category": "Earth",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/JPL-20220504-AIRSf-0001-AIRS_20th_Anniversary_2160/JPL-20220504-AIRSf-0001-AIRS_20th_Anniversary_2160~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/JPL-20220504-AIRSf-0001-AIRS_20th_Anniversary_2160/JPL-20220504-AIRSf-0001-AIRS_20th_Anniversary_2160~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/JPL-20220504-AIRSf-0001-AIRS_20th_Anniversary_2160",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JPL",
-    "sizeMB": 53.19,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Jet Propulsion Laboratory",
-      "JPL",
-      "AIRS",
-      "Atmospheric Infrared Sounder",
-      "atmosphere",
-      "satellite",
-      "infrared"
-    ],
-    "publishedAt": "2022-05-04T00:00:00Z"
-  },
-  {
     "id": "4f54680c-fc14-5c4f-8a6c-ec06c868e5aa",
     "title": "Best of \"Earth As Art\" - Top Five",
     "category": "Earth",
@@ -228,32 +202,6 @@
       "HDEV"
     ],
     "publishedAt": "2019-04-30T00:00:00Z"
-  },
-  {
-    "id": "deacdd23-79ef-5aaf-b6f8-d34a29f14960",
-    "title": "Earth Water Budget Animation",
-    "category": "Earth",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/JPL-20221111-EARTHf-0001-Earth%20Water%20Budget%20Animation/JPL-20221111-EARTHf-0001-Earth%20Water%20Budget%20Animation~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/JPL-20221111-EARTHf-0001-Earth%20Water%20Budget%20Animation/JPL-20221111-EARTHf-0001-Earth%20Water%20Budget%20Animation~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/JPL-20221111-EARTHf-0001-Earth%20Water%20Budget%20Animation",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JPL",
-    "sizeMB": 63.48,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Jet Propulsion Laboratory",
-      "JPL",
-      "Suface Water and Ocean Topography mission",
-      "SWOT",
-      "France",
-      "CNES",
-      "water"
-    ],
-    "publishedAt": "2022-12-09T00:00:00Z"
   },
   {
     "id": "568e147c-9b12-558a-9cb3-caca7a97d282",
@@ -1349,32 +1297,6 @@
     "publishedAt": "2026-08-25T00:00:00Z"
   },
   {
-    "id": "99eb3d18-f739-545b-be88-de7de179314b",
-    "title": "JPL-20240311-CLIPPRf-0001-NASA Unveils Design for Message Heading to Jupiters Moon Europa",
-    "category": "Moon",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/JPL-20240311-CLIPPRf-0001-NASA%20Unveils%20Design%20for%20Message%20Heading%20to%20Jupiters%20Moon%20Europa/JPL-20240311-CLIPPRf-0001-NASA%20Unveils%20Design%20for%20Message%20Heading%20to%20Jupiters%20Moon%20Europa~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/JPL-20240311-CLIPPRf-0001-NASA%20Unveils%20Design%20for%20Message%20Heading%20to%20Jupiters%20Moon%20Europa/JPL-20240311-CLIPPRf-0001-NASA%20Unveils%20Design%20for%20Message%20Heading%20to%20Jupiters%20Moon%20Europa~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/JPL-20240311-CLIPPRf-0001-NASA%20Unveils%20Design%20for%20Message%20Heading%20to%20Jupiters%20Moon%20Europa",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JPL",
-    "sizeMB": 49.71,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "JPL",
-      "Jet Propulsion Laboratory",
-      "Europa Clipper",
-      "Europa",
-      "ocean world",
-      "spacecraft",
-      "commemorative plate"
-    ],
-    "publishedAt": "2024-03-11T00:00:00Z"
-  },
-  {
     "id": "a69bbd34-8492-5f3e-a7a8-cd863d3cb227",
     "title": "LRO's Diviner Takes the Moon's Temperature During Eclipse",
     "category": "Moon",
@@ -1659,58 +1581,6 @@
     "publishedAt": "2015-03-17T00:00:00Z"
   },
   {
-    "id": "504ea82e-e5b6-5069-b38a-5fe02cdda576",
-    "title": "New Supercomputer Simulation Sheds Light on Moon’s Origin",
-    "category": "Moon",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/ARC-20221004-AAV3443-MoonOrigin-Social-NASAWeb-1080p/ARC-20221004-AAV3443-MoonOrigin-Social-NASAWeb-1080p~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/ARC-20221004-AAV3443-MoonOrigin-Social-NASAWeb-1080p/ARC-20221004-AAV3443-MoonOrigin-Social-NASAWeb-1080p~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/ARC-20221004-AAV3443-MoonOrigin-Social-NASAWeb-1080p",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / ARC",
-    "sizeMB": 29.84,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "moon",
-      "origin",
-      "planet",
-      "earth",
-      "planetary formation",
-      "durham university",
-      "supercomputer simulation",
-      "visualization"
-    ],
-    "publishedAt": "2022-10-04T00:00:00Z"
-  },
-  {
-    "id": "d25c1cc5-252d-50b0-a404-f73758945571",
-    "title": "Observe the Moon",
-    "category": "Moon",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/ObserveTheMoon_16x9/ObserveTheMoon_16x9~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/ObserveTheMoon_16x9/ObserveTheMoon_16x9~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/ObserveTheMoon_16x9",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / GSFC",
-    "sizeMB": 55.74,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "LRO",
-      "Moon",
-      "International Observe the Moon Night",
-      "VOYA",
-      "Music",
-      "Music Video"
-    ],
-    "publishedAt": "2021-10-04T00:00:00Z"
-  },
-  {
     "id": "58af8d81-ec33-5d75-9bbd-a34c61fc7d52",
     "title": "SOFIA Discovers Water on a Sunlit Surface of the Moon",
     "category": "Moon",
@@ -1736,29 +1606,6 @@
       "nasa in silicon valley"
     ],
     "publishedAt": "2020-10-26T00:00:00Z"
-  },
-  {
-    "id": "60029428-beab-5652-a792-60fe772a3ad8",
-    "title": "The Moon and More",
-    "category": "Moon",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/GSFC_20161003_MusicVideo_m12366/GSFC_20161003_MusicVideo_m12366~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/GSFC_20161003_MusicVideo_m12366/GSFC_20161003_MusicVideo_m12366~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/GSFC_20161003_MusicVideo_m12366",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / GSFC",
-    "sizeMB": 62.75,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Moon",
-      "Music",
-      "LRO",
-      "Lunar Reconnaissance Orbiter"
-    ],
-    "publishedAt": "2016-10-03T00:00:00Z"
   },
   {
     "id": "d74ef4bf-9c76-5e00-8d1f-de2d73766926",
@@ -1917,32 +1764,6 @@
     "publishedAt": "2018-12-10T00:00:00Z"
   },
   {
-    "id": "643b18ae-6d09-587d-be13-a8d2ef72c9fd",
-    "title": "Crawler Move B-roll and Timelapse featuring Driver Daniel Zapata",
-    "category": "Nature",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/KSC-20190403-MH-CMS01_0001-Crawler_Move_Driver_Daniel_Zapata_H265-3216946/KSC-20190403-MH-CMS01_0001-Crawler_Move_Driver_Daniel_Zapata_H265-3216946~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/KSC-20190403-MH-CMS01_0001-Crawler_Move_Driver_Daniel_Zapata_H265-3216946/KSC-20190403-MH-CMS01_0001-Crawler_Move_Driver_Daniel_Zapata_H265-3216946~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/KSC-20190403-MH-CMS01_0001-Crawler_Move_Driver_Daniel_Zapata_H265-3216946",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / KSC",
-    "sizeMB": 54.96,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "crawler",
-      "EM-1",
-      "crawler-transporter",
-      "CT",
-      "CT-2",
-      "EGS",
-      "Exploration Ground Systems"
-    ],
-    "publishedAt": "2019-04-03T00:00:00Z"
-  },
-  {
     "id": "5af4c6d5-dfe0-5530-9777-b6a6bd2faaf2",
     "title": "Mapping Alaska's Forests",
     "category": "Nature",
@@ -2017,33 +1838,6 @@
     "publishedAt": "2018-09-12T00:00:00Z"
   },
   {
-    "id": "759a90b8-6311-5bb0-9740-c83df4e5737b",
-    "title": "Exploring Jupiter's Magnetic Field",
-    "category": "Planets",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/GSFC_20160629_Juno_m12296_Magnetometer/GSFC_20160629_Juno_m12296_Magnetometer~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/GSFC_20160629_Juno_m12296_Magnetometer/GSFC_20160629_Juno_m12296_Magnetometer~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/GSFC_20160629_Juno_m12296_Magnetometer",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / GSFC",
-    "sizeMB": 69.7,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Dynamo",
-      "Jupiter",
-      "Magnetic Fields",
-      "Magnetosphere",
-      "Voyage",
-      "Juno",
-      "Planets and Moons",
-      "Magnetometer"
-    ],
-    "publishedAt": "2016-06-29T00:00:00Z"
-  },
-  {
     "id": "6d5f7f3d-099d-595d-9b51-f996f887ddf6",
     "title": "Hubble’s Brand New Image of Jupiter",
     "category": "Planets",
@@ -2067,32 +1861,6 @@
       "Planets and Moons"
     ],
     "publishedAt": "2019-08-08T00:00:00Z"
-  },
-  {
-    "id": "52fb6d7e-3c92-59f8-80d6-1e23f6904c9d",
-    "title": "JPL-20200429-TECHf-0002-Mars Helicopter Animation",
-    "category": "Planets",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/JPL-20200429-TECHf-0002-Mars%20Helicopter%20Animation/JPL-20200429-TECHf-0002-Mars%20Helicopter%20Animation~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/JPL-20200429-TECHf-0002-Mars%20Helicopter%20Animation/JPL-20200429-TECHf-0002-Mars%20Helicopter%20Animation~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/JPL-20200429-TECHf-0002-Mars%20Helicopter%20Animation",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JPL",
-    "sizeMB": 44.82,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Jet propulsion Laboratory",
-      "JPL",
-      "Mars 2020",
-      "Mars",
-      "helicopter",
-      "rover",
-      "rovers"
-    ],
-    "publishedAt": "2020-04-29T00:00:00Z"
   },
   {
     "id": "fcf9e841-dbdc-5472-b558-164f749d97a5",
@@ -2294,32 +2062,6 @@
       "SDO"
     ],
     "publishedAt": "2016-05-09T00:00:00Z"
-  },
-  {
-    "id": "45333639-fe64-5ef4-bc8a-3daea35038e1",
-    "title": "3D 4k for STEREO's 10th Anniversary",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/GSFC_20161025_STEREO_m12393_10th_3D_4K/GSFC_20161025_STEREO_m12393_10th_3D_4K~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/GSFC_20161025_STEREO_m12393_10th_3D_4K/GSFC_20161025_STEREO_m12393_10th_3D_4K~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/GSFC_20161025_STEREO_m12393_10th_3D_4K",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / GSFC",
-    "sizeMB": 156.54,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Sun",
-      "Solar Ultraviolet",
-      "SDO",
-      "Heliophysics",
-      "STEREO",
-      "3-D",
-      "Corona"
-    ],
-    "publishedAt": "2016-10-25T00:00:00Z"
   },
   {
     "id": "5abf691d-35e9-52a4-b3b6-e3640c3096ea",
@@ -2835,32 +2577,6 @@
     "publishedAt": "2008-08-19T00:00:00Z"
   },
   {
-    "id": "d1d8cd91-076c-51bf-a615-7d68151e1054",
-    "title": "ISVV-7 Timelapse",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/KSC-20241216-MH-FMX01-0001-ISVV-7_Timelapse-M10920/KSC-20241216-MH-FMX01-0001-ISVV-7_Timelapse-M10920~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/KSC-20241216-MH-FMX01-0001-ISVV-7_Timelapse-M10920/KSC-20241216-MH-FMX01-0001-ISVV-7_Timelapse-M10920~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/KSC-20241216-MH-FMX01-0001-ISVV-7_Timelapse-M10920",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / KSC",
-    "sizeMB": 10.24,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "ML",
-      "EGS",
-      "VAB",
-      "KSC",
-      "Artemis",
-      "Artemis II",
-      "Stacking"
-    ],
-    "publishedAt": "2024-12-16T00:00:00Z"
-  },
-  {
     "id": "af56b108-4f92-53c9-b442-17308dab6ba8",
     "title": "JWST Spacecraft Deploy Animation",
     "category": "Space",
@@ -3014,31 +2730,6 @@
     "publishedAt": "2012-03-05T00:00:00Z"
   },
   {
-    "id": "50e95df5-25a4-5e24-bc4c-a1d709950663",
-    "title": "LH2 Time lapse footage at Pad 39-B",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/KSC-20190826-MH-KLS01_0001-LH2_Time_Lapse_of_construction_at_39B-3223721/KSC-20190826-MH-KLS01_0001-LH2_Time_Lapse_of_construction_at_39B-3223721~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/KSC-20190826-MH-KLS01_0001-LH2_Time_Lapse_of_construction_at_39B-3223721/KSC-20190826-MH-KLS01_0001-LH2_Time_Lapse_of_construction_at_39B-3223721~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/KSC-20190826-MH-KLS01_0001-LH2_Time_Lapse_of_construction_at_39B-3223721",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / KSC",
-    "sizeMB": 84.06,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "39-B",
-      "Time Lapse",
-      "LH-2",
-      "Engineering",
-      "KSC",
-      "Kennedy Space Center"
-    ],
-    "publishedAt": "2019-11-14T00:00:00Z"
-  },
-  {
     "id": "d9ca2c56-b591-5c6a-ad14-ffbd14c7c9e9",
     "title": "MagniX Time-lapse",
     "category": "Space",
@@ -3061,32 +2752,6 @@
       "Armstrong Test Facility"
     ],
     "publishedAt": "2025-07-11T00:00:00Z"
-  },
-  {
-    "id": "51030d73-a0ed-5d73-a666-d44ea1598481",
-    "title": "NASA Captures Hurricane Harvey's Rainfall: Visualization",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/GSFC_20170830_GPM_m4458_Harvey/GSFC_20170830_GPM_m4458_Harvey~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/GSFC_20170830_GPM_m4458_Harvey/GSFC_20170830_GPM_m4458_Harvey~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/GSFC_20170830_GPM_m4458_Harvey",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / GSFC",
-    "sizeMB": 22.64,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Atmospheric Science",
-      "Hydrology",
-      "Natural Hazards",
-      "Hurricanes",
-      "Texas",
-      "Floods",
-      "Earth"
-    ],
-    "publishedAt": "2017-08-30T00:00:00Z"
   },
   {
     "id": "d4eafb82-e9b9-517e-ab3d-eb1f0b9dc2e2",
@@ -3297,33 +2962,6 @@
     "publishedAt": "2018-10-31T00:00:00Z"
   },
   {
-    "id": "ab29f5fa-5b8b-591d-83dc-a7ec5e4451a4",
-    "title": "Sentinel-6 Animation",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/KSC-20201009-MH-SPX01-0001-Sentinel_6_Animation-3261041/KSC-20201009-MH-SPX01-0001-Sentinel_6_Animation-3261041~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/KSC-20201009-MH-SPX01-0001-Sentinel_6_Animation-3261041/KSC-20201009-MH-SPX01-0001-Sentinel_6_Animation-3261041~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/KSC-20201009-MH-SPX01-0001-Sentinel_6_Animation-3261041",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / KSC",
-    "sizeMB": 40.6,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "SpaceX",
-      "Sentinel-6",
-      "Falcon 9",
-      "ESA",
-      "European Space Agency",
-      "VAFB",
-      "Vandenberg Air Force Base",
-      "LSP"
-    ],
-    "publishedAt": "2020-10-09T00:00:00Z"
-  },
-  {
     "id": "f0a778cd-0575-5eed-aa4d-aaf2c458d057",
     "title": "SEXTANT: Navigating by Cosmic Beacon: Animation",
     "category": "Space",
@@ -3400,55 +3038,6 @@
       "X-59 assembly"
     ],
     "publishedAt": "2021-08-03T00:00:00Z"
-  },
-  {
-    "id": "918efb66-7018-55a0-8fdc-979582aa368a",
-    "title": "TROPICS Animation",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/KSC-20230425-MH-NAS01-TROPICS_Animation-WON_3329837/KSC-20230425-MH-NAS01-TROPICS_Animation-WON_3329837~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/KSC-20230425-MH-NAS01-TROPICS_Animation-WON_3329837/KSC-20230425-MH-NAS01-TROPICS_Animation-WON_3329837~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/KSC-20230425-MH-NAS01-TROPICS_Animation-WON_3329837",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / KSC",
-    "sizeMB": 29.9,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "CubeSat",
-      "Hurricane",
-      "Typhoon",
-      "Cyclone",
-      "Rocket Lab",
-      "New Zealand"
-    ],
-    "publishedAt": "2023-04-25T00:00:00Z"
-  },
-  {
-    "id": "ba391d3c-111c-594e-abbd-df39d3cc0cb8",
-    "title": "U. S. Spacewalk 90 Animation",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/jsc2023m000186-U_S_Spacewalk_90_Animation/jsc2023m000186-U_S_Spacewalk_90_Animation~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/jsc2023m000186-U_S_Spacewalk_90_Animation/jsc2023m000186-U_S_Spacewalk_90_Animation~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/jsc2023m000186-U_S_Spacewalk_90_Animation",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JSC",
-    "sizeMB": 128.27,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "US EVA 90",
-      "Spacewalk 90",
-      "Loral O'Hara",
-      "Mogensen",
-      "Expedition 70"
-    ],
-    "publishedAt": "2023-10-16T00:00:00Z"
   },
   {
     "id": "b998629f-6868-596c-945e-5a009e25f792",
@@ -3580,29 +3169,6 @@
       "Spacewalk"
     ],
     "publishedAt": "2022-12-20T00:00:00Z"
-  },
-  {
-    "id": "ccfebee0-323f-55ad-9cc2-c95ea3a5ec59",
-    "title": "U.S. Spacewalk 84 Animation - January 20, 2023",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/jsc2023m000057-US_Spacewalk_84_Animation_January_20_2023_social/jsc2023m000057-US_Spacewalk_84_Animation_January_20_2023_social~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/jsc2023m000057-US_Spacewalk_84_Animation_January_20_2023_social/jsc2023m000057-US_Spacewalk_84_Animation_January_20_2023_social~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/jsc2023m000057-US_Spacewalk_84_Animation_January_20_2023_social",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JSC",
-    "sizeMB": 140.49,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "spacewalk 84",
-      "eva 84",
-      "Mann",
-      "Wakata"
-    ],
-    "publishedAt": "2023-01-13T00:00:00Z"
   },
   {
     "id": "66fcba90-48fc-5def-8350-499399157f0d",
@@ -3814,27 +3380,6 @@
       "Expedition 75"
     ],
     "publishedAt": "2026-07-30T00:00:00Z"
-  },
-  {
-    "id": "a0152ba7-c71d-5f0b-a8c5-b2f89599e098",
-    "title": "US Spacewalk 93 Animation",
-    "category": "Space",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/jsc2025m000112_US_Spacewalk_93_Animation_250424-MP4/jsc2025m000112_US_Spacewalk_93_Animation_250424-MP4~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/jsc2025m000112_US_Spacewalk_93_Animation_250424-MP4/jsc2025m000112_US_Spacewalk_93_Animation_250424-MP4~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/jsc2025m000112_US_Spacewalk_93_Animation_250424-MP4",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JSC",
-    "sizeMB": 53.28,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Spacewalk",
-      "Expedition 73"
-    ],
-    "publishedAt": "2025-04-24T00:00:00Z"
   },
   {
     "id": "aa0d74dc-b024-5fe8-8e8f-ed7a4f564ddf",
@@ -4121,33 +3666,6 @@
     "publishedAt": "2017-06-22T00:00:00Z"
   },
   {
-    "id": "e7a90381-c98c-5995-8d04-4a2b27d9a1d2",
-    "title": "Scientists Uncover Origins of Dynamic Jets on Sun's Surface: Observations from Hinode Spacecraft",
-    "category": "Sun",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/GSFC_20170622_m12604_20080406_GrBlRe/GSFC_20170622_m12604_20080406_GrBlRe~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/GSFC_20170622_m12604_20080406_GrBlRe/GSFC_20170622_m12604_20080406_GrBlRe~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/GSFC_20170622_m12604_20080406_GrBlRe",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / GSFC",
-    "sizeMB": 2.58,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Computer Model",
-      "Model Data",
-      "Sun",
-      "IRIS Mission",
-      "Alfven Waves",
-      "Spicules",
-      "Interface Region",
-      "Coronal Heating"
-    ],
-    "publishedAt": "2017-06-22T00:00:00Z"
-  },
-  {
     "id": "cabaf802-8112-5e0e-8fe9-6189591a6ab8",
     "title": "Scientists Uncover Origins of Dynamic Jets on Sun's Surface: Observations from IRIS",
     "category": "Sun",
@@ -4332,32 +3850,6 @@
       "Hinode"
     ],
     "publishedAt": "2017-08-11T00:00:00Z"
-  },
-  {
-    "id": "a7c14b13-5946-5b8e-a26f-5f98cace16a1",
-    "title": "SunRISE: Seeing the Sun in a New Light",
-    "category": "Sun",
-    "source": "gallery",
-    "remoteURL": "https://images-assets.nasa.gov/video/JPL-20241121-SUNRSEf-0001-SunRISE_Monitoring_Solar_Radiation_Storms_From_Space/JPL-20241121-SUNRSEf-0001-SunRISE_Monitoring_Solar_Radiation_Storms_From_Space~medium.mp4",
-    "previewURL": "https://images-assets.nasa.gov/video/JPL-20241121-SUNRSEf-0001-SunRISE_Monitoring_Solar_Radiation_Storms_From_Space/JPL-20241121-SUNRSEf-0001-SunRISE_Monitoring_Solar_Radiation_Storms_From_Space~large.jpg",
-    "sourceURL": "https://images.nasa.gov/details/JPL-20241121-SUNRSEf-0001-SunRISE_Monitoring_Solar_Radiation_Storms_From_Space",
-    "license": "NASA media-use guidelines",
-    "licenseURL": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
-    "creator": "NASA / JPL",
-    "sizeMB": 56.68,
-    "tags": [
-      "NASA",
-      "Space",
-      "Video",
-      "Jet Propulsion Laboratory",
-      "JPL",
-      "science",
-      "scientists",
-      "engineers",
-      "sun",
-      "Sun"
-    ],
-    "publishedAt": "2024-11-08T00:00:00Z"
   },
   {
     "id": "ec65b7b5-8918-500c-b432-7b05c98fe500",

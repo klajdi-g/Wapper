@@ -40,7 +40,7 @@ swift run --package-path WallperRebuilt WallperRebuilt
    Stop closes only this app's overlay windows and reveals the
    desktop that was already underneath them.
 5. Settings controls audio and battery behavior. Sound is muted by default.
-6. **Explore** shows 179 credited NASA videos in the public package.
+6. **Explore** shows 159 credited NASA videos in the public package.
    Previews load on demand. Download a video before applying it; the
    confirmation can also apply it automatically when ready.
 7. The historical aerial/gallery catalogs are excluded from public releases.
@@ -139,7 +139,7 @@ Quit have different persistence behavior as described above.
 
 ## Catalog and networking
 
-`Resources/public-gallery.json` contains 179 source-credited NASA video records,
+`Resources/public-gallery.json` contains 159 source-credited NASA video records,
 including preview, video, creator, source, and usage-guideline URLs. Regenerate it
 with `python3 tools/import-public-catalog.py` from the repository root.
 Previews load asynchronously into a bounded in-memory cache. Favorites stay local.

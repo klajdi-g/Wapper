@@ -10,10 +10,11 @@ import uuid
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "WallperRebuilt/Sources/WallperRebuilt/Resources/public-gallery.json"
-HEADERS = {"User-Agent": "VoltrumMotion/0.2 (public-media-catalog; motion.voltrum.co)"}
+HEADERS = {"User-Agent": "VoltrumMotion/0.2.1 (public-media-catalog; motion.voltrum.co)"}
 TERMS = ["aurora", "earth", "moon", "sun", "nebula", "jupiter", "saturn", "timelapse", "ocean", "forest", "flyover", "galaxy", "4K", "animation", "visualization", "time lapse", "fly-through"]
 EXCLUDE = re.compile(r"interview|briefing|podcast|science live|press conference|education|stemonstration|assembly|stacking|rollout|transport|lift and mate|behind the scenes|webcast|news |this week|trailer|talk show|Artemis|Orion|Apollo|Launch|Stack|Core Stage|SLS|KSC|VAB|Training|Processing|Lift|Rollback|Arrival|Offload|Countdown|Down to Earth|Espacio|Space to Ground|Expert|AskNASA|Career|Dante|Brigette|Anthony|astronaut|crew|mission|prepar|NASA Tests|NASA Measures|NASA Evaluates|Introducing|Overview|Report|Episode|Humanity|Our Planet, Our Home|Sunshield|Demolition|Headquarter|Mural|RASSOR|Atlas V|ICPS|LVSA|High Bay|Rollover|Roll to|Boeing|Fairing|How Do |How Did |Will the |Why |Envisioning|Send Your Name|Galileo|ScienceCasts|Clipper|jsc202|Engineering|Rover|Moon Base|Lunar Vacuum|Teachers|Thank You|Surprisingly|Annapolis|MSolo|Promo|Air Prize|New Spacesuit|Powering Our|Let's Go", re.I)
 RESTRICTED = re.compile(r"©|copyright|Getty|Shutterstock|SpaceX|European Space Agency|\bESA\b|Roscosmos|JAXA|music by|music courtesy|music provided", re.I)
+REVIEW_REQUIRED = re.compile(r"music|soundtrack|composer|song|audio network|universal production|killer tracks|premiumbeat|pond5|copyright|©|Getty|Shutterstock|SpaceX|European Space Agency|\bESA\b|Roscosmos|JAXA|courtesy|licensed|all rights reserved|permission|restricted|pending review", re.I)
 
 
 def fetch(url, method="GET"):
@@ -49,6 +50,15 @@ def convert(item):
         title = html.unescape(data["title"]).strip()
         description = html.unescape(data.get("description", ""))
         if EXCLUDE.search(title) or RESTRICTED.search(description):
+            return None
+        if data.get("center") == "JPL":
+            return None
+        with fetch("https://images-api.nasa.gov/metadata/" + urllib.parse.quote(identifier, safe="")) as response:
+            metadata_index = json.load(response)
+        with fetch(metadata_index["location"]) as response:
+            metadata = json.load(response)
+        fields = {key: value for key, value in metadata.items() if value and re.search(r"copyright|rights|license|credit|artist|composer|creator|description|usage|attribution|contributor|music|author|performer|publisher", key, re.I)}
+        if REVIEW_REQUIRED.search(json.dumps([data, fields])):
             return None
         with fetch(item["href"].replace("http://", "https://")) as response:
             assets = json.load(response)

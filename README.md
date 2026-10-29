@@ -3,7 +3,7 @@
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
 or all connected displays. The app works offline with your own videos and an
-included animated demo. Explore includes 179 source-credited NASA videos with
+included animated demo. Explore includes 159 source-credited NASA videos with
 on-demand downloads. The public package excludes historical recovered media.
 
 Website: https://motion.voltrum.co. Installation and signing status:
@@ -32,7 +32,7 @@ launching, run `./build-wallper.sh`. For development in Xcode, open
 - Pause, resume, stop, audio volume, and menu-bar controls.
 - Display-sleep holds and configurable battery playback policies.
 - Saved display assignments and reconnection handling.
-- An offline demo and 179 credited NASA videos with opt-in downloads.
+- An offline demo and 159 credited NASA videos with opt-in downloads.
 - Floating Explore interface, category chips, resolution/tag search, and sorting.
 - On-demand artwork, local video previews, and confirmed NASA downloads.
 - Playback speed controls from 0.5× to 2×.
@@ -104,7 +104,7 @@ app. After downloading it, verify it with
 
 ## Release status
 
-Version 0.2.0 is a universal Apple silicon/Intel preview for macOS 14+.
+Version 0.2.1 is a universal Apple silicon/Intel preview for macOS 14+.
 It is ad-hoc signed, not Developer ID signed or Apple notarized. Gatekeeper may
 block downloads; build locally instead of disabling system protections.
 `./release-motion.sh` packages both architectures. A trusted public release
