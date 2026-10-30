@@ -91,7 +91,8 @@ transitions have not been independently exercised. See
 - `build-wallper.sh`, `run-wallper.sh`, `check-wallper.sh`: build, launch, and validation entry points.
 - `wallper-analysis/`: archived implementation notes, metadata, resources, and analysis artifacts.
 - `build/`: generated app and reports, excluded from Git.
-- `website/`: static catalog, download page, privacy information, and browser tests.
+- `website/`: React/TypeScript (TanStack Start), Drizzle SQLite catalog generation,
+  default-wallpaper showcase, and browser tests. See its [guide](website/README.md).
 - `release-motion.sh`: universal DMG packaging and optional Apple notarization.
 
 ## Project status
@@ -118,6 +119,8 @@ block downloads; build locally instead of disabling system protections.
 requires an installed Developer ID identity and a notarytool keychain profile,
 provided through `SIGN_IDENTITY` and `NOTARY_PROFILE`.
 
-Each NASA catalog item links to its original source and media-use guidelines.
-NASA does not endorse this product. Clips may contain edits or narration and
-are not guaranteed seamless. Local imports remain on your Mac.
+The website now uses the familiar recovered defaults for its explicit local
+reference mode (`cd website && bun run dev:recovered`), not the unrelated NASA
+catalog. All 353 cached thumbnails remain local; public hosting showcases only
+the original Aurora demo. No recovered video or Apple aerial is fetched or
+approved for redistribution. Local imports remain on your Mac.

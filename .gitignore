@@ -8,3 +8,10 @@ __pycache__/
 /WallperRebuilt/.swiftpm/
 /build/
 WallperRebuilt/.build-*/
+/website/node_modules/
+/website/.generated/
+/website/.tanstack/
+/website/dist/
+/website/src/routeTree.gen.ts
+/website/playwright-report/
+/website/test-results/

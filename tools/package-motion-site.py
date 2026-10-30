@@ -8,13 +8,15 @@ import sys
 import tarfile
 import urllib.parse
 import urllib.request
+from html.parser import HTMLParser
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SITE = ROOT / "website"
+WEBSITE = ROOT / "website"
+SITE = WEBSITE / "dist/client"
 NIX = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT.parent / "nix"
 namespace = "voltrum-motion"
 try:
-    media_policy = json.loads((SITE / "media-policy.json").read_text())
+    media_policy = json.loads((WEBSITE / "media-policy.json").read_text())
 except (OSError, ValueError):
     media_policy = {}
 if not isinstance(media_policy, dict):
@@ -71,11 +73,58 @@ def public_download(url):
         return False
 
 
+try:
+    build_info = json.loads((SITE / "build-info.json").read_text())
+    showcase = json.loads((SITE / "showcase.json").read_text())
+except (OSError, ValueError) as error:
+    raise SystemExit("Build the TypeScript website with `cd website && bun run build` before packaging.") from error
+if build_info.get("mode") != "public" or showcase.get("mode") != "public":
+    raise SystemExit("Local recovered-media showcases must never be publicly packaged.")
+if any(item.get("origin") != "original" or item.get("id") != "motion-aurora" or item.get("previewURL") != "/media/aurora.jpg" or item.get("remoteURL") != "/media/aurora.mp4" for item in showcase.get("items", [])):
+    raise SystemExit("The public showcase may contain only the original Motion demo.")
+if (SITE / "recovered").exists():
+    raise SystemExit("Recovered default previews must not appear in the public build.")
+original_resources = ROOT / "WallperRebuilt/Sources/WallperRebuilt/Resources"
+for filename in ("Aurora.jpg", "Aurora.mp4"):
+    target = SITE / "media" / filename.lower()
+    if target.read_bytes() != (original_resources / filename).read_bytes():
+        raise SystemExit("The original demo bytes differ from the source resources.")
+
+
+class InlineScripts(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=False)
+        self.active = False
+        self.parts = []
+        self.hashes = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "script":
+            self.active = "src" not in dict(attrs)
+            self.parts = []
+
+    def handle_data(self, data):
+        if self.active:
+            self.parts.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "script" and self.active:
+            digest = base64.b64encode(hashlib.sha256("".join(self.parts).encode()).digest()).decode()
+            self.hashes.append("'sha256-" + digest + "'")
+            self.active = False
+
+
+scripts = InlineScripts()
+scripts.feed((SITE / "index.html").read_text())
 archive = io.BytesIO()
 with tarfile.open(fileobj=archive, mode="w") as bundle:
     for path in sorted(SITE.rglob("*")):
-        if path.is_file() and path.suffix in {".html", ".css", ".js", ".mjs", ".json", ".svg", ".png", ".txt", ".ico"} and not {"node_modules", "tests"}.intersection(path.parts) and path.name != "validate.mjs":
+        if path.is_file() and path.suffix in {".html", ".css", ".js", ".mjs", ".json", ".svg", ".png", ".jpg", ".mp4", ".txt", ".ico"}:
+            if path.suffix in {".jpg", ".mp4"} and path.relative_to(SITE).as_posix() not in {"media/aurora.jpg", "media/aurora.mp4"}:
+                raise SystemExit("Unexpected media in the public build.")
             data = path.read_bytes()
+            if path.name == "media-policy.json":
+                data = (json.dumps(media_policy, indent=2) + "\n").encode()
             if path.relative_to(SITE).as_posix() == "catalog.json":
                 candidates = json.loads(data)
                 approved = [entry for entry in candidates if approved_media(entry)]
@@ -135,7 +184,10 @@ http {
 '''
 if not media_enabled:
     nginx = nginx.replace("img-src 'self' https://images-assets.nasa.gov data:", "img-src 'self'")
-    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'none'")
+    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self'")
+else:
+    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self' https://images-assets.nasa.gov")
+nginx = nginx.replace("script-src 'self';", "script-src 'self' " + " ".join(sorted(set(scripts.hashes))) + ";")
 digest = hashlib.sha256(payload + nginx.encode()).hexdigest()
 config_name = "motion-site-" + digest[:12]
 security = {"runAsNonRoot": True, "runAsUser": 101, "runAsGroup": 101, "seccompProfile": {"type": "RuntimeDefault"}}

@@ -12,7 +12,10 @@ browser screenshots, and remaining production-release gates.
 
 The shared `website/media-policy.json` is paused with zero approved entries and
 `allowNativeDownloads: false`. The public catalog and download list must remain
-empty. The native bundle also contains an empty third-party catalog. Do not infer
+empty. The TypeScript website's separate showcase includes the original Motion
+demo only; its local recovered-defaults view is not publicly packaged. See
+`../website/README.md` for the TSX/Drizzle structure and local preview commands.
+The native bundle also contains an empty third-party catalog. Do not infer
 approval from NASA hosting, metadata screening, silence/muting, or a generic policy.
 
 ## Publish an update
@@ -33,11 +36,13 @@ approval from NASA hosting, metadata screening, silence/muting, or a generic pol
    Confirm a public download's checksum before enabling its website link.
 5. Copy `Resources/public-gallery.json` from the Swift source resource directory
    to `website/catalog.json`, and `build/releases/release.json` to `website/release.json`.
-6. Run `node website/validate.mjs`.
+6. Run `cd website && bun install --frozen-lockfile && bun run validate && bun run test:browser`.
+   Return to the repository root. Packaging accepts compiled `dist/client/` only,
+   never the source or local recovered-defaults directory.
 7. Run `python3 tools/package-motion-site.py ../nix` and review the generated
    `apps/voltrum-motion/resources.json` in the infrastructure repository.
-8. Using authorized local Kubernetes credentials, run `kubectl apply --dry-run=server -f
-   ../nix/apps/voltrum-motion/resources.json`, then apply the same file and verify
+8. Using authorized local Kubernetes credentials, run `kubectl apply --server-side --field-manager=voltrum-motion --dry-run=server -f
+   ../nix/apps/voltrum-motion/resources.json`, then server-side apply the same file and verify
    `kubectl -n voltrum-motion rollout status deployment/voltrum-motion`.
 9. Commit the scoped infrastructure/source changes and verify the public page,
    manifests, video preview, mobile layout, and installer checksum.
@@ -54,7 +59,10 @@ An init container extracts a deterministic archive into an emptyDir. Read-only,
 non-root nginx serves the static site; there is no backend, database, account,
 analytics, or access to local app media. Scripts and manifests load from the same
 origin. While paused, no remote preview images/videos are loaded; the generated
-CSP allows only same-origin images and denies video. Any future approved external
+CSP allows same-origin images and the original first-party demo video only.
+Hashed script approvals permit Start's generated bootstrap without unsafe inline
+scripts. Drizzle SQLite runs during catalog generation, not inside nginx.
+Any future approved external
 media requires a deliberate policy change and matching generated configuration.
 
 Videos and DMGs are not embedded in the ConfigMap. Downloaded native media stays

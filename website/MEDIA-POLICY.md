@@ -53,6 +53,10 @@ do not embed private contracts, credentials, or personal details.
 The source catalog is a candidate list, not a public allowlist. Serve only the
 packager-generated snapshot; never expose the repository or unfiltered source
 directory. Paused snapshots contain `catalog.json: []`, no release download
-links, local original SVG artwork only, and nginx `media-src 'none'` with
-`img-src 'self'`. Re-enabling publication must be a deliberate reviewed change;
-tests never approve real IDs or modify this policy.
+links, and `img-src 'self'`. The October 30 TypeScript website adds the original
+Motion Aurora demo in a separate `/showcase.json`; `media-src 'self'` permits that
+first-party video while continuing to deny external media. This does not approve
+third-party entries. The local loopback-only recovered-defaults showcase is never
+deployable: production build/packaging excludes recovered previews and rejects a
+local-mode build. Re-enabling third-party publication must be a deliberate
+reviewed change; tests never approve real IDs or modify this policy.

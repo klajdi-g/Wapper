@@ -1,0 +1,35 @@
+{
+  "name": "@voltrum/motion",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run scripts/prepare.ts && vite dev --host 127.0.0.1 --port 3000",
+    "dev:recovered": "bun run scripts/prepare.ts --recovered && vite dev --mode recovered --host 127.0.0.1 --port 3000 --strictPort",
+    "build": "bun run scripts/prepare.ts && vite build && bun run scripts/finalize.ts && bun run typecheck",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src tests/catalog.test.ts",
+    "test:browser": "python3 ../tools/package-motion-site.py ../build/ts-site-nix && playwright test",
+    "validate": "bun run build && bun run test && node --test tests/package.test.mjs",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "1.170.46",
+    "@tanstack/react-start": "1.169.4",
+    "drizzle-orm": "0.45.4",
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/bun": "^1.3.10",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "drizzle-kit": "0.31.11",
+    "typescript": "^5.9.3",
+    "vite": "8.3.5"
+  }
+}
