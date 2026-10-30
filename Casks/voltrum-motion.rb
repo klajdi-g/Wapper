@@ -8,7 +8,7 @@ cask "voltrum-motion" do
   desc "Offline live wallpapers and local video imports"
   homepage "https://motion.voltrum.co"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
   app "Voltrum Motion.app"
 
   caveats <<~EOS

@@ -10,8 +10,8 @@ Preview installers and installation commands are available on the
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
 or all connected displays. The app works offline with your own videos and starts
-with an empty library. The third-party collection and public app
-downloads are paused pending item-by-item rights approval. The packaged app
+with an empty library. The native third-party collection remains paused;
+public import-only app downloads are available. The packaged app
 contains zero third-party catalog entries; historical recovered media is excluded.
 
 Website: https://motion.voltrum.co. Installation and signing status:

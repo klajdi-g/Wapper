@@ -65,10 +65,10 @@ the app shell. Retain safe previous ConfigMaps while corresponding ReplicaSets
 are needed, but never roll back to a pre-quarantine media/installer snapshot.
 
 After deploying, check `/showcase.json` has the exact selected 353 wallpapers with stills and exact source-CDN `videoPreviewURL` values, `/catalog.json`
-is `[]`, `/release.json` has no downloads, `/media-policy.json` remains paused with
+is `[]`, `/release.json` has seven verified installer downloads, `/media-policy.json` remains paused with
 no approvals, `/recovered/anything.jpg` and `/media/aurora.mp4` return 404, and both replicas are ready.
-Confirm the page renders under its production CSP and does not contact Wallper,
-Apple, NASA, or other remote wallpaper hosts. No native release is performed by
+Confirm the page renders under its production CSP and only an opened live preview
+contacts its exact Wallper CDN source. No Apple or NASA media is requested. No native release is performed by
 the website build or packager. Signing and rights review remain separate gates.
 Verify Library add/remove, reload persistence, hash/history navigation, and
 search/category filters. Favorites remain browser-local, not a backend service.
@@ -79,7 +79,7 @@ GitHub resolves the source remote `klajdi-g/WallpaperEngine-` to
 **`klajdi-g/Wapper`**. The 0.3.0 preview provides seven import-only installers;
 the recovery archive and macOS 0.2.0/0.2.1 previews remain withdrawn drafts.
 `website/release.json` contains the new asset URLs, byte counts and checksums.
-The repository's `Casks/` directory is the custom Homebrew tap. See
+The dedicated `klajdi-g/homebrew-motion` repository is the custom Homebrew tap. See
 `docs/DISTRIBUTION.md` for installation and release reproduction.
 
 After the native release owner publishes and verifies a new artifact, add it to

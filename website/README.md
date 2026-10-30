@@ -90,10 +90,12 @@ Winter Forest's description is transcribed from the supplied screenshot.
 Japanese Village and Cat Pond use newly authored descriptive copy; other entries
 use a neutral category fallback, not an invented original description.
 
-These are static thumbnail previews, not the original 4K animated backgrounds.
-The browser's Set as Wallpaper and download controls are deliberately disabled;
-no native desktop state or active wallpaper playback is simulated. Rights details
-remain available through Info. The shared media/installer policy is unchanged.
+Detail previews use sharp stills from the source video (up to 2560px wide), then
+play the selected live wallpaper from its exact source-CDN URL. Gallery thumbnails
+remain lightweight; only an opened detail view loads video. Reduced-motion users
+can start playback explicitly. “Download the app” closes the preview and focuses
+the platform downloads section. Wallpaper application is a desktop-app feature.
+Rights details remain available through Info.
 
 ## Structure
 

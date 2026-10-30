@@ -25,13 +25,16 @@ Verify the downloaded files against the release's `SHA256SUMS.txt`.
   are required. AppImage may require your distribution's FUSE compatibility package.
 - macOS 14+: open the universal DMG and drag the app into Applications.
 
-Homebrew uses this repository as a custom tap with the checksum-pinned
-`Casks/voltrum-motion.rb`:
+Homebrew uses the dedicated [Motion tap](https://github.com/klajdi-g/homebrew-motion)
+with the checksum-pinned `Casks/voltrum-motion.rb`:
 
 ```sh
-brew tap klajdi-g/motion https://github.com/klajdi-g/Wapper
+brew tap klajdi-g/motion
 brew install --cask klajdi-g/motion/voltrum-motion
 ```
+
+If your Homebrew version requests trust for custom casks, run
+`brew trust --cask klajdi-g/motion/voltrum-motion` before installing.
 
 This is not a Homebrew core listing or a hosted APT/DNF repository. The Linux
 commands install real local packages and resolve dependencies through your distro.
@@ -67,7 +70,8 @@ demo-containing DMG cannot accidentally be reused.
 Homebrew cask from artifact bytes. The manifest's `publication: candidate` records
 build-time status; existence of the public GitHub release is the publication check.
 After publishing, synchronize the generated `voltrum-motion.rb` to `Casks/` in
-the next source commit. Never update its checksum without the corresponding DMG.
+this repository and the dedicated `klajdi-g/homebrew-motion` tap. Never update its
+checksum without the corresponding DMG.
 
 For a locally built release, stage only the six Windows/Linux installer files in
 an otherwise empty directory, then run (after committing the matching app sources):
