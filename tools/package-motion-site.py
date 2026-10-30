@@ -98,6 +98,8 @@ for item in items:
     preview = f"defaults/{identifier}.webp"
     if not source or any(item.get(key) != source.get(key) for key in ("title", "category")) or item.get("origin") != "recovered-wallper" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://wallper.app" or item.get("creator") != "Wallper collection · original creator unverified" or item.get("license") != "Rights unverified · thumbnail showcase only":
         raise SystemExit("Public thumbnail showcase metadata differs from the selected recovered defaults.")
+    if item.get("author") != (source.get("author") or "Unknown") or item.get("likes") != source.get("likes", 0) or item.get("sizeMB") != source.get("sizeMB"):
+        raise SystemExit("Public thumbnail showcase detail metadata differs from the source snapshot.")
     data = (SITE / preview).read_bytes()
     if len(data) > 50_000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
         raise SystemExit("Default thumbnails must be size-limited WebP images, never video.")

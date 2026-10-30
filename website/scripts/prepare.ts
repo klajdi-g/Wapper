@@ -7,6 +7,7 @@ import { wallpapers, type WallpaperRow } from '../src/db/schema';
 import { record } from '../src/lib/policy';
 import selection from '../showcase-selection.json';
 import sharp from 'sharp';
+import { detailDescriptions } from '../src/lib/detail-copy';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const resources = resolve(root, '../WallperRebuilt/Sources/WallperRebuilt/Resources');
@@ -46,6 +47,10 @@ for (const candidate of recovered ? [...selected, ...cached.filter(item => !sele
     id: candidate.id, title: String(candidate.title), category: String(candidate.category), origin: 'recovered-wallper',
     previewURL: localPreview, remoteURL: '', sourceURL: normalized.sourceURL,
     creator: normalized.creator, license: normalized.license, resolution: String(candidate.resolution ?? ''),
+    author: typeof candidate.author === 'string' && candidate.author.trim() ? candidate.author : 'Unknown',
+    description: detailDescriptions[candidate.id] ?? '',
+    sizeMB: typeof candidate.sizeMB === 'number' && Number.isFinite(candidate.sizeMB) && candidate.sizeMB >= 0 ? candidate.sizeMB : null,
+    likes: typeof candidate.likes === 'number' && Number.isSafeInteger(candidate.likes) && candidate.likes >= 0 ? candidate.likes : 0,
     tags: Array.isArray(candidate.tags) ? candidate.tags.filter((tag): tag is string => typeof tag === 'string') : [], position: rows.length,
   });
 }

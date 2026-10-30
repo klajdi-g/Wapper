@@ -52,6 +52,11 @@ export function MotionPage() {
     return () => controller.abort();
   }, [attempt]);
   useEffect(() => { setVisibleCount(24); }, [query, category, savedOnly]);
+  useEffect(() => {
+    const identifier = new URLSearchParams(location.search).get('wallpaper');
+    const item = showcase?.items.find(candidate => candidate.id === identifier);
+    if (item) setSelected(item);
+  }, [showcase]);
   const categories = useMemo(() => [...new Set(showcase?.items.filter(item => !savedOnly || favorites.has(item.id)).map(item => item.category) ?? [])], [showcase, savedOnly, favorites]);
   const filtered = useMemo(() => filterWallpapers(showcase?.items ?? [], query, category, savedOnly, favorites), [showcase, query, category, savedOnly, favorites]);
   const libraryCount = showcase?.items.filter(item => favorites.has(item.id)).length ?? 0;
@@ -69,6 +74,11 @@ export function MotionPage() {
   };
   const closePreview = useCallback(() => {
     setSelected(null);
+    const link = new URL(location.href);
+    if (link.searchParams.has('wallpaper')) {
+      link.searchParams.delete('wallpaper');
+      history.replaceState(history.state, '', link);
+    }
     requestAnimationFrame(() => previewOpener.current?.focus());
   }, []);
   const featured = showcase?.items[0];
@@ -97,6 +107,6 @@ export function MotionPage() {
       <section className="notes wrap" aria-label="Rights and privacy"><article><h3>Respect the work.</h3><p>These cached thumbnails come from the Wallper collection. Original creators and reuse rights are not verified; showcasing them is not a claim of ownership or a video license. Apple aerials are not bundled or fetched.</p></article><article><h3>A small, private corner.</h3><p>No account or application analytics. Favorites stay in this browser. The public collection uses local assets; no remote wallpaper hosts are contacted as you browse.</p><button type="button" className="text-link" onClick={() => { setFavorites(new Set()); try { localStorage.removeItem(storageKey); } catch { } setStorageNotice('Saved favorites cleared.'); }}>Clear saved favorites <ArrowUpRight size={13} /></button></article></section>
     </main>
     <footer className="site-footer wrap"><a href="/" className="brand"><img src="/assets/mark.svg" width="25" height="25" alt="" />voltrum<span className="brand-product">motion</span></a><p>A different atmosphere.</p><a href="https://voltrum.co" target="_blank" rel="noopener noreferrer">Part of Voltrum <ArrowUpRight size={13} /></a></footer>
-    {selected ? <PreviewDialog key={selected.id} item={selected} onClose={closePreview} /> : null}
+    {selected ? <PreviewDialog key={selected.id} item={selected} saved={favorites.has(selected.id)} onSave={() => save(selected.id)} onClose={closePreview} onSearch={() => { closePreview(); requestAnimationFrame(() => document.getElementById('search')?.focus()); }} onLibrary={() => { closePreview(); openCollection(true); }} /> : null}
   </>;
 }

@@ -174,3 +174,77 @@ test('library synchronizes across tabs and ignores unavailable saved IDs', async
   await expect(page.getByRole('button', { name: 'Library 0', exact: true })).toBeVisible();
   await other.close();
 });
+
+for (const [name, width, height] of [['desktop', 1952, 1269], ['mobile', 390, 844]] as const) {
+  test(`Wallper-style ${name} detail uses edge-to-edge artwork and centered source metadata`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await page.goto(publicURL);
+    await page.getByRole('button', { name: 'Preview Winter Forest', exact: true }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Winter Forest', exact: true })).toBeVisible();
+    await expect(dialog.locator('dl')).toContainText('Author:Unknown');
+    await expect(dialog.locator('dl')).toContainText('Size:51 mb');
+    await expect(dialog.locator('dl')).toContainText('Resolution:3840x2160');
+    await expect(dialog.locator('dl')).toContainText('Likes:2551');
+    await expect(dialog.locator('#preview-description')).toContainText('Snow drifts steadily through a dark stand of fir trees');
+    await expect(dialog.getByRole('button', { name: 'Set as Wallpaper', exact: true })).toBeDisabled();
+    await expect(dialog.getByRole('button', { name: 'Download unavailable' })).toBeDisabled();
+    await expect(dialog.locator('video,a[download]')).toHaveCount(0);
+    await dialog.locator('img').evaluate(image => (image as HTMLImageElement).decode());
+    const bounds = await dialog.boundingBox();
+    const artwork = await dialog.locator('img').boundingBox();
+    const title = await dialog.locator('h2').boundingBox();
+    expect(bounds!.width).toBeLessThan(width);
+    expect(bounds!.height).toBeLessThan(height);
+    expect(Math.abs(artwork!.width - bounds!.width)).toBeLessThan(3);
+    expect(Math.abs(title!.x + title!.width / 2 - bounds!.x - bounds!.width / 2)).toBeLessThan(3);
+    expect(await dialog.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(false);
+    await page.screenshot({ path: `../build/typescript-browser-results/detail-winter-${name}.png` });
+    await dialog.getByRole('button', { name: 'Set as Wallpaper', exact: true }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `../build/typescript-browser-results/detail-winter-${name}-controls.png` });
+    await page.keyboard.press('Escape');
+    expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  });
+}
+
+test('detail favorites, rights, sharing links, Library, and search are functional', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'share', { value: undefined });
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: async (text: string) => { sessionStorage.setItem('test-shared-link', text); } } });
+  });
+  await page.goto(publicURL);
+  await page.getByRole('button', { name: 'Preview Winter Forest', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Save Winter Forest to Library', exact: true }).click();
+  await expect(dialog.getByRole('button', { name: 'Remove Winter Forest from Library' })).toHaveAttribute('aria-pressed', 'true');
+  await dialog.getByRole('button', { name: 'Source and rights information' }).click();
+  await expect(dialog.getByRole('heading', { name: 'Source & rights' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'Share wallpaper', exact: true }).click();
+  await expect(dialog.getByRole('status')).toHaveText('Link copied.');
+  const link = await page.evaluate(() => sessionStorage.getItem('test-shared-link'));
+  expect(link).toContain('?wallpaper=9e35a86d-5ba1-453c-8b22-f70f46e39b38');
+  await dialog.getByRole('button', { name: 'Open Library' }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.locator('#gallery h3')).toHaveText('Winter Forest');
+  await page.goto(link!);
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'Winter Forest', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Search collection', exact: true }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.getByRole('searchbox')).toBeFocused();
+  expect(new URL(page.url()).searchParams.has('wallpaper')).toBe(false);
+});
+
+test('detail sharing handles cancellation and offers a manual link when clipboard is blocked', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'share', { value: async () => { throw new DOMException('Cancelled', 'AbortError'); } });
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: async () => { throw new Error('Blocked'); } } });
+  });
+  await page.goto(publicURL);
+  await page.getByRole('button', { name: 'Preview Winter Forest', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Share wallpaper', exact: true }).click();
+  await expect(dialog.locator('.detail-share-status')).toBeEmpty();
+  await dialog.getByRole('button', { name: 'Copy wallpaper link', exact: true }).click();
+  await expect(dialog.getByRole('status')).toHaveText('Copy this link to share the wallpaper.');
+  await expect(dialog.getByRole('textbox', { name: 'Wallpaper link', exact: true })).toHaveValue(/\?wallpaper=9e35a86d-5ba1-453c-8b22-f70f46e39b38#collection$/);
+});

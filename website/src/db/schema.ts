@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const wallpapers = sqliteTable('wallpapers', {
   id: text('id').primaryKey(),
@@ -11,6 +11,10 @@ export const wallpapers = sqliteTable('wallpapers', {
   creator: text('creator').notNull(),
   license: text('license').notNull(),
   resolution: text('resolution').notNull().default(''),
+  author: text('author').notNull().default('Unknown'),
+  description: text('description').notNull().default(''),
+  sizeMB: real('size_mb'),
+  likes: integer('likes').notNull().default(0),
   tags: text('tags', { mode: 'json' }).$type<string[]>().notNull(),
   position: integer('position').notNull(),
 });

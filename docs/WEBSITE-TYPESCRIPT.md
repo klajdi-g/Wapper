@@ -28,20 +28,45 @@ a compiled static deployment, not a new persistent-database service.
 - Third-party policy remains paused with no approved IDs; native installer links
   remain withheld. Availability in the original app does not establish reuse rights.
 
+## Wallpaper detail comparison
+
+The supplied Wallper Winter Forest screenshot is the visual reference for the
+website detail sheet: edge-to-edge artwork, floating glass toolbar, centered
+two-line italic title, metadata pills, description, wallpaper controls, and lower
+share panel. The dialog retains window margins rather than becoming full-screen.
+Desktop comparison uses the same 1952×1269 viewport; mobile uses 390×844.
+
+Size, resolution, author, and likes are imported through the second committed
+Drizzle migration. Winter Forest displays Unknown, 51 mb, 3840x2160, and the
+cached 2551 likes. The screenshot shows 2553; no counts are fabricated to imitate
+a newer snapshot. Its paragraph is transcribed from the provided screenshot;
+Japanese Village/Cat Pond copy is newly authored, and remaining items use a
+neutral category fallback. Static low-resolution cached artwork cannot reproduce
+the original animated 4K background's motion or sharpness.
+
+Heart, Library, collection search, source disclosure, link copying/sharing, and
+direct wallpaper links work. Native-only Set as Wallpaper and restricted video
+downloads remain disabled and clearly described; no active-monitor/player state
+or publishing service is simulated. No native Swift files are changed.
+
 ## Checks
 
 - Production Vite build and strict TypeScript check pass.
-- 11 Bun unit/database tests cover typed parsing, filtering, storage corruption,
+- 12 Bun unit/database tests cover typed parsing, filtering, storage corruption,
   unsafe links, release integrity fields, exact approval scopes/evidence, and real
   Drizzle migration/query behavior.
 - Three Node packaging tests cover deterministic content/configuration hashing,
   publication policy/schema, and rejection of recovered snapshots.
-- Ten Chromium browser cases cover public desktop/mobile layouts, actual
+- Fourteen Chromium browser cases cover public desktop/mobile layouts, actual
   image-only Cat Pond previews, Escape cleanup and focus return, favorites/persistence,
   search/reset, blocked storage, local defaults without remote media, malformed
   public entries, failure/retry behavior, all 353 paginated items, and Library
   add/remove, empty states, reload persistence, hash/history navigation,
-  cross-tab synchronization, and stale saved IDs.
+  cross-tab synchronization, and stale saved IDs. Detail cases additionally cover
+  reference-sized desktop/mobile screenshots, edge-to-edge artwork, source
+  metadata, disabled native/download actions, body-scroll cleanup, favorites,
+  rights disclosure, share deep links, cancellation, blocked-clipboard fallback,
+  Library navigation, and search focus.
 - Browser testing uses the generated production CSP; Start inline bootstrap is
   hash-authorized, not allowed by unsafe inline scripts. No JavaScript errors or
   horizontal overflow were found at desktop and phone widths.
@@ -54,19 +79,21 @@ production build. See [deployment](../website/DEPLOYMENT.md) for live-rollout ch
 
 ## Deployment acceptance
 
-The full-library build is live at `motion.voltrum.co`, snapshot
-`motion-site-336e2bd52e8f`, with two ready replicas. Live desktop/mobile checks
+The immersive-detail build is live at `motion.voltrum.co`, snapshot
+`motion-site-3e3576375db0`, with two ready replicas. Live desktop/mobile checks
 passed: Cat Pond first, exactly 353 wallpapers, a functional Library, no Aurora, no remote
 wallpaper-image/video requests, no installer links, an empty video catalog,
 unchanged paused policy, and 404 for old Aurora/source paths. All 353 thumbnails
 return HTTP 200 with WebP content types; image previews open without video or
 download links. Library add/remove, reload persistence, search, and pagination
 through all 353 items passed on both screen sizes. Report:
-`build/full-library-live-validation.json`. Screenshots:
+`build/full-library-live-validation.json` and `build/detail-live-validation.json`.
+Detail screenshots cover Winter Forest, Japanese Village, and Cat Pond at desktop
+and mobile sizes: `build/typescript-browser-results/live-detail-*.png`. Gallery screenshots:
 `build/typescript-browser-results/live-full-*-collection.png` and
 `live-full-*-library.png`. The Nix runbook records the full deployment hash.
 
-The deployment packages 5,714,171 compressed bytes across 12 bounded archives,
+The deployment packages 5,720,648 compressed bytes across 12 bounded archives,
 not one oversized ConfigMap. The content hash covers all image shards and nginx
 configuration. Each pod extracts the exact matching archive set before readiness.
 

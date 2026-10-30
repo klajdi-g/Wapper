@@ -10,6 +10,10 @@ export interface Wallpaper {
   remoteURL: string;
   sourceURL: string;
   resolution: string;
+  author: string;
+  description: string;
+  sizeMB: number | null;
+  likes: number;
   tags: string[];
   origin: Origin;
 }

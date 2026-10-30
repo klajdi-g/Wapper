@@ -36,6 +36,10 @@ export function parseShowcase(payload: unknown, allowRecovered = false): Showcas
       id: entry.id as string, title: entry.title as string, category: entry.category as string,
       creator: entry.creator as string, license: entry.license as string, origin: entry.origin as Wallpaper['origin'],
       previewURL, remoteURL, sourceURL, resolution: typeof entry.resolution === 'string' ? entry.resolution : '',
+      author: typeof entry.author === 'string' && entry.author.trim() ? entry.author : 'Unknown',
+      description: typeof entry.description === 'string' ? entry.description : '',
+      sizeMB: typeof entry.sizeMB === 'number' && Number.isFinite(entry.sizeMB) && entry.sizeMB >= 0 ? entry.sizeMB : null,
+      likes: typeof entry.likes === 'number' && Number.isSafeInteger(entry.likes) && entry.likes >= 0 ? entry.likes : 0,
       tags: Array.isArray(entry.tags) ? entry.tags.filter((tag): tag is string => typeof tag === 'string') : [],
     });
   }

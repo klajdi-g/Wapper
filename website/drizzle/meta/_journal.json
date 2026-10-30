@@ -8,6 +8,13 @@
       "when": 1793350195873,
       "tag": "0000_cool_guardsmen",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793360337995,
+      "tag": "0001_wallpaper_details",
+      "breakpoints": true
     }
   ]
 }

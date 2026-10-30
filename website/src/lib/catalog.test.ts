@@ -3,7 +3,7 @@ import { filterWallpapers, parseFavorites, parseRelease, parseShowcase, safeURL 
 import { approves, safeEvidence } from './policy';
 import type { Wallpaper } from './types';
 
-const original: Wallpaper = { id: 'original', title: 'Aurora Flow', category: 'Originals', creator: 'Voltrum', license: 'Original demo', previewURL: '/media/aurora.jpg', remoteURL: '/media/aurora.mp4', sourceURL: '/#about', origin: 'original', tags: ['calm'], resolution: '1280 × 720' };
+const original: Wallpaper = { id: 'original', title: 'Aurora Flow', category: 'Originals', creator: 'Voltrum', license: 'Original demo', previewURL: '/media/aurora.jpg', remoteURL: '/media/aurora.mp4', sourceURL: '/#about', origin: 'original', tags: ['calm'], resolution: '1280 × 720', author: 'Unknown', description: '', sizeMB: null, likes: 0 };
 const recovered: Wallpaper = { ...original, id: '025fce0a-a7e8-4f6f-9d49-075cb51a1316', title: 'Peaceful Candles', category: 'Winter', origin: 'recovered-wallper', previewURL: '/recovered/025fce0a-a7e8-4f6f-9d49-075cb51a1316.jpg', remoteURL: '' };
 const data = { mode: 'public', items: [original, recovered], recoveredCount: 3026, cachedCount: 353, aerialCount: 152 };
 
@@ -35,6 +35,12 @@ describe('typed collection', () => {
     expect([...parseFavorites('invalid')]).toEqual([]);
     expect([...parseFavorites('{}')]).toEqual([]);
     expect([...parseFavorites('["original", 42, null]')]).toEqual(['original']);
+  });
+  test('detail metadata preserves source values and defaults malformed fields honestly', () => {
+    const item = { ...original, author: 'Fixture artist', description: 'Fixture description.', sizeMB: 50.892, likes: 2551 };
+    expect(parseShowcase({ ...data, items: [item] }).items[0]).toEqual(item);
+    const malformed = parseShowcase({ ...data, items: [{ ...original, author: '', description: {}, sizeMB: -1, likes: 1.5 }] }).items[0];
+    expect([malformed.author, malformed.description, malformed.sizeMB, malformed.likes]).toEqual(['Unknown', '', null, 0]);
   });
   test('links reject unsafe schemes, credentials, protocol-relative links and control characters', () => {
     for (const value of ['javascript:alert(1)', '//evil.com', 'https://user:pass@example.org', '/\\evil.com', 'https://example.org/\u0000']) expect(safeURL(value)).toBeNull();

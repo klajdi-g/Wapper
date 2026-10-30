@@ -56,6 +56,26 @@ Thumbnails are lazy loaded and cards are paginated in batches of 24. Deployment
 splits the complete image set into deterministic, bounded immutable ConfigMaps;
 it never truncates the collection to make one ConfigMap fit.
 
+## Wallpaper details
+
+Opening a wallpaper uses an immersive, window-sized detail sheet: edge-to-edge
+artwork, a floating toolbar, centered italic title, metadata pills, description,
+and Library/share controls. It follows the supplied Wallper detail screenshot,
+while remaining scrollable on smaller screens. Escape/back closes the sheet and
+restores focus. Search and Library toolbar buttons navigate the actual collection.
+Shared `/?wallpaper=<id>#collection` links open the selected wallpaper directly.
+
+Author, size, resolution, and likes come from the cached catalog via Drizzle;
+unknown authors remain Unknown and likes are snapshot counts, not live figures.
+Winter Forest's description is transcribed from the supplied screenshot.
+Japanese Village and Cat Pond use newly authored descriptive copy; other entries
+use a neutral category fallback, not an invented original description.
+
+These are static thumbnail previews, not the original 4K animated backgrounds.
+The browser's Set as Wallpaper and download controls are deliberately disabled;
+no native desktop state or active wallpaper playback is simulated. Rights details
+remain available through Info. The shared media/installer policy is unchanged.
+
 ## Structure
 
 - `src/routes/__root.tsx`, `index.tsx`, `src/router.tsx`: typed TanStack routes,
