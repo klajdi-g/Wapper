@@ -3,9 +3,9 @@
 Requires macOS 14 or newer. The universal application includes both Apple silicon
 and Intel executables. Drag Voltrum Motion into Applications to install.
 
-Public downloads are currently withheld. Version 0.2.2 is a local-only build with
-the original demo and local-video imports; zero third-party catalog entries are
-approved or bundled. The earlier 0.2.0/0.2.1 public previews were withdrawn.
+Version 0.2.2 is an import-only offline preview with an empty initial library;
+zero wallpaper media files are bundled. The earlier 0.2.0/0.2.1
+previews remain withdrawn. See `docs/DISTRIBUTION.md` for publication and installation.
 
 ## Preview signing status
 
@@ -29,7 +29,7 @@ paused rights-review policy, not candidate NASA or historical recovered media.
 
 ## Use
 
-Open My Media to apply the included offline Aurora Flow demo or import your own
+Open My Media to import your own
 video. Explore is paused pending item-by-item rights approval. Select
 the target display in the dock, then apply a downloaded or imported wallpaper.
 Playback starts muted. Stop from the menu-bar menu to close desktop overlays;
@@ -41,7 +41,7 @@ The website does not upload this library or expose your local videos.
 
 ## Media credits
 
-The original Aurora Flow demo is included. Third-party NASA candidates are
+The library starts empty with no bundled demo. Third-party NASA candidates are
 quarantined: hosting on NASA and a generic media-use policy are not individual
 clearance for soundtracks, stock footage, performers, or other components.
 No third-party media is approved for the current native package.

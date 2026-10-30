@@ -2,8 +2,8 @@
 
 **Website update, October 30, 2026:** the site has migrated to TanStack Start,
 React/TypeScript, and Drizzle SQLite catalog generation. Its public showcase now
-includes the original Motion demo only (`media-src 'self'`, no external media).
-Recovered default thumbnails are available only through a local loopback preview.
+includes selected still images and source-CDN live previews in the detail dialog.
+No generated demo is bundled. Native libraries start empty and support local imports.
 See [current website validation](WEBSITE-TYPESCRIPT.md). The October 29 website
 screenshots, counts, and snapshot below are historical quarantine evidence;
 native 0.2.2 validation and installer withholding still apply.
@@ -11,7 +11,7 @@ native 0.2.2 validation and installer withholding still apply.
 Validated on October 29, 2026. The website remains live at
 https://motion.voltrum.co, but third-party media and installer publication are
 paused. No real catalog IDs have been approved. Native version 0.2.2 is a local
-demo/import build, not a public release.
+historical import build, not a public release.
 
 ## Publication boundary
 
@@ -40,8 +40,8 @@ the intended uses. Do not manufacture approval records to enable publication.
 - Universal executable contains `arm64` and `x86_64`; minimum macOS is 14.0.
 - Strict code-signature verification and `hdiutil verify` passed. The signature
   is ad-hoc; no Developer ID identity is installed and notarization is incomplete.
-- The original procedural Aurora demo and Voltrum icon are bundled. Recovered
-  catalogs/artwork and unapproved remote media are stripped from the app bundle.
+- This historical artifact is superseded and must not be reused. Current builds
+  contain no demo media; catalogs/artwork and unapproved remote media are stripped.
 - Generated local release metadata contains a candidate URL, not a public asset.
   Do not publish that manifest or installer while publication remains paused.
 

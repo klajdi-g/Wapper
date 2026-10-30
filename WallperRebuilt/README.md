@@ -32,7 +32,7 @@ swift run --package-path WallperRebuilt WallperRebuilt
 
 ## Try it
 
-1. Open **My Media** to preview and apply a local video or the Aurora Flow demo.
+1. Open **My Media** to import, preview and apply your own local video. New libraries start empty.
 2. Use **Import Video** (or Command-O) to copy your own movies into the library.
 3. Select a display or **All displays**, then apply a video. Preview and favorite
    buttons are available on each imported item.
@@ -42,7 +42,7 @@ swift run --package-path WallperRebuilt WallperRebuilt
 5. Settings controls audio and battery behavior. Sound is muted by default.
 6. **Explore** is paused pending item-by-item rights review. No third-party
    preview or download is available without explicit approval. Use My Media
-   for your own videos and the original demo.
+   for your own videos.
 7. The historical aerial/gallery catalogs are excluded from public releases.
 8. The dock controls display selection, shuffle, favorites, pause, and speed.
 
@@ -124,8 +124,7 @@ Thumbnails/<wallpaper-id>.jpg
 
 Imports first load a video track and a finite positive duration through
 AVFoundation. Accepted files are copied into `Media/`, then the first frame is
-extracted into a size-limited JPEG thumbnail. The generated demo remains in the
-application bundle rather than being copied into the library.
+extracted into a size-limited JPEG thumbnail. No demo media is bundled.
 
 `library.json` is a versioned Codable document containing imported wallpaper
 records, a favorite-ID set, display-to-wallpaper assignments, desired playback
@@ -191,8 +190,11 @@ on the development Mac. They remain in Application Support, not this repository.
 
 ## Resources and packaging
 
-Public `Resources/` includes the NASA catalog and an original four-second
-procedural Aurora Flow demo with a JPEG poster. Packaging generates an original
+Playback smoke checks use `MOTION_SMOKE_VIDEO=/absolute/path/to/test.mp4`; the
+fixture is supplied at test time and is never bundled with the application.
+
+Source `Resources/` includes catalog metadata; public import-only packaging strips catalogs
+and contains no demo media. Packaging generates an original
 Voltrum icon with `tools/generate-motion-icon.swift`.
 
 Swift Package Manager copies these assets into a resource bundle. The build

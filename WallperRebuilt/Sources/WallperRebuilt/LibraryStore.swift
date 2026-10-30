@@ -19,7 +19,7 @@ final class LibraryStore: ObservableObject {
 
     var mediaPublicationPaused: Bool { !mediaPolicy.isEnabled }
 
-    var library: [Wallpaper] { [.demo] + state.wallpapers }
+    var library: [Wallpaper] { state.wallpapers }
 
     init(root: URL? = nil) {
         self.root = root ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -35,6 +35,15 @@ final class LibraryStore: ObservableObject {
                     throw RebuildError.message("Unsupported library version. Your saved library has not been overwritten.")
                 }
                 state = saved
+                // Retire only the old bundled identifier. Imported copies are user media.
+                let retired = "rebuilt-aurora"
+                let importedWithSameID = state.wallpapers.contains { $0.id == retired && $0.source != .bundled }
+                state.wallpapers.removeAll { $0.id == retired && $0.source == .bundled }
+                if !importedWithSameID {
+                    state.favorites.remove(retired)
+                    state.assignments = state.assignments.filter { $0.value != retired }
+                }
+                if saved.wallpapers.contains(where: { $0.id == retired && $0.source == .bundled }) || (!importedWithSameID && (saved.favorites.contains(retired) || saved.assignments.values.contains(retired))) { save() }
             }
         } catch {
             canSave = false
@@ -49,12 +58,12 @@ final class LibraryStore: ObservableObject {
 
     func mediaURL(for wallpaper: Wallpaper) -> URL? {
         guard let filename = wallpaper.filename, filename == URL(fileURLWithPath: filename).lastPathComponent else { return nil }
-        if wallpaper.source == .bundled { return resourceURL("Aurora", extension: "mp4") }
+        if wallpaper.source == .bundled { return nil }
         return mediaDirectory.appendingPathComponent(filename)
     }
 
     func thumbnailURL(for wallpaper: Wallpaper) -> URL? {
-        if wallpaper.source == .bundled { return resourceURL("Aurora", extension: "jpg") }
+        if wallpaper.source == .bundled { return nil }
         if let previewAsset = wallpaper.previewAsset, UUID(uuidString: previewAsset) != nil {
             return resourceURL(previewAsset, extension: "jpg", subdirectory: "Resources/Gallery")
         }

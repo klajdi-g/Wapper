@@ -67,14 +67,15 @@ npm run installer:windows
 npm run installer:linux
 ```
 
-NSIS installs per user without requesting elevation. Linux targets are AppImage
-and Debian `.deb`; distro/FUSE requirements differ. The GitHub workflow builds
-Windows/Linux candidates and runs validation without uploading installers or
-creating public releases. No certificate, signing key, auto-updater, or trusted
-public release has been configured. Windows candidates are unsigned.
+NSIS installs per user without requesting elevation. Linux targets are AppImage,
+Debian `.deb`, and RPM; distro/FUSE requirements differ. The GitHub workflow retains
+installers and can publish a complete offline-only preview by manual dispatch.
+No certificate, signing key or auto-updater has been configured. Windows is unsigned.
+See [distribution and package-manager installation](../docs/DISTRIBUTION.md).
 
-`npm run release:check` refuses public downloads while the shared policy is paused.
-Do not treat successful packaging as permission to distribute media or as signing.
+`npm run release:check` audits an explicit resource allowlist and requires the bundled
+catalog policy to remain paused. `distribution-policy.json` independently permits
+offline-only installers; it does not grant rights to third-party media or signing.
 
 ## Media boundary
 

@@ -15,6 +15,20 @@
       "when": 1793360337995,
       "tag": "0001_wallpaper_details",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793370532574,
+      "tag": "0002_safe_cloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1793371153660,
+      "tag": "0003_familiar_maginty",
+      "breakpoints": true
     }
   ]
 }

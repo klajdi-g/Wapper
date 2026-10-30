@@ -3,13 +3,14 @@
 **Windows and Linux:** the separate TypeScript desktop app is in [`desktop/`](desktop/README.md).
 It adds local video/image imports, favorites, previews, and native wallpaper
 backends for Windows, Linux X11, and supported Wayland compositors with mpvpaper.
-Candidate packages are unsigned and not public releases; GNOME/KDE Wayland is
-not supported yet. The existing native macOS app remains unchanged.
+Preview installers and installation commands are available on the
+[website](https://motion.voltrum.co/#download) and in the
+[distribution guide](docs/DISTRIBUTION.md). GNOME/KDE Wayland is not supported yet.
 
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
-or all connected displays. The app works offline with your own videos and an
-included original animated demo. The third-party collection and public app
+or all connected displays. The app works offline with your own videos and starts
+with an empty library. The third-party collection and public app
 downloads are paused pending item-by-item rights approval. The packaged app
 contains zero third-party catalog entries; historical recovered media is excluded.
 
@@ -39,7 +40,7 @@ launching, run `./build-wallper.sh`. For development in Xcode, open
 - Pause, resume, stop, audio volume, and menu-bar controls.
 - Display-sleep holds and configurable battery playback policies.
 - Saved display assignments and reconnection handling.
-- An original offline demo and private local-video imports.
+- Private local-video imports; no bundled demo media.
 - Floating Explore interface, category chips, resolution/tag search, and sorting.
 - Local video previews and fail-closed approval gates for future remote media.
 - Playback speed controls from 0.5× to 2×.

@@ -297,7 +297,7 @@ struct ContentView: View {
             }.padding(.top, page == .explore ? 36 : 24).padding(.bottom, 18)
             if items.isEmpty {
                 ContentUnavailableView(page == .explore && library.mediaPublicationPaused ? "Collection paused for rights review" : "No wallpapers found", systemImage: "photo.on.rectangle",
-                                       description: Text(page == .explore && library.mediaPublicationPaused ? "Third-party media is withheld until individually approved. Use My Media to import your own video or play the original demo." : "Import a video, like a wallpaper, or try another search."))
+                                       description: Text(page == .explore && library.mediaPublicationPaused ? "Third-party media is withheld until individually approved. Use My Media to import your own video." : "Import a video, like a wallpaper, or try another search."))
                     .frame(maxWidth: .infinity, minHeight: 280)
             } else { wallpaperGrid(items) }
         }
@@ -416,7 +416,8 @@ struct ContentView: View {
             dockButton(playback.isPlaying ? "pause.fill" : "play.fill", help: playback.isPlaying ? "Pause wallpapers" : "Play wallpaper") {
                 if playback.active.isEmpty {
                     if !library.state.wantsPlaying { controller.togglePlayback() }
-                    controller.apply(.demo)
+                    if let wallpaper = library.library.first { controller.apply(wallpaper) }
+                    else { library.chooseFiles() }
                 } else { controller.togglePlayback() }
             }
             Button { page = .playlists } label: {

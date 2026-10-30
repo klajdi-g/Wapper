@@ -1,0 +1,1 @@
+ALTER TABLE `wallpapers` ADD `colors` text DEFAULT '[]' NOT NULL;

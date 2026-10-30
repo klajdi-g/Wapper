@@ -27,14 +27,32 @@ func runSmokeTest(reportURL: URL) async {
         let cachedGallery = controller.library.gallery.filter { $0.previewAsset != nil }
         try check(cachedGallery.allSatisfy { policy.approves($0) && controller.library.thumbnailURL(for: $0) != nil }, "only approved cached gallery images resolve")
         try check(controller.library.gallery.allSatisfy { $0.source == .gallery && ["cdn.wallper.app", "images-assets.nasa.gov"].contains($0.remoteURL?.host ?? "") && controller.library.mediaURL(for: $0) == nil }, "catalog URLs do not pretend undownloaded videos are local files")
-        var searchSample = Wallpaper.demo
+        let sample = Wallpaper(id: "test-local", title: "Test fixture", category: "Tests", source: .local)
+        let migrationRoot = temporaryRoot.appendingPathComponent("migration")
+        try FileManager.default.createDirectory(at: migrationRoot, withIntermediateDirectories: true)
+        var legacy = SavedLibrary()
+        let retiredID = "rebuilt-aurora"
+        legacy.wallpapers = [Wallpaper(id: retiredID, title: "Retired bundled fixture", category: "Tests", source: .bundled), sample]
+        legacy.favorites = [retiredID, sample.id]
+        legacy.assignments = ["old-display": retiredID, "user-display": sample.id]
+        let migrationState = migrationRoot.appendingPathComponent("library.json")
+        try JSONEncoder().encode(legacy).write(to: migrationState)
+        let migrated = LibraryStore(root: migrationRoot)
+        try check(migrated.library.map(\.id) == [sample.id] && migrated.state.favorites == [sample.id] && migrated.state.assignments == ["user-display": sample.id], "retired bundled state migrates without removing imports")
+        let reloadedMigration = LibraryStore(root: migrationRoot)
+        try check(reloadedMigration.library.map(\.id) == [sample.id], "retired bundled migration persists")
+        legacy.wallpapers = [Wallpaper(id: retiredID, title: "User import", category: "Local videos", source: .local)]
+        try JSONEncoder().encode(legacy).write(to: migrationState)
+        let preservedImport = LibraryStore(root: migrationRoot)
+        try check(preservedImport.library.count == 1 && preservedImport.state.favorites.contains(retiredID), "migration preserves local imports even with a legacy identifier")
+        var searchSample = sample
         searchSample.resolution = "3840x2160"
         searchSample.tags = ["Aesthetic"]
         try check(searchSample.matchesSearch("4K") && searchSample.matchesSearch("16:9"), "resolution search chips match video dimensions")
         try check(searchSample.matchesSearch("Aesthetic") && !searchSample.matchesSearch("32:9"), "tag and aspect-ratio search filters work")
-        let galleryFavorite = controller.library.gallery.first ?? .demo
+        let galleryFavorite = controller.library.gallery.first ?? sample
         controller.library.toggleFavorite(galleryFavorite)
-        var unapproved = Wallpaper.demo
+        var unapproved = sample
         unapproved.id = "unapproved-policy-fixture"
         unapproved.source = .gallery
         unapproved.filename = nil
@@ -66,12 +84,12 @@ func runSmokeTest(reportURL: URL) async {
         approval.remoteURL += "?changed"
         fixturePolicy.approvedMedia = [approval]
         try check(!fixturePolicy.approves(unapproved), "native approval rejects changed media URLs")
-        guard let demo = controller.library.mediaURL(for: .demo) else { throw RebuildError.message("Missing bundled demo") }
-        let duration = try await AVURLAsset(url: demo).load(.duration).seconds
-        try check(duration > 0, "bundled demo decodes")
-        try check(controller.library.thumbnailURL(for: .demo).flatMap { NSImage(contentsOf: $0) } != nil, "bundled thumbnail decodes")
-        let imported = try await controller.library.importVideo(demo)
-        try check(controller.library.library.count == 2, "local video import")
+        try check(controller.library.library.isEmpty, "new library starts empty")
+        guard let fixturePath = ProcessInfo.processInfo.environment["MOTION_SMOKE_VIDEO"] else { throw RebuildError.message("Set MOTION_SMOKE_VIDEO to a local test video for playback smoke checks") }
+        let fixture = URL(fileURLWithPath: fixturePath)
+        let duration = try await AVURLAsset(url: fixture).load(.duration).seconds
+        let imported = try await controller.library.importVideo(fixture)
+        try check(controller.library.library.count == 1, "local video import")
         try check(controller.library.thumbnailURL(for: imported) != nil, "import thumbnail generated")
         controller.library.toggleFavorite(imported)
         controller.setVolume(0.25)
@@ -81,7 +99,7 @@ func runSmokeTest(reportURL: URL) async {
         try check(controller.playback.active.count == controller.playback.displays.count, "native desktop player on each display")
         let restored = LibraryStore(root: temporaryRoot)
         try check(restored.state.favorites.contains(imported.id), "favorite survives reload")
-        try check(restored.state.favorites.contains(galleryFavorite.id), "catalog or demo favorite survives reload")
+        try check(restored.state.favorites.contains(galleryFavorite.id), "catalog or fixture favorite survives reload")
         try check(restored.state.volume == 0.25, "audio setting survives reload")
         try check(restored.state.assignments.count == controller.playback.displays.count, "display assignments survive reload")
         controller.setVolume(0)
@@ -114,9 +132,9 @@ func runSmokeTest(reportURL: URL) async {
         try check(controller.playback.players.isEmpty && controller.playback.active.isEmpty, "stop releases desktop players")
         try check(controller.library.state.assignments.isEmpty, "stop clears saved assignments")
         controller.remove(imported)
-        try check(controller.library.library.count == 1, "remove deletes imported library entry")
+        try check(controller.library.library.isEmpty, "remove deletes imported library entry")
         try check(!FileManager.default.fileExists(atPath: controller.library.mediaDirectory.appendingPathComponent(imported.filename!).path), "remove deletes copied media only")
-        try check(FileManager.default.isReadableFile(atPath: demo.path), "bundled source remains intact")
+        try check(FileManager.default.isReadableFile(atPath: fixture.path), "user source remains intact")
         let invalid = temporaryRoot.appendingPathComponent("invalid.mp4")
         try Data("not a video".utf8).write(to: invalid)
         var rejected = false
@@ -146,7 +164,7 @@ func runSmokeTest(reportURL: URL) async {
         let corruptData = Data("invalid saved state".utf8)
         try corruptData.write(to: stateURL)
         let corruptLibrary = LibraryStore(root: temporaryRoot)
-        corruptLibrary.toggleFavorite(.demo)
+        corruptLibrary.toggleFavorite(sample)
         try check(corruptLibrary.errorMessage != nil && (try Data(contentsOf: stateURL)) == corruptData, "corrupt saved state is not overwritten")
     } catch { failure = error.localizedDescription }
     controller.playback.shutdown()

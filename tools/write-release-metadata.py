@@ -17,9 +17,18 @@ metadata = {
     "downloads": [{
         "label": "macOS · Apple silicon + Intel" + (" · unnotarized preview" if label == "preview" else ""),
         "architecture": "universal",
-        "url": f"https://github.com/klajdi-g/Wapper/releases/download/{tag}/{filename}",
+        "url": None,
+        "filename": filename,
         "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
         "bytes": artifact.stat().st_size,
     }],
 }
+metadata["publication"] = "local-candidate"
 (directory / "release.json").write_text(json.dumps(metadata, indent=2) + "\n")
+# Written only after release-motion.sh has audited the app resources and verified
+# the completed DMG. Prevent an older demo-containing DMG being reused by mistake.
+(directory / (filename + ".audit.json")).write_text(json.dumps({
+    "filename": filename,
+    "sha256": metadata["downloads"][0]["sha256"],
+    "media": "local-imports-only-empty-library",
+}, indent=2) + "\n")

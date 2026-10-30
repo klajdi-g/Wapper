@@ -1,0 +1,1 @@
+ALTER TABLE `wallpapers` ADD `detail_url` text;

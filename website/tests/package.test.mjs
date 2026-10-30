@@ -57,6 +57,51 @@ function archiveEntries(compressed) {
   return entries;
 }
 
+test('local-only installers require offline settings and anonymous byte verification while media stays paused', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'motion-native-policy-'));
+  const script = fileURLToPath(new URL('../../tools/package-motion-site.py', import.meta.url));
+  const publisher = `
+import hashlib, io, json, pathlib, runpy, sys, urllib.error
+from unittest.mock import patch
+script, destination, variant = sys.argv[1:]
+root = pathlib.Path(script).resolve().parents[1]
+payload = b'Synthetic test artifact, not executable'
+entry = dict(platform='linux', label='Test', architecture='x64', format='tar.gz', version='test', minimumSystem='Test only', installInstructions=['Test only'], signed=False, notarized=False, contentScope='local-import-only', url='https://example.org/synthetic', sha256=hashlib.sha256(payload).hexdigest(), bytes=len(payload))
+if variant == 'catalog': entry['contentScope'] = 'catalog'
+if variant == 'changed-hash': entry['sha256'] = 'b' * 64
+release = dict(version='test', notarized=False, downloads=[entry])
+read_text, read_bytes = pathlib.Path.read_text, pathlib.Path.read_bytes
+def text(path, *args, **kwargs):
+    if path == root / 'website/media-policy.json': return json.dumps(dict(publication='paused', allowNativeDownloads=False, approvedMedia=[]))
+    if path == root / 'desktop/distribution-policy.json': return json.dumps(dict(publication='paused' if variant == 'paused' else 'offline-only', thirdPartyMedia=False, bundledWallpapers=False))
+    if path == root / 'website/release.json': return json.dumps(dict(release, downloads=[])) if variant == 'stale' else json.dumps(release)
+    return read_text(path, *args, **kwargs)
+def data(path, *args, **kwargs):
+    if path == root / 'website/dist/client/release.json': return json.dumps(release).encode()
+    return read_bytes(path, *args, **kwargs)
+def fetch(*args, **kwargs):
+    if variant == 'private': raise urllib.error.URLError('Private draft')
+    response = io.BytesIO(b'Wrong bytes' if variant == 'corrupt' else payload)
+    response.status, response.url = 200, entry['url']
+    return response
+sys.argv = [script, destination]
+with patch.object(pathlib.Path, 'read_text', text), patch.object(pathlib.Path, 'read_bytes', data), patch('urllib.request.urlopen', fetch):
+    runpy.run_path(script, run_name='__main__')
+`;
+  try {
+    for (const variant of ['approved', 'catalog', 'changed-hash', 'paused', 'stale', 'private', 'corrupt']) {
+      const result = spawnSync('python3', ['-c', publisher, script, directory, variant], { encoding: 'utf8' });
+      assert.equal(result.status, 0, `${variant}: ${result.stderr}`);
+      const resources = JSON.parse(await readFile(join(directory, 'apps/voltrum-motion/resources.json'), 'utf8'));
+      const config = resources.items.find(item => item.kind === 'ConfigMap');
+      const entries = archiveEntries(Buffer.from(config.binaryData['site.tgz'], 'base64'));
+      assert.equal(JSON.parse(entries.get('release.json').toString()).downloads.length, variant === 'approved' ? 1 : 0, variant);
+      assert.deepEqual(JSON.parse(entries.get('catalog.json').toString()), []);
+      assert.match(config.data['nginx.conf'], /media-src https:\/\/cdn\.wallper\.app/u);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
 test('deployment snapshot hashes nginx configuration together with static content', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'motion-package-test-'));
   try {
@@ -90,7 +135,7 @@ test('deployment snapshot hashes nginx configuration together with static conten
     assert.ok(![...entries.keys()].some(name => name.startsWith('tests/') || name.endsWith('.dmg') || name === 'validate.mjs'));
     if (entries.has('release.json')) assert.deepEqual(JSON.parse(entries.get('release.json').toString()).downloads, []);
     assert.deepEqual(JSON.parse(entries.get('catalog.json').toString()), []);
-    assert.match(config.data['nginx.conf'], /media-src 'none'/u);
+    assert.match(config.data['nginx.conf'], /media-src https:\/\/cdn\.wallper\.app/u);
     assert.match(config.data['nginx.conf'], /script-src 'self' 'sha256-/u);
     assert.ok(entries.has('defaults/78b58191-5c56-4196-9c4f-1a5b98dfd72b.webp'));
     assert.ok(![...entries.keys()].some(name => /aurora|\.(mp4|mov|webm)$/iu.test(name)));
@@ -100,6 +145,8 @@ test('deployment snapshot hashes nginx configuration together with static conten
     assert.equal(showcase.items.length, 353);
     for (const item of showcase.items) assert.ok(entries.has(item.previewURL.slice(1)), item.title);
     assert.ok(showcase.items.every(item => item.origin === 'recovered-wallper' && item.remoteURL === ''));
+    const source = JSON.parse(await readFile(new URL('../../WallperRebuilt/Sources/WallperRebuilt/Resources/gallery.json', import.meta.url), 'utf8'));
+    assert.ok(showcase.items.every(item => item.videoPreviewURL === source.find(candidate => candidate.id === item.id)?.remoteURL));
     assert.notEqual(digest, createHash('sha256').update(archive).update(`${config.data['nginx.conf']}\n`).digest('hex'));
     const again = spawnSync('python3', ['-c', offlinePublisher, script, directory], { encoding: 'utf8' });
     assert.equal(again.status, 0, again.stderr);
@@ -167,12 +214,14 @@ def altered_text(path, *args, **kwargs):
     data = read_text(path, *args, **kwargs)
     if path.name == 'build-info.json' and variant == 'mode':
         return json.dumps({'mode': 'local-recovered'})
-    if path.name == 'showcase.json' and variant in ('entry', 'video', 'metadata'):
+    if path.name == 'showcase.json' and variant in ('entry', 'video', 'preview', 'metadata'):
         value = json.loads(data)
         if variant == 'entry':
             value['items'][0]['id'] = 'unselected'
         elif variant == 'video':
             value['items'][0]['remoteURL'] = 'https://example.org/test.mp4'
+        elif variant == 'preview':
+            value['items'][0]['videoPreviewURL'] += '?changed'
         else:
             value['items'][0]['creator'] = 'Voltrum'
         return json.dumps(value)
@@ -187,10 +236,10 @@ with patch.object(pathlib.Path, 'read_text', altered_text), patch.object(pathlib
     runpy.run_path(script, run_name='__main__')
 `;
   try {
-    for (const variant of ['mode', 'entry', 'directory', 'video', 'metadata']) {
+    for (const variant of ['mode', 'entry', 'directory', 'video', 'preview', 'metadata']) {
       const result = spawnSync('python3', ['-c', tamperedPublisher, script, directory, variant], { encoding: 'utf8' });
       assert.notEqual(result.status, 0, variant);
-      assert.match(result.stderr, /recovered|thumbnail showcase/iu);
+      assert.match(result.stderr, /recovered|thumbnail showcase|exact selected source/iu);
     }
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

@@ -1,15 +1,147 @@
 {
-  "version": "0.2.1",
-  "tag": "motion-v0.2.1-preview",
+  "version": "0.3.0",
   "notarized": false,
-  "minimumMacOS": "14.0",
+  "publicationStatus": "Preview 0.3.0 is available for Windows, Linux and macOS. Import your own wallpapers; the apps start with an empty library.",
   "downloads": [
     {
-      "label": "macOS \u00b7 Apple silicon + Intel \u00b7 unnotarized preview",
+      "filename": "Voltrum-Motion-0.3.0-preview-universal.dmg",
+      "platform": "macos",
       "architecture": "universal",
-      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.2.1-preview/Voltrum-Motion-0.2.1-preview-universal.dmg",
-      "sha256": "4cc4ae04da4ec4b10902d22adca48347bb59fda5881487cd98dcc79a75d55996",
-      "bytes": 4142063
+      "version": "0.3.0",
+      "format": "dmg",
+      "label": "macOS universal (.dmg)",
+      "minimumSystem": "macOS 14 Sonoma",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "Open the disk image and drag Voltrum Motion to Applications.",
+        "This preview is ad-hoc signed, not Apple-notarized. If macOS blocks it, review the app in System Settings \u2192 Privacy & Security.",
+        "Open Motion and import your own local videos."
+      ],
+      "bytes": 3961804,
+      "sha256": "eb2e2929f1fbf33cd493930b0eb5aba1cea6baf82fb831e87e3998291d797792",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-preview-universal.dmg"
+    },
+    {
+      "filename": "Voltrum-Motion-0.3.0-win-x64.exe",
+      "platform": "windows",
+      "architecture": "x64",
+      "version": "0.3.0",
+      "format": "exe",
+      "label": "Windows x64 (.exe)",
+      "minimumSystem": "Windows 10 (64-bit)",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "Run the downloaded installer and follow the setup prompts.",
+        "This preview is unsigned; Windows may show a publisher warning.",
+        "Open Motion and import your own images or videos."
+      ],
+      "bytes": 121280186,
+      "sha256": "2dc1b8b1c219a01b224324ea07a6f32da5880c27d743092dfbedf043b1945f28",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-win-x64.exe"
+    },
+    {
+      "filename": "Voltrum-Motion-0.3.0-win-x64.zip",
+      "platform": "windows",
+      "architecture": "x64",
+      "version": "0.3.0",
+      "format": "zip",
+      "label": "Windows x64 (.zip)",
+      "minimumSystem": "Windows 10 (64-bit)",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "Extract the entire ZIP into a folder you control.",
+        "Run Voltrum Motion.exe from the extracted folder.",
+        "This portable preview is unsigned."
+      ],
+      "bytes": 153210816,
+      "sha256": "f12fab96beebdfef81b5f5d515d6e5bd2192154ddeeeabc5f0ccf86cae10a003",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-win-x64.zip"
+    },
+    {
+      "filename": "Voltrum-Motion-0.3.0-linux-x86_64.AppImage",
+      "platform": "linux",
+      "architecture": "x64",
+      "version": "0.3.0",
+      "format": "AppImage",
+      "label": "Linux x64 (.AppImage)",
+      "minimumSystem": "64-bit Linux with X11 or supported wlroots Wayland",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "chmod +x Voltrum-Motion-0.3.0-linux-x86_64.AppImage",
+        "./Voltrum-Motion-0.3.0-linux-x86_64.AppImage",
+        "Requires Linux X11, or a supported wlroots Wayland compositor with mpvpaper. GNOME/KDE Wayland are not supported."
+      ],
+      "bytes": 125673885,
+      "sha256": "0f24fc522e2f5d2191c76cb8491bde6e11c5551c94c1c3e5a8531abd98eb9a26",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-linux-x86_64.AppImage"
+    },
+    {
+      "filename": "Voltrum-Motion-0.3.0-linux-amd64.deb",
+      "platform": "linux",
+      "architecture": "x64",
+      "version": "0.3.0",
+      "format": "deb",
+      "label": "Linux x64 (.deb)",
+      "minimumSystem": "64-bit Linux with X11 or supported wlroots Wayland",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "sudo apt install ./Voltrum-Motion-0.3.0-linux-amd64.deb",
+        "Launch Voltrum Motion from your applications menu.",
+        "Requires X11, or supported wlroots Wayland with mpvpaper; GNOME/KDE Wayland are not supported."
+      ],
+      "bytes": 101026064,
+      "sha256": "2f574223c32bdfbb168f585158044d749d7608dce03c719556d8af2054ef10c8",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-linux-amd64.deb"
+    },
+    {
+      "filename": "Voltrum-Motion-0.3.0-linux-x86_64.rpm",
+      "platform": "linux",
+      "architecture": "x64",
+      "version": "0.3.0",
+      "format": "rpm",
+      "label": "Linux x64 (.rpm)",
+      "minimumSystem": "64-bit Linux with X11 or supported wlroots Wayland",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "sudo dnf install ./Voltrum-Motion-0.3.0-linux-x86_64.rpm",
+        "Launch Voltrum Motion from your applications menu.",
+        "Requires X11, or supported wlroots Wayland with mpvpaper; GNOME/KDE Wayland are not supported."
+      ],
+      "bytes": 123552609,
+      "sha256": "e4b2a0306a2f7e256329c28b5e2f2240ced013c0b528165da8f3e3f664dd9738",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-linux-x86_64.rpm"
+    },
+    {
+      "filename": "Voltrum-Motion-0.3.0-linux-x64.tar.gz",
+      "platform": "linux",
+      "architecture": "x64",
+      "version": "0.3.0",
+      "format": "tar.gz",
+      "label": "Linux x64 (.tar.gz)",
+      "minimumSystem": "64-bit Linux with X11 or supported wlroots Wayland",
+      "contentScope": "local-import-only",
+      "signed": false,
+      "notarized": false,
+      "installInstructions": [
+        "tar -xzf Voltrum-Motion-0.3.0-linux-x64.tar.gz",
+        "Run voltrum-motion from the extracted directory.",
+        "Requires X11, or supported wlroots Wayland with mpvpaper; GNOME/KDE Wayland are not supported."
+      ],
+      "bytes": 119966923,
+      "sha256": "b74f52542fceb6c26653396d932abf965c8ff83ca806bc937146d1cc56ae09e4",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-linux-x64.tar.gz"
     }
   ]
 }

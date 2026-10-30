@@ -3,6 +3,32 @@ import { expect, test } from '@playwright/test';
 const publicURL = 'http://127.0.0.1:4173';
 const localURL = 'http://127.0.0.1:3001';
 
+test('color links and swatches filter by stored palette membership', async ({ page, request }) => {
+  const catalog = await (await request.get(`${publicURL}/showcase.json`)).json();
+  const matches = catalog.items.filter((item: { colors: string[] }) => item.colors.includes('0066cc'));
+  expect(matches.length).toBeGreaterThan(0);
+  await page.goto(`${publicURL}/?colors=0066cc#collection`);
+  await expect(page.getByRole('searchbox')).toHaveValue('');
+  await expect(page.locator('.results-bar [role=status]')).toHaveText(`${matches.length} ${matches.length === 1 ? 'wallpaper' : 'wallpapers'}`);
+  await expect(page.locator('#gallery h3')).toHaveText(matches.slice(0, 24).map((item: { title: string }) => item.title));
+  await page.locator('.color-trigger').click();
+  await expect(page.locator('.color-options').getByRole('button', { name: 'Blue', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'All colors', exact: true }).click();
+  await expect(page.getByRole('searchbox')).toHaveValue('');
+  expect(new URL(page.url()).searchParams.has('colors')).toBe(false);
+  await page.locator('.color-trigger').click();
+  await page.locator('.color-options').getByRole('button', { name: 'Blue', exact: true }).click();
+  await page.reload();
+  await expect(page.locator('#gallery h3')).toHaveText(matches.slice(0, 24).map((item: { title: string }) => item.title));
+  await page.getByRole('searchbox').fill('nothing-matches');
+  await page.getByRole('button', { name: 'Clear color filter', exact: true }).click();
+  await expect(page.getByRole('searchbox')).toHaveValue('nothing-matches');
+  await page.locator('.color-trigger').click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.color-trigger')).toBeFocused();
+  await expect(page.locator('.color-options')).toHaveCount(0);
+});
+
 for (const [name, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 844]] as const) {
   test(`public ${name} shows the complete collection without internal labels or overflow`, async ({ page }) => {
     await page.setViewportSize({ width, height });
@@ -14,7 +40,8 @@ for (const [name, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 84
     await expect(page.locator('#gallery article')).toHaveCount(24);
     await expect(page.getByRole('button', { name: 'Explore 353', exact: true })).toBeVisible();
     await expect(page.getByText(/recovered default|local reference|view default/iu)).toHaveCount(0);
-    await expect(page.locator('#release-downloads a')).toHaveCount(0);
+    const release = await (await page.request.get(`${publicURL}/release.json`)).json();
+    await expect(page.locator('#release-downloads a')).toHaveCount(release.downloads.length);
     await expect(page.locator('#gallery h3').first()).toHaveText('Cat Pond');
     await expect(page.getByText('Aurora Flow')).toHaveCount(0);
     await expect(page.locator('.hero-art img')).toHaveAttribute('alt', 'Cat Pond');
@@ -30,7 +57,10 @@ for (const [name, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 84
   });
 }
 
-test('public cat preview is image-only and restores focus with Escape', async ({ page }) => {
+test('reduced-motion cat preview starts with a still and restores focus with Escape', async ({ page, request }) => {
+  const catalog = await (await request.get(`${publicURL}/showcase.json`)).json();
+  const cat = catalog.items.find((item: { id: string }) => item.id === '78b58191-5c56-4196-9c4f-1a5b98dfd72b');
+  expect(cat).toBeDefined();
   const media: string[] = [];
   page.on('request', request => { if (request.resourceType() === 'media') media.push(request.url()); });
   await page.goto(publicURL);
@@ -39,7 +69,7 @@ test('public cat preview is image-only and restores focus with Escape', async ({
   const preview = page.locator('#gallery').getByRole('button', { name: 'Preview Cat Pond', exact: true });
   await preview.click();
   await expect(page.getByRole('dialog')).toBeVisible();
-  await expect(page.getByRole('dialog').locator('img')).toHaveAttribute('src', '/defaults/78b58191-5c56-4196-9c4f-1a5b98dfd72b.webp');
+  await expect(page.getByRole('dialog').locator('img')).toHaveAttribute('src', cat.detailURL ?? cat.previewURL);
   await expect(page.getByRole('dialog').locator('video,a[download]')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -91,7 +121,7 @@ test('local showcase restores cached defaults without any remote media or downlo
   await expect(page.locator('#gallery article')).toHaveCount(1);
   await page.getByRole('button', { name: 'Preview Peaceful Candles' }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
-  await expect(page.getByRole('dialog').locator('img')).toHaveAttribute('src', /\/recovered\//u);
+  await expect(page.getByRole('dialog').locator('img')).toHaveAttribute('src', /\/details\//u);
   await expect(page.getByRole('dialog').locator('video,a[download]')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await page.getByRole('searchbox').fill('');
@@ -187,8 +217,8 @@ for (const [name, width, height] of [['desktop', 1952, 1269], ['mobile', 390, 84
     await expect(dialog.locator('dl')).toContainText('Resolution:3840x2160');
     await expect(dialog.locator('dl')).toContainText('Likes:2551');
     await expect(dialog.locator('#preview-description')).toContainText('Snow drifts steadily through a dark stand of fir trees');
-    await expect(dialog.getByRole('button', { name: 'Set as Wallpaper', exact: true })).toBeDisabled();
-    await expect(dialog.getByRole('button', { name: 'Download unavailable' })).toBeDisabled();
+    await expect(dialog.getByRole('button', { name: 'Download the app', exact: true })).toBeEnabled();
+    await expect(dialog.getByRole('button', { name: /Set as Wallpaper|Download unavailable/u })).toHaveCount(0);
     await expect(dialog.getByRole('button', { name: 'Share wallpaper', exact: true })).toBeVisible();
     await expect(dialog.locator('video,a[download]')).toHaveCount(0);
     await dialog.locator('img').evaluate(image => (image as HTMLImageElement).decode());
@@ -201,7 +231,7 @@ for (const [name, width, height] of [['desktop', 1952, 1269], ['mobile', 390, 84
     expect(Math.abs(title!.x + title!.width / 2 - bounds!.x - bounds!.width / 2)).toBeLessThan(3);
     expect(await dialog.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(false);
     await page.screenshot({ path: `../build/typescript-browser-results/detail-winter-${name}.png` });
-    await dialog.getByRole('button', { name: 'Set as Wallpaper', exact: true }).scrollIntoViewIfNeeded();
+    await dialog.getByRole('button', { name: 'Download the app', exact: true }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: `../build/typescript-browser-results/detail-winter-${name}-controls.png` });
     await page.keyboard.press('Escape');
     expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
@@ -221,7 +251,7 @@ test('detail favorites, rights, sharing links, Library, and search are functiona
   await dialog.getByRole('button', { name: 'Source and rights information' }).click();
   await expect(dialog.getByRole('heading', { name: 'Source & rights' })).toBeVisible();
   await dialog.getByRole('button', { name: 'Share wallpaper', exact: true }).click();
-  await expect(dialog.getByRole('status')).toHaveText('Link copied.');
+  await expect(dialog.locator('.detail-share-status')).toHaveText('Link copied.');
   const link = await page.evaluate(() => sessionStorage.getItem('test-shared-link'));
   expect(link).toContain('?wallpaper=9e35a86d-5ba1-453c-8b22-f70f46e39b38');
   await dialog.getByRole('button', { name: 'Open Library' }).click();
@@ -246,6 +276,6 @@ test('detail sharing handles cancellation and offers a manual link when clipboar
   await dialog.getByRole('button', { name: 'Share wallpaper', exact: true }).click();
   await expect(dialog.locator('.detail-share-status')).toBeEmpty();
   await dialog.getByRole('button', { name: 'Copy wallpaper link', exact: true }).click();
-  await expect(dialog.getByRole('status')).toHaveText('Copy this link to share the wallpaper.');
+  await expect(dialog.locator('.detail-share-status')).toHaveText('Copy this link to share the wallpaper.');
   await expect(dialog.getByRole('textbox', { name: 'Wallpaper link', exact: true })).toHaveValue(/\?wallpaper=9e35a86d-5ba1-453c-8b22-f70f46e39b38#collection$/);
 });

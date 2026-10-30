@@ -20,9 +20,9 @@ default previews** from the other app, with Cat Pond first and no Aurora demo.
 It does not fetch the 152 Apple aerial assets or substitute the NASA collection.
 The original gallery contains 3,026 metadata records; only previews already cached
 locally are shown. Categories, multi-term search, favorites, incremental loading,
-image previews, and keyboard dismissal work with these familiar defaults.
+still and selected live previews, and keyboard dismissal work with these familiar defaults.
 
-Recovered cards are image references, not remote video players or download links.
+Cards remain still images. Only an open detail dialog can stream its selected video.
 They show the origin and unverified-rights status, not invented artist credits.
 The local server binds to loopback. Do not expose it through a tunnel or LAN host.
 Do not publish `.generated/`, the SQLite database, or original source JPEGs.
@@ -36,8 +36,10 @@ bun run preview
 ```
 
 At the user's explicit request, the public website showcases optimized cached
-thumbnails of all 353 available wallpapers, with Cat Pond first. No Aurora assets, remote video
-URLs, video playback, or downloads are included. This separate, image-only
+thumbnails of all 353 available wallpapers, with Cat Pond first. Detail dialogs use
+the associated exact CDN video URL from `showcase-videos.json`, with muted inline
+looping playback, a high-resolution poster, reduced-motion opt-in and error fallback.
+No demo assets or video downloads are bundled. This presentation-only
 selection is not a rights approval: creators/reuse rights remain unverified.
 The existing video/native shared rights policy remains paused with no approvals.
 
@@ -55,6 +57,23 @@ Internal recovery/default labels are not displayed on cards or collection pages.
 Thumbnails are lazy loaded and cards are paginated in batches of 24. Deployment
 splits the complete image set into deterministic, bounded immutable ConfigMaps;
 it never truncates the collection to make one ConfigMap fit.
+
+## Color search
+
+Catalog preparation downsamples each cached image to 64×36 sRGB pixels and snaps
+each sample to the shared palette in `src/lib/colors.ts` using CIELAB distance
+(Delta E 1976, D65). Transparent areas are composited on white. Up to five colors
+covering at least 3% each are stored in SQLite and exported with each image.
+Rebuilding regenerates colors for existing entries.
+
+Open the compact **Color** picker and choose a named swatch, or share
+`/?colors=0066cc#collection`. Filters use exact stored-hex membership, with no
+image processing at search time. Hex values are case-insensitive with an optional
+`#`; comma-separated colors require every selected color. Color filters combine
+with text, categories, and favorites. The selected color appears beside search;
+its clear button removes only the color filter. The search field stays plain text
+(advanced `colors=0066cc` queries are also supported). Escape or clicking outside
+closes the picker.
 
 ## Wallpaper details
 
@@ -120,7 +139,7 @@ The first command builds, typechecks, and runs typed catalog/policy/database and
 deployment-packaging tests. Browser tests start isolated loopback servers for both
 public and recovered modes. They check desktop/mobile layouts, zero unapproved
 remote-media requests, favorites/search, modal cleanup/focus restoration, actual
-image-only previews, absence of Aurora/video downloads, and error retries. Screenshots and traces go under the
+selected live previews, reduced motion, shared-link history, absence of bundled demos/video downloads, and error retries. Screenshots and traces go under the
 ignored root `build/typescript-browser-results/` directory. The public test server
 uses the generated production CSP, including hashes for Start bootstrap scripts;
 development-mode checks alone do not establish CSP compatibility.

@@ -61,14 +61,45 @@ def approved_media(entry):
     return False
 
 
-def public_download(url):
+def native_download_approved(entry):
+    if not isinstance(entry, dict):
+        return False
+    if entry.get("contentScope") == "catalog":
+        return media_enabled and media_policy.get("allowNativeDownloads") is True
+    if entry.get("contentScope") != "local-import-only":
+        return False
     try:
-        parsed = urllib.parse.urlparse(url)
-        if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        policy = json.loads((ROOT / "desktop/distribution-policy.json").read_text())
+    except (OSError, ValueError):
+        return False
+    return isinstance(policy, dict) and policy.get("publication") == "offline-only" and policy.get("thirdPartyMedia") is False and policy.get("bundledWallpapers") is False
+
+
+def public_download(entry):
+    try:
+        url = entry.get("url", "")
+        if not valid_evidence_url(url) or entry.get("platform") not in {"windows", "linux", "macos"}:
             return False
-        request = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "VoltrumMotion-Publisher/1.0"})
-        with urllib.request.urlopen(request, timeout=15) as response:
-            return response.status == 200
+        if type(entry.get("bytes")) is not int or entry["bytes"] <= 0 or any(not isinstance(entry.get(key), str) or not entry[key].strip() for key in ("label", "architecture", "format", "version", "minimumSystem")):
+            return False
+        if type(entry.get("signed")) is not bool or type(entry.get("notarized")) is not bool:
+            return False
+        steps = entry.get("installInstructions")
+        if not isinstance(steps, list) or not steps or any(not isinstance(step, str) or not step.strip() for step in steps):
+            return False
+        request = urllib.request.Request(url, headers={"User-Agent": "VoltrumMotion-Publisher/1.0"})
+        # Anonymous fetch: private drafts and an HTML login page cannot pass as an installer.
+        with urllib.request.urlopen(request, timeout=60) as response:
+            if response.status != 200 or urllib.parse.urlparse(response.url).scheme != "https":
+                return False
+            digest = hashlib.sha256()
+            size = 0
+            while chunk := response.read(1024 * 1024):
+                size += len(chunk)
+                if size > entry["bytes"]:
+                    return False
+                digest.update(chunk)
+            return size == entry["bytes"] and digest.hexdigest() == entry.get("sha256")
     except (OSError, ValueError):
         return False
 
@@ -85,7 +116,7 @@ if (SITE / "recovered").exists() or (SITE / "media").exists():
 original_resources = ROOT / "WallperRebuilt/Sources/WallperRebuilt/Resources"
 selection = json.loads((WEBSITE / "showcase-selection.json").read_text())
 selected_ids = selection.get("ids", [])
-if selection.get("presentation") != "cached-thumbnails-only" or not isinstance(selected_ids, list) or not selected_ids or any(not isinstance(identifier, str) for identifier in selected_ids) or len(set(selected_ids)) != len(selected_ids):
+if selection.get("presentation") != "selected-live-preview" or not isinstance(selected_ids, list) or not selected_ids or any(not isinstance(identifier, str) for identifier in selected_ids) or len(set(selected_ids)) != len(selected_ids):
     raise SystemExit("Invalid thumbnail showcase selection.")
 gallery = {item["id"]: item for item in json.loads((original_resources / "gallery.json").read_text())}
 items = showcase.get("items", [])
@@ -96,16 +127,28 @@ for item in items:
     identifier = item["id"]
     source = gallery.get(identifier)
     preview = f"defaults/{identifier}.webp"
-    if not source or any(item.get(key) != source.get(key) for key in ("title", "category")) or item.get("origin") != "recovered-wallper" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://wallper.app" or item.get("creator") != "Wallper collection · original creator unverified" or item.get("license") != "Rights unverified · thumbnail showcase only":
+    if not source or any(item.get(key) != source.get(key) for key in ("title", "category")) or item.get("origin") != "recovered-wallper" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://wallper.app" or item.get("creator") != "Wallper collection · original creator unverified" or item.get("license") != "Rights unverified · website showcase preview only":
         raise SystemExit("Public thumbnail showcase metadata differs from the selected recovered defaults.")
+    video = item.get("videoPreviewURL")
+    if video != source.get("remoteURL") or not isinstance(video, str) or not video.startswith("https://cdn.wallper.app/") or not video.endswith(".mp4"):
+        raise SystemExit("Live preview must use the exact selected source-catalog video URL.")
     if item.get("author") != (source.get("author") or "Unknown") or item.get("likes") != source.get("likes", 0) or item.get("sizeMB") != source.get("sizeMB"):
         raise SystemExit("Public thumbnail showcase detail metadata differs from the source snapshot.")
     data = (SITE / preview).read_bytes()
-    if len(data) > 50_000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+    if len(data) > 120_000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
         raise SystemExit("Default thumbnails must be size-limited WebP images, never video.")
     if data != (WEBSITE / ".generated/public" / preview).read_bytes():
         raise SystemExit("Default thumbnails differ from the prepared showcase.")
     allowed_images.add(preview)
+    detail = f"details/{identifier}.webp"
+    if item.get("detailURL") != "/" + detail:
+        raise SystemExit("Detail artwork must match its selected wallpaper.")
+    data = (SITE / detail).read_bytes()
+    if len(data) > 650_000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+        raise SystemExit("Detail artwork must be bounded WebP still images, never video.")
+    if data != (WEBSITE / ".generated/public" / detail).read_bytes():
+        raise SystemExit("Detail artwork differs from the prepared showcase.")
+    allowed_images.add(detail)
 
 
 class InlineScripts(HTMLParser):
@@ -156,17 +199,13 @@ with tarfile.open(fileobj=archive, mode="w") as bundle:
                 print(f"Published {len(approved)} explicitly approved media records; withheld {len(candidates) - len(approved)} unreviewed candidates.")
             if path.relative_to(SITE).as_posix() == "release.json":
                 release = json.loads(data)
-                native_enabled = media_enabled and media_policy.get("allowNativeDownloads") is True
-                available = [entry for entry in release.get("downloads", []) if native_enabled and public_download(entry.get("url", ""))]
-                if not native_enabled:
-                    release["downloads"] = []
-                    release["publicationStatus"] = "App downloads paused pending media-rights review"
-                    data = (json.dumps(release, indent=2) + "\n").encode()
+                source_release = json.loads((WEBSITE / "release.json").read_text())
+                available = [entry for entry in release.get("downloads", []) if entry in source_release.get("downloads", []) and native_download_approved(entry) and public_download(entry)]
                 if len(available) != len(release.get("downloads", [])):
                     print("Withheld unavailable installer links from the deployed release manifest; source metadata is unchanged.")
-                    release["downloads"] = available
-                    release["publicationStatus"] = "Awaiting publicly available app downloads"
-                    data = (json.dumps(release, indent=2) + "\n").encode()
+                release["downloads"] = available
+                release["publicationStatus"] = "Download a published build for your platform below." if available else "No public installers are available yet. The earlier macOS previews were withdrawn."
+                data = (json.dumps(release, indent=2) + "\n").encode()
             info = tarfile.TarInfo(str(path.relative_to(SITE)))
             info.size = len(data)
             info.mode = 0o644
@@ -233,9 +272,9 @@ http {
 '''
 if not media_enabled:
     nginx = nginx.replace("img-src 'self' https://images-assets.nasa.gov data:", "img-src 'self'")
-    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'none'")
+    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src https://cdn.wallper.app")
 else:
-    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self' https://images-assets.nasa.gov")
+    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self' https://images-assets.nasa.gov https://cdn.wallper.app")
 nginx = nginx.replace("script-src 'self';", "script-src 'self' " + " ".join(sorted(set(scripts.hashes))) + ";")
 digest = hashlib.sha256(payload + b"".join(preview_archives) + nginx.encode()).hexdigest()
 config_name = "motion-site-" + digest[:12]

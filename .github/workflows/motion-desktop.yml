@@ -1,15 +1,23 @@
-name: Motion desktop candidates
+name: Motion desktop builds
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Optional new preview release tag (motion-vVERSION-preview); blank builds artifacts only'
+        required: false
+        type: string
   push:
-    paths: ['desktop/**', 'website/assets/mark.svg', 'website/media-policy.json', '.github/workflows/motion-desktop.yml']
+    paths: ['desktop/**', 'WallperRebuilt/**', 'build-wallper.sh', 'release-motion.sh', 'tools/prepare-desktop-release.py', 'tools/package-approved-catalog.py', 'website/assets/mark.svg', 'website/media-policy.json', '.github/workflows/motion-desktop.yml']
   pull_request:
-    paths: ['desktop/**', '.github/workflows/motion-desktop.yml']
+    paths: ['desktop/**', 'WallperRebuilt/**', 'tools/**', 'release-motion.sh', '.github/workflows/motion-desktop.yml']
 permissions:
   contents: read
 jobs:
-  windows:
-    runs-on: windows-latest
+  desktop:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
@@ -17,44 +25,86 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: desktop/package-lock.json
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y xvfb x11-utils openbox ffmpeg rpm libgtk-3-0t64 libnss3 libasound2t64 libgbm1
       - run: npm ci --no-audit --no-fund
         working-directory: desktop
-      - run: npm run validate
+      - run: npm run validate && npm run release:check
         working-directory: desktop
-      - name: Compile Windows helper without changing the runner desktop
+      - if: runner.os == 'Windows'
+        name: Validate Windows helper and library UI
         shell: pwsh
-        run: ./desktop/native/windows-workerw.ps1 -WindowHandle 0 -X 0 -Y 0 -Width 1 -Height 1 -ValidateOnly
-      - run: npm run test:smoke
-        working-directory: desktop
-      - run: npx electron-builder --win nsis zip --x64 --publish never
-        working-directory: desktop
-  linux:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
-        with:
-          node-version: '24'
-          cache: npm
-          cache-dependency-path: desktop/package-lock.json
-      - run: sudo apt-get update && sudo apt-get install -y xvfb x11-utils openbox ffmpeg libgtk-3-0t64 libnss3 libasound2t64 libgbm1
-      - run: npm ci --no-audit --no-fund
-        working-directory: desktop
-      - run: npm run validate
-        working-directory: desktop
-      - run: xvfb-run -a sh -c 'openbox >/tmp/motion-openbox.log 2>&1 & npm run test:smoke'
+        run: |
+          ./desktop/native/windows-workerw.ps1 -WindowHandle 0 -X 0 -Y 0 -Width 1 -Height 1 -ValidateOnly
+          cd desktop
+          npm run test:smoke
+      - if: runner.os == 'Linux'
+        run: xvfb-run -a sh -c 'openbox >/tmp/motion-openbox.log 2>&1 & npm run test:smoke'
         working-directory: desktop
         env:
           XDG_SESSION_TYPE: x11
           MOTION_TEST_NO_SANDBOX: '1'
-      - run: npx electron-builder --linux AppImage deb tar.gz --x64 --publish never
+      - if: runner.os == 'Windows'
+        run: npx electron-builder --win nsis zip --x64 --publish never
         working-directory: desktop
-  publication-boundary:
-    runs-on: ubuntu-24.04
+      - if: runner.os == 'Linux'
+        run: npx electron-builder --linux AppImage deb rpm tar.gz --x64 --publish never
+        working-directory: desktop
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: installers-${{ runner.os }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            desktop/release/*.exe
+            desktop/release/*.zip
+            desktop/release/*.AppImage
+            desktop/release/*.deb
+            desktop/release/*.rpm
+            desktop/release/*.tar.gz
+  macos:
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '24'
-      - name: No public release or installer uploads
-        run: node desktop/scripts/publication-check.mjs || echo 'Publication is paused; all jobs produce runner-local candidates only.'
+      - run: ./release-motion.sh
+      - name: Check native playback with a temporary fixture
+        run: |
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          ffmpeg -nostdin -hide_banner -loglevel error -y -f lavfi -i 'testsrc2=size=320x180:rate=30' -t 3 -c:v libx264 -pix_fmt yuv420p build/smoke-fixture.mp4
+          MOTION_SMOKE_VIDEO="$PWD/build/smoke-fixture.mp4" "./build/Voltrum Motion.app/Contents/MacOS/WallperRebuilt" --smoke-test build/smoke-report.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: installers-macOS
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            build/releases/*-preview-universal.dmg
+            build/releases/*-preview-universal.dmg.audit.json
+  release:
+    needs: [desktop, macos]
+    if: github.event_name == 'workflow_dispatch' && inputs.release_tag != '' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: installers-*
+          merge-multiple: true
+          path: release
+      - name: Assemble checked release manifest
+        run: |
+          python3 -m unittest discover -s tools/tests -v
+          python3 -c 'import os,json; assert os.environ["RELEASE_TAG"] == "motion-v" + json.load(open("desktop/package.json"))["version"] + "-preview"'
+          python3 tools/prepare-desktop-release.py --directory release --repository "$GITHUB_REPOSITORY" --tag "$RELEASE_TAG" --commit "$GITHUB_SHA"
+          cd release && sha256sum -c SHA256SUMS.txt
+      - name: Publish offline-only preview
+        run: |
+          gh release create "$RELEASE_TAG" release/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease --title "Voltrum Motion offline preview" --notes-file docs/DESKTOP-RELEASE-NOTES.md

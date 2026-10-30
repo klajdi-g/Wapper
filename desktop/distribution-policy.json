@@ -1,0 +1,6 @@
+{
+  "publication": "offline-only",
+  "reason": "Distribute the import-only application with an empty library. This does not authorize the separately paused third-party catalog.",
+  "thirdPartyMedia": false,
+  "bundledWallpapers": false
+}

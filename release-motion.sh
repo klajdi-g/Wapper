@@ -26,6 +26,7 @@ else
     fi
 fi
 codesign --verify --deep --strict "$app"
+node "$root/desktop/scripts/publication-check.mjs" "$app/Contents/Resources" --mac
 stage=$(mktemp -d "$root/build/Motion-DMG.XXXXXX")
 trap 'rm -rf "$stage"' EXIT HUP INT TERM
 ditto "$app" "$stage/Voltrum Motion.app"

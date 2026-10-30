@@ -3,7 +3,7 @@ import { filterWallpapers, parseFavorites, parseRelease, parseShowcase, safeURL 
 import { approves, safeEvidence } from './policy';
 import type { Wallpaper } from './types';
 
-const original: Wallpaper = { id: 'original', title: 'Aurora Flow', category: 'Originals', creator: 'Voltrum', license: 'Original demo', previewURL: '/media/aurora.jpg', remoteURL: '/media/aurora.mp4', sourceURL: '/#about', origin: 'original', tags: ['calm'], resolution: '1280 × 720', author: 'Unknown', description: '', sizeMB: null, likes: 0 };
+const original: Wallpaper = { id: 'original', title: 'Synthetic Fixture', category: 'Originals', creator: 'Test', license: 'Test fixture', previewURL: '/media/fixture.jpg', remoteURL: '/media/fixture.mp4', sourceURL: '/#about', origin: 'original', tags: ['calm'], colors: ['0066cc', '000000'], resolution: '1280 × 720', author: 'Unknown', description: '', sizeMB: null, likes: 0 };
 const recovered: Wallpaper = { ...original, id: '025fce0a-a7e8-4f6f-9d49-075cb51a1316', title: 'Peaceful Candles', category: 'Winter', origin: 'recovered-wallper', previewURL: '/recovered/025fce0a-a7e8-4f6f-9d49-075cb51a1316.jpg', remoteURL: '' };
 const data = { mode: 'public', items: [original, recovered], recoveredCount: 3026, cachedCount: 353, aerialCount: 152 };
 
@@ -26,7 +26,7 @@ describe('typed collection', () => {
   });
   test('search combines terms, categories, and saved items', () => {
     const items = parseShowcase({ ...data, mode: 'local-recovered' }, true).items;
-    expect(filterWallpapers(items, 'aurora calm', '', false, new Set())).toHaveLength(1);
+    expect(filterWallpapers(items, 'synthetic calm', '', false, new Set())).toHaveLength(1);
     expect(filterWallpapers(items, '', 'Winter', false, new Set())[0].title).toBe('Peaceful Candles');
     expect(filterWallpapers(items, '', '', true, new Set())).toHaveLength(0);
     expect(filterWallpapers(items, '', '', true, new Set(['original']))).toEqual([original]);
@@ -36,6 +36,16 @@ describe('typed collection', () => {
     expect([...parseFavorites('{}')]).toEqual([]);
     expect([...parseFavorites('["original", 42, null]')]).toEqual(['original']);
   });
+  test('color lookup combines with text, categories and favorites', () => {
+    const items = [original, { ...recovered, colors: [] }];
+    expect(filterWallpapers(items, 'calm colors=#0066CC,000000', 'Originals', true, new Set(['original']))).toEqual([original]);
+    for (const query of ['colors=ff6600', 'colors=0066cd', 'colors=', 'colors=0066cc,invalid', 'colors=0066cc candles']) {
+      expect(filterWallpapers(items, query, '', false, new Set())).toEqual([]);
+    }
+    const parsed = parseShowcase({ ...data, items: [{ ...original, colors: ['#0066CC', '0066cc', 'invalid', 42] }] }).items[0];
+    expect(parsed.colors).toEqual(['0066cc']);
+    expect(parseShowcase({ ...data, items: [{ ...original, colors: undefined }] }).items[0].colors).toEqual([]);
+  });
   test('detail metadata preserves source values and defaults malformed fields honestly', () => {
     const item = { ...original, author: 'Fixture artist', description: 'Fixture description.', sizeMB: 50.892, likes: 2551 };
     expect(parseShowcase({ ...data, items: [item] }).items[0]).toEqual(item);
@@ -44,7 +54,7 @@ describe('typed collection', () => {
   });
   test('links reject unsafe schemes, credentials, protocol-relative links and control characters', () => {
     for (const value of ['javascript:alert(1)', '//evil.com', 'https://user:pass@example.org', '/\\evil.com', 'https://example.org/\u0000']) expect(safeURL(value)).toBeNull();
-    expect(safeURL('/media/aurora.mp4')).toBe('/media/aurora.mp4');
+    expect(safeURL('/media/fixture.mp4')).toBe('/media/fixture.mp4');
     expect(safeURL('https://example.org/test clip.mp4')).toBe('https://example.org/test%20clip.mp4');
   });
   test('release parser requires an explicit boolean and checksum', () => {

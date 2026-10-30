@@ -98,9 +98,6 @@ struct Wallpaper: Codable, Identifiable, Equatable {
         }
     }
 
-    static let demo = Wallpaper(id: "rebuilt-aurora", title: "Aurora Flow",
-                                category: "Original demo", source: .bundled,
-                                filename: "Aurora.mp4")
 }
 
 enum BatteryBehavior: String, Codable, CaseIterable {
