@@ -189,6 +189,7 @@ for (const [name, width, height] of [['desktop', 1952, 1269], ['mobile', 390, 84
     await expect(dialog.locator('#preview-description')).toContainText('Snow drifts steadily through a dark stand of fir trees');
     await expect(dialog.getByRole('button', { name: 'Set as Wallpaper', exact: true })).toBeDisabled();
     await expect(dialog.getByRole('button', { name: 'Download unavailable' })).toBeDisabled();
+    await expect(dialog.getByRole('button', { name: 'Share wallpaper', exact: true })).toBeVisible();
     await expect(dialog.locator('video,a[download]')).toHaveCount(0);
     await dialog.locator('img').evaluate(image => (image as HTMLImageElement).decode());
     const bounds = await dialog.boundingBox();

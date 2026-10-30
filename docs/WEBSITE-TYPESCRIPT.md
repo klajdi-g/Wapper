@@ -80,7 +80,7 @@ production build. See [deployment](../website/DEPLOYMENT.md) for live-rollout ch
 ## Deployment acceptance
 
 The immersive-detail build is live at `motion.voltrum.co`, snapshot
-`motion-site-3e3576375db0`, with two ready replicas. Live desktop/mobile checks
+`motion-site-572fbde5ca6b`, with two ready replicas. Live desktop/mobile checks
 passed: Cat Pond first, exactly 353 wallpapers, a functional Library, no Aurora, no remote
 wallpaper-image/video requests, no installer links, an empty video catalog,
 unchanged paused policy, and 404 for old Aurora/source paths. All 353 thumbnails
@@ -93,7 +93,7 @@ and mobile sizes: `build/typescript-browser-results/live-detail-*.png`. Gallery 
 `build/typescript-browser-results/live-full-*-collection.png` and
 `live-full-*-library.png`. The Nix runbook records the full deployment hash.
 
-The deployment packages 5,720,648 compressed bytes across 12 bounded archives,
+The deployment packages 5,720,658 compressed bytes across 12 bounded archives,
 not one oversized ConfigMap. The content hash covers all image shards and nginx
 configuration. Each pod extracts the exact matching archive set before readiness.
 
