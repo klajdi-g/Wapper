@@ -8,11 +8,12 @@ media is approved. All platforms start with an empty library and include no
 wallpapers or demo media. Local imports remain user-selected.
 The previous 0.2.0/0.2.1 releases remain withdrawn drafts.
 
-Windows, Linux and the native macOS app use version 0.3.0.
+Windows/Linux use version 0.3.0. macOS uses 0.3.1, fixing the preview crash on macOS 26.5.
 
 ## Install a published preview
 
-Download assets from [the 0.3.0 preview release](https://github.com/klajdi-g/Wapper/releases/tag/motion-v0.3.0-preview)
+Download assets from [the macOS 0.3.1 hotfix](https://github.com/klajdi-g/Wapper/releases/tag/motion-v0.3.1-preview),
+[the Windows/Linux 0.3.0 preview](https://github.com/klajdi-g/Wapper/releases/tag/motion-v0.3.0-preview),
 or [the website](https://motion.voltrum.co/#download).
 Verify the downloaded files against the release's `SHA256SUMS.txt`.
 

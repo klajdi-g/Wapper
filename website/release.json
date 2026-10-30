@@ -1,13 +1,13 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "notarized": false,
-  "publicationStatus": "Preview 0.3.0 is available for Windows, Linux and macOS. Import your own wallpapers; the apps start with an empty library.",
+  "publicationStatus": "macOS 0.3.1 fixes the wallpaper preview crash. Windows and Linux 0.3.0 remain available.",
   "downloads": [
     {
-      "filename": "Voltrum-Motion-0.3.0-preview-universal.dmg",
+      "filename": "Voltrum-Motion-0.3.1-preview-universal.dmg",
       "platform": "macos",
       "architecture": "universal",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "format": "dmg",
       "label": "macOS universal (.dmg)",
       "minimumSystem": "macOS 14 Sonoma",
@@ -19,9 +19,9 @@
         "This preview is ad-hoc signed, not Apple-notarized. If macOS blocks it, review the app in System Settings \u2192 Privacy & Security.",
         "Open Motion and import your own local videos."
       ],
-      "bytes": 3961804,
-      "sha256": "eb2e2929f1fbf33cd493930b0eb5aba1cea6baf82fb831e87e3998291d797792",
-      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.0-preview/Voltrum-Motion-0.3.0-preview-universal.dmg"
+      "bytes": 4009962,
+      "sha256": "8d07284f46ce04e269a64ae020aafbfe18a732d63f2d57c1068942693c5a6f12",
+      "url": "https://github.com/klajdi-g/Wapper/releases/download/motion-v0.3.1-preview/Voltrum-Motion-0.3.1-preview-universal.dmg"
     },
     {
       "filename": "Voltrum-Motion-0.3.0-win-x64.exe",

@@ -1,5 +1,19 @@
 # Voltrum Motion quarantine validation
 
+## macOS 0.3.1 preview crash fix
+
+The reported 0.3.0 crash aborted inside `_AVKit_SwiftUI` while initializing
+SwiftUI VideoPlayer metadata as a wallpaper detail sheet opened. 0.3.1 embeds
+AppKit AVPlayerView directly and releases its player when the sheet closes.
+All 54 smoke checks pass on macOS 26.5 (25F71), including three real sheet
+open/play/apply/close cycles. Checks also passed when running the universal app
+directly from the finished read-only DMG.
+
+- Artifact: `Voltrum-Motion-0.3.1-preview-universal.dmg` (4,009,962 bytes).
+- SHA-256: `8d07284f46ce04e269a64ae020aafbfe18a732d63f2d57c1068942693c5a6f12`.
+- Report: `build/mac-hotfix-smoke-report.json`.
+- Existing imported media and library data are preserved.
+
 **Website update, October 30, 2026:** the site has migrated to TanStack Start,
 React/TypeScript, and Drizzle SQLite catalog generation. Its public showcase now
 includes selected still images and source-CDN live previews in the detail dialog.

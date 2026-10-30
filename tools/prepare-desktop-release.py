@@ -15,6 +15,7 @@ parser.add_argument('--tag', required=True)
 parser.add_argument('--commit', required=True)
 parser.add_argument('--website-metadata', type=pathlib.Path, help='Generate website release metadata (publish artifacts before deploying it)')
 parser.add_argument('--cask-directory', type=pathlib.Path, help='Write the checksum-pinned custom Homebrew tap cask')
+parser.add_argument('--mac-only', action='store_true', help='Publish a macOS hotfix while preserving other website platform downloads')
 args = parser.parse_args()
 if not re.fullmatch(r'[\w.-]+/[\w.-]+', args.repository) or not re.fullmatch(r'[\w.-]+', args.tag) or not re.fullmatch(r'[a-f0-9]{40}', args.commit):
     parser.error('Invalid repository, tag or full commit SHA')
@@ -37,9 +38,10 @@ audit = json.loads(audit_path.read_text())
 if audit.get('media') != 'local-imports-only-empty-library' or audit.get('filename') != mac_name:
     raise SystemExit('macOS import-only resource audit is missing or invalid; rebuild the DMG')
 specs = [(mac_name, 'macos', 'universal', mac_version)]
-specs += [(f'Voltrum-Motion-{version}-win-x64.{ext}', 'windows', 'x64', version) for ext in ['exe', 'zip']]
-specs += [(f'Voltrum-Motion-{version}-linux-{arch}.{ext}', 'linux', 'x64', version)
-          for ext, arch in [('AppImage', 'x86_64'), ('deb', 'amd64'), ('rpm', 'x86_64'), ('tar.gz', 'x64')]]
+if not args.mac_only:
+    specs += [(f'Voltrum-Motion-{version}-win-x64.{ext}', 'windows', 'x64', version) for ext in ['exe', 'zip']]
+    specs += [(f'Voltrum-Motion-{version}-linux-{arch}.{ext}', 'linux', 'x64', version)
+              for ext, arch in [('AppImage', 'x86_64'), ('deb', 'amd64'), ('rpm', 'x86_64'), ('tar.gz', 'x64')]]
 downloads = []
 for name, platform, architecture, artifact_version in specs:
     path = directory / name
@@ -94,7 +96,13 @@ if args.cask_directory:
     args.cask_directory.mkdir(parents=True, exist_ok=True)
     (args.cask_directory / 'voltrum-motion.rb').write_text(cask)
 if args.website_metadata:
-    args.website_metadata.write_text(json.dumps(dict(version=version, notarized=False,
-        publicationStatus=f'Preview {version} is available for Windows, Linux and macOS. Import your own wallpapers; the apps start with an empty library.',
-        downloads=downloads), indent=2) + '\n')
+    website_downloads = downloads
+    release_version = mac_version if args.mac_only else version
+    if args.mac_only:
+        existing = json.loads(args.website_metadata.read_text())
+        website_downloads = downloads + [item for item in existing['downloads'] if item['platform'] != 'macos']
+    status = (f'macOS {mac_version} fixes the wallpaper preview crash. Windows and Linux {version} remain available.' if args.mac_only
+              else f'Preview {version} is available for Windows, Linux and macOS. Import your own wallpapers; the apps start with an empty library.')
+    args.website_metadata.write_text(json.dumps(dict(version=release_version, notarized=False,
+        publicationStatus=status, downloads=website_downloads), indent=2) + '\n')
 print(json.dumps(manifest, indent=2))

@@ -1,5 +1,6 @@
 import AppKit
 import AVFoundation
+import AVKit
 import SwiftUI
 
 @MainActor
@@ -128,6 +129,45 @@ func runSmokeTest(reportURL: URL) async {
         try check(controller.playback.completedLoops.allSatisfy { $0 > 0 }, "AVPlayerLooper completed a loop on every display")
         try check(controller.playback.renderedDisplayCount == controller.playback.displays.count, "video layers render on every display")
         try check(controller.playback.errorMessage == nil, "no player error reported")
+        // Exercise the actual sheet/preview path, not just desktop AVPlayerLayers.
+        // The previous smoke test missed a runtime abort inside SwiftUI VideoPlayer.
+        let previewWindow = NSWindow(contentRect: host.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        previewWindow.isReleasedWhenClosed = false
+        previewWindow.contentView = host
+        previewWindow.orderFrontRegardless()
+        defer { previewWindow.contentView = nil; previewWindow.close() }
+        func findPlayerView(_ view: NSView) -> AVPlayerView? {
+            if let player = view as? AVPlayerView { return player }
+            return view.subviews.lazy.compactMap(findPlayerView).first
+        }
+        let replacement = try await controller.library.importVideo(fixture)
+        for (index, wallpaper) in [imported, replacement, imported].enumerated() {
+            let sheet = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 844, height: 650), styleMask: [.titled], backing: .buffered, defer: false)
+            sheet.isReleasedWhenClosed = false
+            sheet.contentView = NSHostingView(rootView: WallpaperDetail(wallpaper: wallpaper, controller: controller, library: controller.library, download: {}))
+            previewWindow.beginSheet(sheet, completionHandler: nil)
+            let deadline = Date().addingTimeInterval(10)
+            while Date() < deadline {
+                sheet.contentView?.layoutSubtreeIfNeeded()
+                if let view = sheet.contentView.flatMap(findPlayerView), let player = view.player,
+                   player.currentItem?.status == .readyToPlay, player.currentTime().seconds > 0.1 { break }
+                try await Task.sleep(nanoseconds: 50_000_000)
+            }
+            let preview = sheet.contentView.flatMap(findPlayerView)
+            let previewPlayer = preview?.player
+            try check(previewPlayer?.currentItem?.status == .readyToPlay && (previewPlayer?.currentTime().seconds ?? 0) > 0.1, "detail sheet opens and renders video \(index + 1)")
+            let previousPlayers = Array(controller.playback.players.values)
+            controller.apply(wallpaper)
+            try check(controller.playback.active.values.allSatisfy { $0 == wallpaper.id } && previousPlayers.allSatisfy { $0.rate == 0 }, "wallpaper switches from open preview \(index + 1)")
+            previewWindow.endSheet(sheet)
+            sheet.orderOut(nil)
+            sheet.contentView = nil
+            sheet.close()
+            let cleanupDeadline = Date().addingTimeInterval(2)
+            while preview?.player != nil && Date() < cleanupDeadline { try await Task.sleep(nanoseconds: 50_000_000) }
+            try check(preview?.player == nil && previewPlayer?.rate == 0, "closing detail releases preview player \(index + 1)")
+        }
+        controller.remove(replacement)
         controller.stop()
         try check(controller.playback.players.isEmpty && controller.playback.active.isEmpty, "stop releases desktop players")
         try check(controller.library.state.assignments.isEmpty, "stop clears saved assignments")

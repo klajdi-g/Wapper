@@ -3,7 +3,7 @@
 Requires macOS 14 or newer. The universal application includes both Apple silicon
 and Intel executables. Drag Voltrum Motion into Applications to install.
 
-Version 0.3.0 is an import-only offline preview with an empty initial library;
+Version 0.3.1 is an import-only offline preview with an empty initial library;
 zero wallpaper media files are bundled. The earlier 0.2.0/0.2.1
 previews remain withdrawn. See `docs/DISTRIBUTION.md` for publication and installation.
 

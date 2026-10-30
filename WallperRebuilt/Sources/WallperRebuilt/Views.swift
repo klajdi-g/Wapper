@@ -593,7 +593,7 @@ struct WallpaperDetail: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             ZStack {
-                if let player { VideoPlayer(player: player) }
+                if let player { WallpaperPreviewPlayer(player: player) }
                 else { WallpaperArtwork(url: library.thumbnailURL(for: wallpaper) ?? wallpaper.previewURL, category: wallpaper.category) }
             }.frame(width: 800, height: 450).clipShape(RoundedRectangle(cornerRadius: 10))
             HStack(alignment: .top) {
@@ -633,7 +633,11 @@ struct WallpaperDetail: View {
                     player = previewPlayer
                     previewPlayer.play()
                 }
-            }.onDisappear { player?.pause() }
+            }.onDisappear {
+                player?.pause()
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
     }
 }
 

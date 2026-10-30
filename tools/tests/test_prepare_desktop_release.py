@@ -36,6 +36,14 @@ class DesktopReleaseTests(unittest.TestCase):
             self.assertEqual(len(manifest['downloads']), 7)
             self.assertEqual(manifest['publication'], 'candidate')
             self.assertIn(audit['sha256'], (directory / 'voltrum-motion.rb').read_text())
+            website = directory / 'website-release.json'
+            website.write_text(json.dumps({'downloads': [{'platform': 'linux', 'url': 'https://example.org/existing.deb'}]}))
+            for name in names[1:]:
+                (directory / name).unlink()
+            hotfix = subprocess.run(command + ['--mac-only', '--website-metadata', str(website)], capture_output=True, text=True)
+            self.assertEqual(hotfix.returncode, 0, hotfix.stderr)
+            self.assertEqual(len(json.loads((directory / 'release-manifest.json').read_text())['downloads']), 1)
+            self.assertEqual(json.loads(website.read_text())['downloads'][1]['url'], 'https://example.org/existing.deb')
             (directory / mac).write_bytes(b'changed or stale disk image')
             self.assertNotEqual(subprocess.run(command, capture_output=True).returncode, 0)
 
