@@ -1,5 +1,6 @@
 import { record } from './policy';
 import type { Release, Showcase, Wallpaper } from './types';
+import selection from '../../showcase-selection.json';
 
 export function safeURL(value: unknown): string | null {
   if (typeof value !== 'string' || !value || value !== value.trim() || /[\\\u0000-\u001f\u007f]/u.test(value)) return null;
@@ -22,13 +23,14 @@ export function parseShowcase(payload: unknown, allowRecovered = false): Showcas
     const entry = record(value);
     if (!entry || !['id', 'title', 'category', 'creator', 'license'].every(key => typeof entry[key] === 'string' && (entry[key] as string).trim())) continue;
     if (identifiers.has(entry.id as string) || !['original', 'recovered-wallper', 'apple-aerial'].includes(String(entry.origin))) continue;
-    if (entry.origin !== 'original' && !(allowRecovered && input.mode === 'local-recovered')) continue;
+    const thumbnail = input.mode === 'public' && entry.origin === 'recovered-wallper' && selection.ids.includes(entry.id as string) && entry.previewURL === `/defaults/${entry.id}.webp` && entry.remoteURL === '';
+    if (entry.origin !== 'original' && !thumbnail && !(allowRecovered && input.mode === 'local-recovered')) continue;
     const previewURL = safeURL(entry.previewURL);
-    const remoteURL = safeURL(entry.remoteURL);
+    const remoteURL = entry.origin === 'original' ? safeURL(entry.remoteURL) : entry.remoteURL === '' ? '' : null;
     const sourceURL = safeURL(entry.sourceURL);
-    if (!previewURL || !remoteURL || !sourceURL || !previewURL.startsWith('/')) continue;
+    if (!previewURL || remoteURL === null || !sourceURL || !previewURL.startsWith('/')) continue;
     if (entry.origin === 'original' && (!previewURL.startsWith('/media/') || !remoteURL.startsWith('/media/'))) continue;
-    if (entry.origin !== 'original' && !/^\/recovered\/[\da-f-]{36}\.jpg$/iu.test(previewURL)) continue;
+    if (entry.origin !== 'original' && !thumbnail && !/^\/recovered\/[\da-f-]{36}\.jpg$/iu.test(previewURL)) continue;
     identifiers.add(entry.id as string);
     items.push({
       id: entry.id as string, title: entry.title as string, category: entry.category as string,

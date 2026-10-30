@@ -12,8 +12,9 @@ browser screenshots, and remaining production-release gates.
 
 The shared `website/media-policy.json` is paused with zero approved entries and
 `allowNativeDownloads: false`. The public catalog and download list must remain
-empty. The TypeScript website's separate showcase includes the original Motion
-demo only; its local recovered-defaults view is not publicly packaged. See
+empty. At the user's request, the TypeScript website's separate showcase includes
+21 cached image-only defaults, Cat Pond first, with no Aurora. This is not rights
+clearance; the complete local recovered-defaults view is not packaged. See
 `../website/README.md` for the TSX/Drizzle structure and local preview commands.
 The native bundle also contains an empty third-party catalog. Do not infer
 approval from NASA hosting, metadata screening, silence/muting, or a generic policy.
@@ -59,7 +60,7 @@ An init container extracts a deterministic archive into an emptyDir. Read-only,
 non-root nginx serves the static site; there is no backend, database, account,
 analytics, or access to local app media. Scripts and manifests load from the same
 origin. While paused, no remote preview images/videos are loaded; the generated
-CSP allows same-origin images and the original first-party demo video only.
+CSP allows same-origin images and denies all video playback.
 Hashed script approvals permit Start's generated bootstrap without unsafe inline
 scripts. Drizzle SQLite runs during catalog generation, not inside nginx.
 Any future approved external

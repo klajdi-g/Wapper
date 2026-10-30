@@ -12,17 +12,19 @@ python3 tools/package-motion-site.py ../nix
 ```
 
 `tools/package-motion-site.py` accepts **only** compiled `website/dist/client/`
-with a public build marker and original-only showcase. It refuses a recovered
-local build, a `recovered/` directory, unexpected image/video files, and altered
-original demo bytes. SQL databases, source TypeScript, tests, installers, videos
-other than the original demo, and source candidate catalogs are not deployed.
+with a public build marker and the exact thumbnail selection. It refuses a local
+build, `recovered/` or `media/` directories, unselected IDs, modified provenance,
+video URLs/files, and thumbnails differing from the prepared, size-limited WebPs.
+SQL databases, source TypeScript, tests, installers, videos, Aurora assets, and
+source candidate catalogs are not deployed.
 Never serve the repository root or `.generated/public/` directly.
 
 The packager rechecks the current shared `media-policy.json` and installer flag
 instead of trusting stale build metadata. Third-party `catalog.json` remains empty
-and installer links are withheld. The separate `/showcase.json` contains only the
-original Motion demo; this is not approval of recovered or NASA candidates.
-The original demo requires `media-src 'self'`; external media remains denied and
+and installer links are withheld. The separate `/showcase.json` contains 21
+user-requested cached thumbnails, with Cat Pond first. This selection is not a
+rights approval of the images or videos. While the shared policy is paused,
+`media-src 'none'` denies all video playback and
 `img-src 'self'` remains in force. Exact SHA-256 hashes authorize Start's inline
 bootstrap scripts without adding `unsafe-inline` to `script-src`.
 
@@ -53,9 +55,9 @@ Responses use revalidation headers; nonexistent resources return 404 rather than
 the app shell. Retain safe previous ConfigMaps while corresponding ReplicaSets
 are needed, but never roll back to a pre-quarantine media/installer snapshot.
 
-After deploying, check `/showcase.json` has only the original demo, `/catalog.json`
+After deploying, check `/showcase.json` has the exact selected 21 image-only defaults, `/catalog.json`
 is `[]`, `/release.json` has no downloads, `/media-policy.json` remains paused with
-no approvals, `/recovered/anything.jpg` returns 404, and both replicas are ready.
+no approvals, `/recovered/anything.jpg` and `/media/aurora.mp4` return 404, and both replicas are ready.
 Confirm the page renders under its production CSP and does not contact Wallper,
 Apple, NASA, or other remote wallpaper hosts. No native release is performed by
 the website build or packager. Signing and rights review remain separate gates.

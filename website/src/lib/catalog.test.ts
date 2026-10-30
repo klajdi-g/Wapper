@@ -4,7 +4,7 @@ import { approves, safeEvidence } from './policy';
 import type { Wallpaper } from './types';
 
 const original: Wallpaper = { id: 'original', title: 'Aurora Flow', category: 'Originals', creator: 'Voltrum', license: 'Original demo', previewURL: '/media/aurora.jpg', remoteURL: '/media/aurora.mp4', sourceURL: '/#about', origin: 'original', tags: ['calm'], resolution: '1280 × 720' };
-const recovered: Wallpaper = { ...original, id: '025fce0a-a7e8-4f6f-9d49-075cb51a1316', title: 'Peaceful Candles', category: 'Winter', origin: 'recovered-wallper', previewURL: '/recovered/025fce0a-a7e8-4f6f-9d49-075cb51a1316.jpg', remoteURL: 'https://example.org/test.mp4' };
+const recovered: Wallpaper = { ...original, id: '025fce0a-a7e8-4f6f-9d49-075cb51a1316', title: 'Peaceful Candles', category: 'Winter', origin: 'recovered-wallper', previewURL: '/recovered/025fce0a-a7e8-4f6f-9d49-075cb51a1316.jpg', remoteURL: '' };
 const data = { mode: 'public', items: [original, recovered], recoveredCount: 3026, cachedCount: 353, aerialCount: 152 };
 
 describe('typed collection', () => {
@@ -17,6 +17,12 @@ describe('typed collection', () => {
   test('rejects invalid shapes, duplicate IDs, active links and disguised originals', () => {
     expect(() => parseShowcase([])).toThrow();
     expect(parseShowcase({ ...data, items: [original, original, { ...original, id: 'bad', remoteURL: 'https://example.org/not-original.mp4' }, { ...original, id: 'evil', sourceURL: 'javascript:alert(1)' }] }).items).toEqual([original]);
+  });
+  test('public recovered showcase accepts only selected thumbnail paths without video URLs', () => {
+    const thumbnail = { ...recovered, previewURL: `/defaults/${recovered.id}.webp` };
+    const input = { ...data, items: [thumbnail] };
+    expect(parseShowcase(input).items).toEqual([thumbnail]);
+    for (const invalid of [{ remoteURL: 'https://example.org/test.mp4' }, { previewURL: '/defaults/other.webp' }, { id: 'unselected', previewURL: '/defaults/unselected.webp' }]) expect(parseShowcase({ ...input, items: [{ ...thumbnail, ...invalid }] }).items).toEqual([]);
   });
   test('search combines terms, categories, and saved items', () => {
     const items = parseShowcase({ ...data, mode: 'local-recovered' }, true).items;

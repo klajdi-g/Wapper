@@ -121,6 +121,7 @@ provided through `SIGN_IDENTITY` and `NOTARY_PROFILE`.
 
 The website now uses the familiar recovered defaults for its explicit local
 reference mode (`cd website && bun run dev:recovered`), not the unrelated NASA
-catalog. All 353 cached thumbnails remain local; public hosting showcases only
-the original Aurora demo. No recovered video or Apple aerial is fetched or
+catalog. The complete 353-thumbnail collection stays local; public hosting shows
+21 selected cached defaults, led by Cat Pond, with Aurora removed. This image-only
+selection is not rights clearance. No recovered video or Apple aerial is fetched or
 approved for redistribution. Local imports remain on your Mac.

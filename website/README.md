@@ -16,7 +16,7 @@ bun run dev:recovered
 ```
 
 Open `http://127.0.0.1:3000`. This explicitly local mode restores **353 cached
-default previews** from the other app, plus Motion's original Aurora Flow demo.
+default previews** from the other app, with Cat Pond first and no Aurora demo.
 It does not fetch the 152 Apple aerial assets or substitute the NASA collection.
 The original gallery contains 3,026 metadata records; only previews already cached
 locally are shown. Categories, multi-term search, favorites, incremental loading,
@@ -27,17 +27,19 @@ They show the origin and unverified-rights status, not invented artist credits.
 The local server binds to loopback. Do not expose it through a tunnel or LAN host.
 Do not publish `.generated/`, the SQLite database, or recovered image screenshots.
 
-For the public-safe mode, use `bun run dev`. The production command always resets
-the generated assets and excludes recovered thumbnails:
+For the public showcase, use `bun run dev`. The production command always resets
+the generated assets and exports only the 21 IDs in `showcase-selection.json`:
 
 ```sh
 bun run build
 bun run preview
 ```
 
-The public website showcases the same original Aurora demo bundled with Motion.
-No third-party defaults or native installers become approved merely because they
-were found in another app. The existing shared rights policy remains paused.
+At the user's explicit request, the public website showcases optimized cached
+thumbnails of Cat Pond and 20 familiar defaults. No Aurora assets, remote video
+URLs, video playback, or downloads are included. This separate, image-only
+selection is not a rights approval: creators/reuse rights remain unverified.
+The existing video/native shared rights policy remains paused with no approvals.
 
 ## Structure
 
@@ -62,7 +64,7 @@ claim that nginx runs a database. This read-only showcase does not need accounts
 public writes, or a persistent web database. Start's SPA shell and compiled JS/CSS
 are statically hosted by the existing two-replica nginx deployment. The browser
 loads the showcase/release manifests and local artwork. SQLite and recovered-source
-records never reach the browser in a public build. Native Swift storage and
+records beyond the selected thumbnails never reach the browser in a public build. Native Swift storage and
 behavior are unchanged by this website migration.
 
 `bun run db:generate` generates schema migrations; `bun run db:studio` opens the
@@ -83,7 +85,7 @@ The first command builds, typechecks, and runs typed catalog/policy/database and
 deployment-packaging tests. Browser tests start isolated loopback servers for both
 public and recovered modes. They check desktop/mobile layouts, zero unapproved
 remote-media requests, favorites/search, modal cleanup/focus restoration, actual
-original-demo playback, and error retries. Screenshots and traces go under the
+image-only previews, absence of Aurora/video downloads, and error retries. Screenshots and traces go under the
 ignored root `build/typescript-browser-results/` directory. The public test server
 uses the generated production CSP, including hashes for Start bootstrap scripts;
 development-mode checks alone do not establish CSP compatibility.

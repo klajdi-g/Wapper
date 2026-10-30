@@ -80,11 +80,15 @@ test('deployment snapshot hashes nginx configuration together with static conten
     assert.ok(![...entries.keys()].some(name => name.startsWith('tests/') || name.endsWith('.dmg') || name === 'validate.mjs'));
     if (entries.has('release.json')) assert.deepEqual(JSON.parse(entries.get('release.json').toString()).downloads, []);
     assert.deepEqual(JSON.parse(entries.get('catalog.json').toString()), []);
-    assert.match(config.data['nginx.conf'], /media-src 'self'/u);
+    assert.match(config.data['nginx.conf'], /media-src 'none'/u);
     assert.match(config.data['nginx.conf'], /script-src 'self' 'sha256-/u);
-    assert.ok(entries.has('media/aurora.mp4'));
+    assert.ok(entries.has('defaults/78b58191-5c56-4196-9c4f-1a5b98dfd72b.webp'));
+    assert.ok(![...entries.keys()].some(name => /aurora|\.(mp4|mov|webm)$/iu.test(name)));
     assert.ok(![...entries.keys()].some(name => /recovered|\.sqlite|schema\.ts/u.test(name)));
-    assert.equal(JSON.parse(entries.get('showcase.json').toString()).items[0].origin, 'original');
+    const showcase = JSON.parse(entries.get('showcase.json').toString());
+    assert.equal(showcase.items[0].title, 'Cat Pond');
+    assert.equal(showcase.items.length, 21);
+    assert.ok(showcase.items.every(item => item.origin === 'recovered-wallper' && item.remoteURL === ''));
     assert.notEqual(digest, createHash('sha256').update(archive).update(`${config.data['nginx.conf']}\n`).digest('hex'));
     const again = spawnSync('python3', ['-c', offlinePublisher, script, directory], { encoding: 'utf8' });
     assert.equal(again.status, 0, again.stderr);
@@ -140,7 +144,7 @@ test('publication defaults deny and requires complete, exact, scoped media appro
   }
 });
 
-test('publication rejects recovered build markers, recovered showcase entries, and recovered directories', async () => {
+test('publication rejects local builds, altered selections, video URLs, metadata, and recovered directories', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'motion-default-safety-'));
   const script = fileURLToPath(new URL('../../tools/package-motion-site.py', import.meta.url));
   const tamperedPublisher = `
@@ -152,9 +156,14 @@ def altered_text(path, *args, **kwargs):
     data = read_text(path, *args, **kwargs)
     if path.name == 'build-info.json' and variant == 'mode':
         return json.dumps({'mode': 'local-recovered'})
-    if path.name == 'showcase.json' and variant == 'entry':
+    if path.name == 'showcase.json' and variant in ('entry', 'video', 'metadata'):
         value = json.loads(data)
-        value['items'][0]['origin'] = 'recovered-wallper'
+        if variant == 'entry':
+            value['items'][0]['id'] = 'unselected'
+        elif variant == 'video':
+            value['items'][0]['remoteURL'] = 'https://example.org/test.mp4'
+        else:
+            value['items'][0]['creator'] = 'Voltrum'
         return json.dumps(value)
     return data
 def altered_exists(path):
@@ -167,10 +176,10 @@ with patch.object(pathlib.Path, 'read_text', altered_text), patch.object(pathlib
     runpy.run_path(script, run_name='__main__')
 `;
   try {
-    for (const variant of ['mode', 'entry', 'directory']) {
+    for (const variant of ['mode', 'entry', 'directory', 'video', 'metadata']) {
       const result = spawnSync('python3', ['-c', tamperedPublisher, script, directory, variant], { encoding: 'utf8' });
       assert.notEqual(result.status, 0, variant);
-      assert.match(result.stderr, /recovered|original Motion demo/iu);
+      assert.match(result.stderr, /recovered|thumbnail showcase/iu);
     }
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

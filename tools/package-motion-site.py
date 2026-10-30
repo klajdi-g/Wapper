@@ -80,15 +80,30 @@ except (OSError, ValueError) as error:
     raise SystemExit("Build the TypeScript website with `cd website && bun run build` before packaging.") from error
 if build_info.get("mode") != "public" or showcase.get("mode") != "public":
     raise SystemExit("Local recovered-media showcases must never be publicly packaged.")
-if any(item.get("origin") != "original" or item.get("id") != "motion-aurora" or item.get("previewURL") != "/media/aurora.jpg" or item.get("remoteURL") != "/media/aurora.mp4" for item in showcase.get("items", [])):
-    raise SystemExit("The public showcase may contain only the original Motion demo.")
-if (SITE / "recovered").exists():
+if (SITE / "recovered").exists() or (SITE / "media").exists():
     raise SystemExit("Recovered default previews must not appear in the public build.")
 original_resources = ROOT / "WallperRebuilt/Sources/WallperRebuilt/Resources"
-for filename in ("Aurora.jpg", "Aurora.mp4"):
-    target = SITE / "media" / filename.lower()
-    if target.read_bytes() != (original_resources / filename).read_bytes():
-        raise SystemExit("The original demo bytes differ from the source resources.")
+selection = json.loads((WEBSITE / "showcase-selection.json").read_text())
+selected_ids = selection.get("ids", [])
+if selection.get("presentation") != "cached-thumbnails-only" or not isinstance(selected_ids, list) or not selected_ids or any(not isinstance(identifier, str) for identifier in selected_ids) or len(set(selected_ids)) != len(selected_ids):
+    raise SystemExit("Invalid thumbnail showcase selection.")
+gallery = {item["id"]: item for item in json.loads((original_resources / "gallery.json").read_text())}
+items = showcase.get("items", [])
+if not isinstance(items, list) or [item.get("id") for item in items if isinstance(item, dict)] != selected_ids:
+    raise SystemExit("Public thumbnail showcase must exactly match the selected defaults.")
+allowed_images = set()
+for item in items:
+    identifier = item["id"]
+    source = gallery.get(identifier)
+    preview = f"defaults/{identifier}.webp"
+    if not source or any(item.get(key) != source.get(key) for key in ("title", "category")) or item.get("origin") != "recovered-wallper" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://wallper.app" or item.get("creator") != "Wallper collection · original creator unverified" or item.get("license") != "Rights unverified · thumbnail showcase only":
+        raise SystemExit("Public thumbnail showcase metadata differs from the selected recovered defaults.")
+    data = (SITE / preview).read_bytes()
+    if len(data) > 50_000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+        raise SystemExit("Default thumbnails must be size-limited WebP images, never video.")
+    if data != (WEBSITE / ".generated/public" / preview).read_bytes():
+        raise SystemExit("Default thumbnails differ from the prepared showcase.")
+    allowed_images.add(preview)
 
 
 class InlineScripts(HTMLParser):
@@ -119,9 +134,12 @@ scripts.feed((SITE / "index.html").read_text())
 archive = io.BytesIO()
 with tarfile.open(fileobj=archive, mode="w") as bundle:
     for path in sorted(SITE.rglob("*")):
-        if path.is_file() and path.suffix in {".html", ".css", ".js", ".mjs", ".json", ".svg", ".png", ".jpg", ".mp4", ".txt", ".ico"}:
-            if path.suffix in {".jpg", ".mp4"} and path.relative_to(SITE).as_posix() not in {"media/aurora.jpg", "media/aurora.mp4"}:
+        if path.is_file():
+            relative = path.relative_to(SITE).as_posix()
+            if path.suffix.lower() in {".jpg", ".jpeg", ".webp", ".mp4", ".webm", ".mov", ".m4v", ".gif", ".avif"} and relative not in allowed_images:
                 raise SystemExit("Unexpected media in the public build.")
+            if path.suffix not in {".html", ".css", ".js", ".mjs", ".json", ".svg", ".png", ".webp", ".txt", ".ico"}:
+                raise SystemExit("Unexpected file in the public build.")
             data = path.read_bytes()
             if path.name == "media-policy.json":
                 data = (json.dumps(media_policy, indent=2) + "\n").encode()
@@ -154,7 +172,7 @@ image = "nginx:1.28.0-alpine@sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac
 nginx = '''pid /tmp/nginx.pid;
 events { worker_connections 256; }
 http {
-  types { text/html html; text/css css; application/javascript js mjs; application/json json; image/svg+xml svg; image/png png; image/x-icon ico; text/plain txt; }
+  types { text/html html; text/css css; application/javascript js mjs; application/json json; image/svg+xml svg; image/png png; image/webp webp; image/x-icon ico; text/plain txt; }
   default_type application/octet-stream;
   access_log /dev/stdout;
   error_log /dev/stderr warn;
@@ -184,7 +202,7 @@ http {
 '''
 if not media_enabled:
     nginx = nginx.replace("img-src 'self' https://images-assets.nasa.gov data:", "img-src 'self'")
-    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self'")
+    nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'none'")
 else:
     nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self' https://images-assets.nasa.gov")
 nginx = nginx.replace("script-src 'self';", "script-src 'self' " + " ".join(sorted(set(scripts.hashes))) + ";")

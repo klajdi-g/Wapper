@@ -53,10 +53,19 @@ do not embed private contracts, credentials, or personal details.
 The source catalog is a candidate list, not a public allowlist. Serve only the
 packager-generated snapshot; never expose the repository or unfiltered source
 directory. Paused snapshots contain `catalog.json: []`, no release download
-links, and `img-src 'self'`. The October 30 TypeScript website adds the original
-Motion Aurora demo in a separate `/showcase.json`; `media-src 'self'` permits that
-first-party video while continuing to deny external media. This does not approve
-third-party entries. The local loopback-only recovered-defaults showcase is never
-deployable: production build/packaging excludes recovered previews and rejects a
-local-mode build. Re-enabling third-party publication must be a deliberate
-reviewed change; tests never approve real IDs or modify this policy.
+links, `img-src 'self'`, and `media-src 'none'`.
+
+On October 30 the user explicitly requested a public showcase of familiar defaults
+and removal of Aurora. `showcase-selection.json` selects 21 cached thumbnails,
+with Cat Pond first, independently of the video/native approval list. Only
+optimized self-hosted WebP previews are published in `/showcase.json`; every
+`remoteURL` is empty. This is a user-directed presentation selection, **not legal
+clearance**. Creator and reuse rights remain explicitly unverified. No reviewer,
+rights evidence, or ownership claim has been invented. Image reuse itself may
+require permission; rights review must cover thumbnails too.
+
+The complete 353-image local recovered collection is still not deployable.
+Packaging rejects local mode, unselected IDs, modified provenance, source JPEGs,
+video files, Aurora assets, and entries containing video URLs. Video/native
+publication remains governed by the unchanged paused shared policy. Tests never
+approve real IDs or modify it.
