@@ -27,10 +27,10 @@ function icon(size) {
   const pixels = Buffer.alloc((size * 4 + 1) * size);
   const segments = [[.22, .31, .43, .73], [.43, .73, .59, .38], [.48, .27, .63, .57], [.63, .57, .78, .29]];
   for (let row = 0; row < size; row++) for (let column = 0; column < size; column++) {
-    const x = column / size; const y = row / size;
+    const normalizedX = column / size; const normalizedY = row / size;
     const mark = segments.some(([x1, y1, x2, y2]) => {
-      const along = Math.max(0, Math.min(1, ((x - x1) * (x2 - x1) + (y - y1) * (y2 - y1)) / ((x2 - x1) ** 2 + (y2 - y1) ** 2)));
-      return Math.hypot(x - x1 - along * (x2 - x1), y - y1 - along * (y2 - y1)) < .028;
+      const along = Math.max(0, Math.min(1, ((normalizedX - x1) * (x2 - x1) + (normalizedY - y1) * (y2 - y1)) / ((x2 - x1) ** 2 + (y2 - y1) ** 2)));
+      return Math.hypot(normalizedX - x1 - along * (x2 - x1), normalizedY - y1 - along * (y2 - y1)) < .028;
     });
     const offset = row * (size * 4 + 1) + 1 + column * 4;
     pixels.set(mark ? [27, 48, 38, 255] : [216, 237, 189, 255], offset);
