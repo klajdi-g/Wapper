@@ -15,3 +15,8 @@ WallperRebuilt/.build-*/
 /website/src/routeTree.gen.ts
 /website/playwright-report/
 /website/test-results/
+/desktop/node_modules/
+/desktop/dist/
+/desktop/dist-tests/
+/desktop/release/
+/desktop/test-results/

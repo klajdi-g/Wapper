@@ -1,0 +1,12 @@
+**/node_modules
+**/.build
+**/.generated
+**/dist
+**/dist-tests
+**/release
+.git
+build
+wallper-analysis
+WallperRebuilt
+*.zip
+**/test-results

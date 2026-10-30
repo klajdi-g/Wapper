@@ -1,0 +1,48 @@
+{
+  "name": "voltrum-motion-desktop",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Voltrum Motion desktop wallpaper player for Windows and Linux",
+  "author": "Voltrum",
+  "homepage": "https://motion.voltrum.co",
+  "main": "dist/main.cjs",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc --noEmit",
+    "start": "npm run build && node scripts/start.mjs",
+    "test": "node scripts/test.mjs",
+    "test:smoke": "node scripts/smoke.mjs",
+    "validate": "npm run build && npm test",
+    "package:windows": "npm run validate && electron-builder --win zip --x64 --publish never",
+    "package:linux": "npm run validate && electron-builder --linux tar.gz --x64 --publish never",
+    "installer:windows": "npm run validate && electron-builder --win nsis --x64 --publish never",
+    "installer:linux": "npm run validate && electron-builder --linux AppImage deb --x64 --publish never",
+    "release:check": "node scripts/publication-check.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "electron": "45.1.0",
+    "electron-builder": "26.18.0",
+    "esbuild": "0.28.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "typescript": "5.9.3"
+  },
+  "build": {
+    "appId": "co.voltrum.motion",
+    "productName": "Voltrum Motion",
+    "asar": true,
+    "directories": { "output": "release" },
+    "files": ["dist/**", "package.json"],
+    "extraResources": [{ "from": "native", "to": "native", "filter": ["windows-workerw.ps1"] }],
+    "artifactName": "Voltrum-Motion-${version}-${os}-${arch}.${ext}",
+    "electronFuses": { "runAsNode": false, "enableNodeOptionsEnvironmentVariable": false, "enableNodeCliInspectArguments": false, "onlyLoadAppFromAsar": true, "grantFileProtocolExtraPrivileges": false },
+    "win": { "target": ["nsis", "zip"], "icon": "dist/icon.ico", "signExecutable": false },
+    "nsis": { "oneClick": false, "perMachine": false, "allowElevation": false, "allowToChangeInstallationDirectory": true },
+    "linux": { "target": ["AppImage", "deb", "tar.gz"], "executableName": "voltrum-motion", "category": "Utility", "icon": "dist/renderer/icon.png", "maintainer": "Voltrum", "desktop": { "entry": { "StartupWMClass": "voltrum-motion" } } },
+    "publish": null
+  }
+}

@@ -1,5 +1,11 @@
 # Voltrum Motion
 
+**Windows and Linux:** the separate TypeScript desktop app is in [`desktop/`](desktop/README.md).
+It adds local video/image imports, favorites, previews, and native wallpaper
+backends for Windows, Linux X11, and supported Wayland compositors with mpvpaper.
+Candidate packages are unsigned and not public releases; GNOME/KDE Wayland is
+not supported yet. The existing native macOS app remains unchanged.
+
 Native video wallpapers for macOS, built with SwiftUI, AppKit, and AVFoundation.
 Import a video, preview it, and loop it behind your desktop icons on one display
 or all connected displays. The app works offline with your own videos and an

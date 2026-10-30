@@ -1,0 +1,11 @@
+FROM node:24-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends xvfb xauth x11-utils openbox ffmpeg libgtk-3-0 libnss3 libasound2 libgbm1 libxss1 libdrm2 && rm -rf /var/lib/apt/lists/*
+WORKDIR /motion/desktop
+COPY desktop/package*.json desktop/.npmrc ./
+RUN npm ci --no-audit --no-fund && node node_modules/electron/install.js
+COPY desktop/ ./
+COPY website/assets/mark.svg /motion/website/assets/mark.svg
+COPY website/media-policy.json /motion/website/media-policy.json
+RUN npm run validate
+ENV XDG_SESSION_TYPE=x11 CI=1
+CMD ["xvfb-run", "-a", "sh", "-c", "openbox >/tmp/motion-openbox.log 2>&1 & npm run test:smoke"]

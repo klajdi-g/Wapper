@@ -1,0 +1,19 @@
+import type {} from '../shared';
+import './wallpaper.css';
+const parameters = new URLSearchParams(location.search);
+const identifier = parameters.get('id');
+const kind = parameters.get('kind');
+if (!identifier || !/^[\da-f-]{36}$/i.test(identifier) || !['video', 'image'].includes(kind || '')) throw new Error('Invalid wallpaper session.');
+const media = document.createElement(kind === 'video' ? 'video' : 'img');
+media.src = `motion://media/${identifier}`;
+media.addEventListener('error', () => window.wallpaper.failed());
+document.body.append(media);
+if (media instanceof HTMLVideoElement) {
+  media.loop = true;
+  media.playsInline = true;
+  media.volume = Number(parameters.get('volume')) || 0;
+  media.muted = media.volume === 0;
+  const play = async (paused: boolean) => { if (paused) { media.pause(); return true; } else { try { await media.play(); return true; } catch { window.wallpaper.failed(); return false; } } };
+  media.addEventListener('loadeddata', async () => { if (await play(parameters.get('paused') === 'true')) window.wallpaper.ready(); }, { once: true });
+  window.wallpaper.subscribe(settings => { media.volume = settings.volume; media.muted = settings.volume === 0; void play(settings.paused); });
+} else media.addEventListener('load', () => window.wallpaper.ready(), { once: true });
