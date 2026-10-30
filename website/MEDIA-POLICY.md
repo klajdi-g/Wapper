@@ -56,7 +56,8 @@ directory. Paused snapshots contain `catalog.json: []`, no release download
 links, `img-src 'self'`, and `media-src 'none'`.
 
 On October 30 the user explicitly requested a public showcase of familiar defaults
-and removal of Aurora. `showcase-selection.json` selects 21 cached thumbnails,
+and removal of Aurora. The subsequent request to include the whole collection
+expanded `showcase-selection.json` to all 353 available cached thumbnails,
 with Cat Pond first, independently of the video/native approval list. Only
 optimized self-hosted WebP previews are published in `/showcase.json`; every
 `remoteURL` is empty. This is a user-directed presentation selection, **not legal
@@ -64,8 +65,8 @@ clearance**. Creator and reuse rights remain explicitly unverified. No reviewer,
 rights evidence, or ownership claim has been invented. Image reuse itself may
 require permission; rights review must cover thumbnails too.
 
-The complete 353-image local recovered collection is still not deployable.
-Packaging rejects local mode, unselected IDs, modified provenance, source JPEGs,
+The original source JPEGs and complete source metadata are not deployable.
+Packaging exports only optimized previews and rejects local mode, unselected IDs, modified provenance, source JPEGs,
 video files, Aurora assets, and entries containing video URLs. Video/native
 publication remains governed by the unchanged paused shared policy. Tests never
 approve real IDs or modify it.

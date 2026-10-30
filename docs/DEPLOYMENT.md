@@ -13,8 +13,8 @@ browser screenshots, and remaining production-release gates.
 The shared `website/media-policy.json` is paused with zero approved entries and
 `allowNativeDownloads: false`. The public catalog and download list must remain
 empty. At the user's request, the TypeScript website's separate showcase includes
-21 cached image-only defaults, Cat Pond first, with no Aurora. This is not rights
-clearance; the complete local recovered-defaults view is not packaged. See
+all 353 cached image-only wallpapers, Cat Pond first, with no Aurora, plus a
+browser-local Library. This is not rights clearance; original JPEGs/videos are not packaged. See
 `../website/README.md` for the TSX/Drizzle structure and local preview commands.
 The native bundle also contains an empty third-party catalog. Do not infer
 approval from NASA hosting, metadata screening, silence/muting, or a generic policy.

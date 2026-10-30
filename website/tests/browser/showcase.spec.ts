@@ -4,14 +4,16 @@ const publicURL = 'http://127.0.0.1:4173';
 const localURL = 'http://127.0.0.1:3001';
 
 for (const [name, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 844]] as const) {
-  test(`public ${name} shows cat-first recovered defaults without Aurora or overflow`, async ({ page }) => {
+  test(`public ${name} shows the complete collection without internal labels or overflow`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     const errors: string[] = [];
     const external: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => { if (!request.url().startsWith(publicURL)) external.push(request.url()); });
     await page.goto(publicURL);
-    await expect(page.locator('#gallery article')).toHaveCount(21);
+    await expect(page.locator('#gallery article')).toHaveCount(24);
+    await expect(page.getByRole('button', { name: 'Explore 353', exact: true })).toBeVisible();
+    await expect(page.getByText(/recovered default|local reference|view default/iu)).toHaveCount(0);
     await expect(page.locator('#release-downloads a')).toHaveCount(0);
     await expect(page.locator('#gallery h3').first()).toHaveText('Cat Pond');
     await expect(page.getByText('Aurora Flow')).toHaveCount(0);
@@ -32,7 +34,7 @@ test('public cat preview is image-only and restores focus with Escape', async ({
   const media: string[] = [];
   page.on('request', request => { if (request.resourceType() === 'media') media.push(request.url()); });
   await page.goto(publicURL);
-  await expect(page.locator('#gallery article')).toHaveCount(21);
+  await expect(page.locator('#gallery article')).toHaveCount(24);
   expect(media).toEqual([]);
   const preview = page.locator('#gallery').getByRole('button', { name: 'Preview Cat Pond', exact: true });
   await preview.click();
@@ -51,13 +53,25 @@ test('favorites, search, reset, and browser persistence work', async ({ page }) 
   await page.getByRole('button', { name: 'Save Cat Pond', exact: true }).click();
   await page.reload();
   await expect(page.getByRole('button', { name: 'Unsave Cat Pond', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: /Saved/ }).click();
+  await page.getByRole('button', { name: 'Library 1', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Your library.' })).toBeVisible();
   await expect(page.locator('#gallery article')).toHaveCount(1);
   await page.getByRole('searchbox').fill('nothing-matches');
   await expect(page.locator('#gallery article')).toHaveCount(0);
   await page.getByRole('button', { name: /Reset filters/ }).click();
-  await expect(page.locator('#gallery article')).toHaveCount(21);
+  await expect(page.locator('#gallery article')).toHaveCount(1);
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Your library.' })).toBeVisible();
+  await expect(page.locator('#gallery article')).toHaveCount(1);
+  await page.evaluate(() => scrollTo({ top: document.querySelector<HTMLElement>('#collection')!.offsetTop - 24, behavior: 'instant' }));
+  await page.locator('#gallery img').first().evaluate(image => (image as HTMLImageElement).decode());
+  await page.screenshot({ path: '../build/typescript-browser-results/library-desktop.png' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => scrollTo({ top: document.querySelector<HTMLElement>('#collection')!.offsetTop - 24, behavior: 'instant' }));
+  await page.screenshot({ path: '../build/typescript-browser-results/library-mobile.png' });
   await page.getByRole('button', { name: /Clear saved favorites/ }).click();
+  await expect(page.getByText('Your library is waiting.')).toBeVisible();
+  await page.getByRole('button', { name: /Browse wallpapers/ }).click();
   await expect(page.getByRole('button', { name: 'Save Cat Pond', exact: true })).toBeVisible();
 });
 
@@ -67,7 +81,8 @@ test('local showcase restores cached defaults without any remote media or downlo
   page.on('pageerror', error => errors.push(error.message));
   page.on('request', request => { if (/wallper\.app|apple\.com|nasa\.gov/u.test(request.url())) remote.push(request.url()); });
   await page.goto(localURL);
-  await expect(page.getByText('Local recovered-defaults showcase')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Explore 353', exact: true })).toBeVisible();
+  await expect(page.getByText(/recovered default/iu)).toHaveCount(0);
   await expect(page.getByText('Aurora Flow')).toHaveCount(0);
   await expect(page.locator('#gallery article')).toHaveCount(24);
   await page.getByRole('button', { name: 'Show more wallpapers' }).click();
@@ -98,7 +113,7 @@ test('blocked browser storage keeps session favorites usable', async ({ page }) 
   });
   await page.goto(publicURL);
   await page.getByRole('button', { name: 'Save Cat Pond', exact: true }).click();
-  await page.getByRole('button', { name: /Saved/ }).click();
+  await page.getByRole('button', { name: 'Library 1', exact: true }).click();
   await expect(page.locator('#gallery article')).toHaveCount(1);
   await expect(page.getByText('Saved items are available for this session only.')).toBeVisible();
 });
@@ -119,5 +134,43 @@ test('collection fetch failures have an honest retry state', async ({ page }) =>
   await expect(page.locator('#gallery article')).toHaveCount(0);
   await page.unroute('**/showcase.json');
   await page.getByRole('button', { name: 'Try again' }).click();
-  await expect(page.locator('#gallery article')).toHaveCount(21);
+  await expect(page.locator('#gallery article')).toHaveCount(24);
+});
+
+test('all 353 wallpapers are reachable and library navigation supports remove and history', async ({ page }) => {
+  await page.goto(publicURL);
+  await expect(page.getByRole('button', { name: 'Explore 353', exact: true })).toBeVisible();
+  while (await page.getByRole('button', { name: 'Show more wallpapers' }).count()) await page.getByRole('button', { name: 'Show more wallpapers' }).click();
+  await expect(page.locator('#gallery article')).toHaveCount(353);
+  const finalCard = page.locator('#gallery article').last();
+  const finalTitle = await finalCard.locator('h3').innerText();
+  await finalCard.getByRole('button', { name: `Save ${finalTitle}`, exact: true }).click();
+  await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Library', exact: true }).click();
+  await expect(page).toHaveURL(/#library$/u);
+  await expect(page.locator('#gallery article')).toHaveCount(1);
+  await expect(page.locator('#gallery h3')).toHaveText(finalTitle);
+  await page.getByRole('button', { name: `Unsave ${finalTitle}`, exact: true }).click();
+  await expect(page.getByText('Your library is waiting.')).toBeVisible();
+  await page.getByRole('button', { name: /Browse wallpapers/ }).click();
+  await expect(page).toHaveURL(/#collection$/u);
+  await expect(page.locator('#gallery article')).toHaveCount(24);
+  await page.goBack();
+  await expect(page.getByRole('heading', { name: 'Your library.' })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('Your library is waiting.')).toBeVisible();
+});
+
+test('library synchronizes across tabs and ignores unavailable saved IDs', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('voltrum-motion:favorites', '["removed-wallpaper"]'));
+  await page.goto(publicURL);
+  await expect(page.getByRole('button', { name: 'Library 0', exact: true })).toBeVisible();
+  const other = await page.context().newPage();
+  await other.goto(`${publicURL}/#library`);
+  await expect(other.getByText('Your library is waiting.')).toBeVisible();
+  await page.getByRole('button', { name: 'Save Cat Pond', exact: true }).click();
+  await expect(other.locator('#gallery article')).toHaveCount(1);
+  await expect(other.locator('#gallery h3')).toHaveText('Cat Pond');
+  await other.getByRole('button', { name: 'Unsave Cat Pond', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Library 0', exact: true })).toBeVisible();
+  await other.close();
 });

@@ -132,6 +132,7 @@ class InlineScripts(HTMLParser):
 scripts = InlineScripts()
 scripts.feed((SITE / "index.html").read_text())
 archive = io.BytesIO()
+preview_files = []
 with tarfile.open(fileobj=archive, mode="w") as bundle:
     for path in sorted(SITE.rglob("*")):
         if path.is_file():
@@ -141,6 +142,9 @@ with tarfile.open(fileobj=archive, mode="w") as bundle:
             if path.suffix not in {".html", ".css", ".js", ".mjs", ".json", ".svg", ".png", ".webp", ".txt", ".ico"}:
                 raise SystemExit("Unexpected file in the public build.")
             data = path.read_bytes()
+            if relative in allowed_images:
+                preview_files.append((relative, data))
+                continue
             if path.name == "media-policy.json":
                 data = (json.dumps(media_policy, indent=2) + "\n").encode()
             if path.relative_to(SITE).as_posix() == "catalog.json":
@@ -168,6 +172,31 @@ with tarfile.open(fileobj=archive, mode="w") as bundle:
 payload = gzip.compress(archive.getvalue(), mtime=0)
 if len(payload) > 700_000:
     raise SystemExit("Static archive exceeds the ConfigMap budget; do not embed app installers or videos.")
+preview_groups = []
+current_group = []
+current_size = 0
+for filename, data in preview_files:
+    if current_group and current_size + len(data) + 1024 > 600_000:
+        preview_groups.append(current_group)
+        current_group = []
+        current_size = 0
+    current_group.append((filename, data))
+    current_size += len(data) + 1024
+if current_group:
+    preview_groups.append(current_group)
+preview_archives = []
+for group in preview_groups:
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w") as bundle:
+        for filename, data in group:
+            info = tarfile.TarInfo(filename)
+            info.size = len(data)
+            info.mode = 0o644
+            bundle.addfile(info, io.BytesIO(data))
+    compressed = gzip.compress(buffer.getvalue(), mtime=0)
+    if len(compressed) > 700_000:
+        raise SystemExit("Preview archive exceeds the per-ConfigMap budget.")
+    preview_archives.append(compressed)
 image = "nginx:1.28.0-alpine@sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac6782c235200619158284"
 nginx = '''pid /tmp/nginx.pid;
 events { worker_connections 256; }
@@ -206,27 +235,34 @@ if not media_enabled:
 else:
     nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self' https://images-assets.nasa.gov")
 nginx = nginx.replace("script-src 'self';", "script-src 'self' " + " ".join(sorted(set(scripts.hashes))) + ";")
-digest = hashlib.sha256(payload + nginx.encode()).hexdigest()
+digest = hashlib.sha256(payload + b"".join(preview_archives) + nginx.encode()).hexdigest()
 config_name = "motion-site-" + digest[:12]
 security = {"runAsNonRoot": True, "runAsUser": 101, "runAsGroup": 101, "seccompProfile": {"type": "RuntimeDefault"}}
 container_security = {"allowPrivilegeEscalation": False, "readOnlyRootFilesystem": True, "capabilities": {"drop": ["ALL"]}}
 labels = {"app.kubernetes.io/name": namespace}
 metadata = lambda name: {"name": name, "namespace": namespace, "labels": labels}
+preview_configs = [
+    {"apiVersion": "v1", "kind": "ConfigMap", "metadata": metadata(f"{config_name}-previews-{index}"), "immutable": True,
+     "binaryData": {f"previews-{index}.tgz": base64.b64encode(compressed).decode()}}
+    for index, compressed in enumerate(preview_archives)
+]
+archive_sources = [{"configMap": {"name": config_name}}] + [{"configMap": {"name": config["metadata"]["name"]}} for config in preview_configs]
 resources = [
     {"apiVersion": "v1", "kind": "Namespace", "metadata": {"name": namespace, "labels": labels}},
     {"apiVersion": "v1", "kind": "ConfigMap", "metadata": metadata(config_name), "immutable": True, "binaryData": {"site.tgz": base64.b64encode(payload).decode()}, "data": {"nginx.conf": nginx}},
+    *preview_configs,
     {"apiVersion": "apps/v1", "kind": "Deployment", "metadata": metadata(namespace), "spec": {
         "replicas": 2, "revisionHistoryLimit": 3, "selector": {"matchLabels": labels},
         "template": {"metadata": {"labels": labels, "annotations": {"voltrum.co/site-sha256": digest}}, "spec": {
             "automountServiceAccountToken": False, "securityContext": {**security, "fsGroup": 101},
             "tolerations": [{"key": "role", "operator": "Equal", "value": "backbone", "effect": "NoSchedule"}, {"key": "infra", "operator": "Equal", "value": "true", "effect": "NoSchedule"}],
-            "initContainers": [{"name": "unpack", "image": image, "command": ["/bin/sh", "-ec", "tar -xzf /archive/site.tgz -C /site"], "securityContext": container_security, "resources": {"requests": {"cpu": "10m", "memory": "16Mi"}, "limits": {"cpu": "100m", "memory": "64Mi"}}, "volumeMounts": [{"name": "archive", "mountPath": "/archive", "readOnly": True}, {"name": "site", "mountPath": "/site"}]}],
+            "initContainers": [{"name": "unpack", "image": image, "command": ["/bin/sh", "-ec", 'for archive in /archive/*.tgz; do tar -xzf "$archive" -C /site; done'], "securityContext": container_security, "resources": {"requests": {"cpu": "10m", "memory": "16Mi"}, "limits": {"cpu": "100m", "memory": "64Mi"}}, "volumeMounts": [{"name": "archive", "mountPath": "/archive", "readOnly": True}, {"name": "site", "mountPath": "/site"}]}],
             "containers": [{"name": "web", "image": image, "command": ["nginx", "-c", "/archive/nginx.conf", "-g", "daemon off;"], "ports": [{"name": "http", "containerPort": 8080}], "securityContext": container_security,
                 "resources": {"requests": {"cpu": "10m", "memory": "24Mi"}, "limits": {"cpu": "200m", "memory": "96Mi"}},
                 "readinessProbe": {"httpGet": {"path": "/healthz", "port": "http"}, "periodSeconds": 5},
                 "livenessProbe": {"httpGet": {"path": "/healthz", "port": "http"}, "periodSeconds": 20},
                 "volumeMounts": [{"name": "archive", "mountPath": "/archive", "readOnly": True}, {"name": "site", "mountPath": "/site", "readOnly": True}, {"name": "tmp", "mountPath": "/tmp"}]}],
-            "volumes": [{"name": "archive", "configMap": {"name": config_name}}, {"name": "site", "emptyDir": {}}, {"name": "tmp", "emptyDir": {}}]
+            "volumes": [{"name": "archive", "projected": {"sources": archive_sources}}, {"name": "site", "emptyDir": {}}, {"name": "tmp", "emptyDir": {}}]
         }}}
     },
     {"apiVersion": "v1", "kind": "Service", "metadata": metadata(namespace), "spec": {"selector": labels, "ports": [{"name": "http", "port": 80, "targetPort": "http"}]}},
@@ -235,4 +271,4 @@ resources = [
 output = NIX / "apps/voltrum-motion/resources.json"
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps({"apiVersion": "v1", "kind": "List", "items": resources}, indent=2) + "\n")
-print(f"Packaged {len(payload):,} bytes; site SHA-256 {digest}; wrote {output}")
+print(f"Packaged {len(payload) + sum(map(len, preview_archives)):,} bytes across {1 + len(preview_archives)} bounded archives; site SHA-256 {digest}; wrote {output}")

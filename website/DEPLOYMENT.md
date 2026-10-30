@@ -21,7 +21,7 @@ Never serve the repository root or `.generated/public/` directly.
 
 The packager rechecks the current shared `media-policy.json` and installer flag
 instead of trusting stale build metadata. Third-party `catalog.json` remains empty
-and installer links are withheld. The separate `/showcase.json` contains 21
+and installer links are withheld. The separate `/showcase.json` contains all 353
 user-requested cached thumbnails, with Cat Pond first. This selection is not a
 rights approval of the images or videos. While the shared policy is paused,
 `media-src 'none'` denies all video playback and
@@ -34,6 +34,13 @@ Generated infrastructure lives in the sibling Nix repository:
   isolated namespace, two non-root nginx replicas, service, and ingress.
 - `modules/outputs/bootstrap/voltrum-motion.nix`: existing bootstrap integration.
 - `runbooks/voltrum-motion.md`: operation and safe rollback instructions.
+
+The compiled shell/manifests and the image shards are separate gzip archives,
+each below 700,000 bytes. Every immutable ConfigMap is named with the same
+snapshot hash, covering shell bytes, all thumbnail archive bytes, and nginx
+configuration. A projected volume combines that exact snapshot's ConfigMaps;
+the init container extracts every archive into the site volume before nginx is
+ready. Retain the complete matching set for rollback, never just the main shell.
 
 Using existing authorized local Kubernetes credentials:
 
@@ -55,9 +62,11 @@ Responses use revalidation headers; nonexistent resources return 404 rather than
 the app shell. Retain safe previous ConfigMaps while corresponding ReplicaSets
 are needed, but never roll back to a pre-quarantine media/installer snapshot.
 
-After deploying, check `/showcase.json` has the exact selected 21 image-only defaults, `/catalog.json`
+After deploying, check `/showcase.json` has the exact selected 353 image-only wallpapers, `/catalog.json`
 is `[]`, `/release.json` has no downloads, `/media-policy.json` remains paused with
 no approvals, `/recovered/anything.jpg` and `/media/aurora.mp4` return 404, and both replicas are ready.
 Confirm the page renders under its production CSP and does not contact Wallper,
 Apple, NASA, or other remote wallpaper hosts. No native release is performed by
 the website build or packager. Signing and rights review remain separate gates.
+Verify Library add/remove, reload persistence, hash/history navigation, and
+search/category filters. Favorites remain browser-local, not a backend service.

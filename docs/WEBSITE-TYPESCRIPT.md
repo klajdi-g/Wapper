@@ -16,12 +16,15 @@ a compiled static deployment, not a new persistent-database service.
   on `127.0.0.1:3000`. It loads cached images only, never remote recovered videos.
 - Search, categories, saved favorites, incremental loading, and image previews
   operate on the recovered defaults. Native Swift user storage is untouched.
-- Production starts with a clean public asset directory and includes 21 optimized
+- Production starts with a clean public asset directory and includes all 353 optimized
   cached thumbnails selected in `website/showcase-selection.json`, Cat Pond first.
   Familiar defaults include Japanese Village, Winter Forest, Train Ride From Work,
   Rain, Dreamy Clouds, and more cats/space scenes. No Aurora files are deployed.
   The packager rejects local builds, unselected items, altered provenance, source
   JPEGs, video URLs/files, and changed prepared thumbnail bytes.
+- Cards display categories and ordinary preview controls, not recovery/default
+  labels. Explore browses the full collection; Library filters persistent
+  browser-local favorites, with direct `/#library` and history support.
 - Third-party policy remains paused with no approved IDs; native installer links
   remain withheld. Availability in the original app does not establish reuse rights.
 
@@ -33,10 +36,12 @@ a compiled static deployment, not a new persistent-database service.
   Drizzle migration/query behavior.
 - Three Node packaging tests cover deterministic content/configuration hashing,
   publication policy/schema, and rejection of recovered snapshots.
-- Eight Chromium browser cases cover public desktop/mobile layouts, actual
+- Ten Chromium browser cases cover public desktop/mobile layouts, actual
   image-only Cat Pond previews, Escape cleanup and focus return, favorites/persistence,
   search/reset, blocked storage, local defaults without remote media, malformed
-  public entries, and failure/retry behavior.
+  public entries, failure/retry behavior, all 353 paginated items, and Library
+  add/remove, empty states, reload persistence, hash/history navigation,
+  cross-tab synchronization, and stale saved IDs.
 - Browser testing uses the generated production CSP; Start inline bootstrap is
   hash-authorized, not allowed by unsafe inline scripts. No JavaScript errors or
   horizontal overflow were found at desktop and phone widths.
@@ -49,17 +54,24 @@ production build. See [deployment](../website/DEPLOYMENT.md) for live-rollout ch
 
 ## Deployment acceptance
 
-The thumbnail-only build is live at `motion.voltrum.co`, snapshot
-`motion-site-856c25209679`, with two ready replicas. Live desktop/mobile Chromium
-checks passed: Cat Pond first, exactly 21 defaults, no Aurora, no remote
+The full-library build is live at `motion.voltrum.co`, snapshot
+`motion-site-336e2bd52e8f`, with two ready replicas. Live desktop/mobile checks
+passed: Cat Pond first, exactly 353 wallpapers, a functional Library, no Aurora, no remote
 wallpaper-image/video requests, no installer links, an empty video catalog,
-unchanged paused policy, and 404 for old Aurora/source paths. All 21 thumbnails
+unchanged paused policy, and 404 for old Aurora/source paths. All 353 thumbnails
 return HTTP 200 with WebP content types; image previews open without video or
-download links. Report: `build/cat-defaults-live-validation.json`.
-Screenshots: `build/typescript-browser-results/live-cat-*-home.png` and
-`live-cat-*-collection.png`. The Nix runbook records the full deployment hash.
+download links. Library add/remove, reload persistence, search, and pagination
+through all 353 items passed on both screen sizes. Report:
+`build/full-library-live-validation.json`. Screenshots:
+`build/typescript-browser-results/live-full-*-collection.png` and
+`live-full-*-library.png`. The Nix runbook records the full deployment hash.
 
-The full recovered-defaults gallery remains localhost-only. The public selection
-is an explicit user-requested thumbnail showcase, not a claim of ownership or
+The deployment packages 5,714,171 compressed bytes across 12 bounded archives,
+not one oversized ConfigMap. The content hash covers all image shards and nginx
+configuration. Each pod extracts the exact matching archive set before readiness.
+
+The full cached gallery is now published as optimized image previews, per the
+explicit user request. Original JPEGs and remote videos remain excluded. The
+public selection is not a claim of ownership or
 item-specific rights clearance. Image reuse itself still needs rights review.
 Native files and user media are unchanged.

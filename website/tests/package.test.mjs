@@ -68,14 +68,24 @@ test('deployment snapshot hashes nginx configuration together with static conten
     const config = manifest.items.find(item => item.kind === 'ConfigMap');
     const deployment = manifest.items.find(item => item.kind === 'Deployment');
     const archive = Buffer.from(config.binaryData['site.tgz'], 'base64');
-    const digest = createHash('sha256').update(archive).update(config.data['nginx.conf']).digest('hex');
+    const shards = manifest.items.filter(item => item.kind === 'ConfigMap' && item !== config);
+    const previews = shards.map(item => Buffer.from(Object.values(item.binaryData)[0], 'base64'));
+    const digest = createHash('sha256').update(archive).update(Buffer.concat(previews)).update(config.data['nginx.conf']).digest('hex');
     assert.equal(config.immutable, true);
     assert.equal(config.metadata.name, `motion-site-${digest.slice(0, 12)}`);
     assert.equal(deployment.spec.template.metadata.annotations['voltrum.co/site-sha256'], digest);
-    assert.equal(deployment.spec.template.spec.volumes.find(volume => volume.name === 'archive').configMap.name, config.metadata.name);
+    const sources = deployment.spec.template.spec.volumes.find(volume => volume.name === 'archive').projected.sources;
+    assert.deepEqual(sources.map(source => source.configMap.name), [config.metadata.name, ...shards.map(item => item.metadata.name)]);
+    assert.ok(shards.length > 1);
+    for (const [index, shard] of shards.entries()) {
+      assert.equal(shard.immutable, true);
+      assert.equal(shard.metadata.name, `${config.metadata.name}-previews-${index}`);
+      assert.ok(previews[index].byteLength < 700_000);
+    }
     assert.match(config.data['nginx.conf'], /add_header Cache-Control no-cache always;/u);
     assert.ok(archive.byteLength < 700_000);
-    const entries = archiveEntries(archive);
+    const entries = new Map([archive, ...previews].flatMap(bytes => [...archiveEntries(bytes)]));
+    assert.equal(entries.size, [archive, ...previews].reduce((count, bytes) => count + archiveEntries(bytes).size, 0));
     assert.ok(entries.has('index.html'));
     assert.ok(![...entries.keys()].some(name => name.startsWith('tests/') || name.endsWith('.dmg') || name === 'validate.mjs'));
     if (entries.has('release.json')) assert.deepEqual(JSON.parse(entries.get('release.json').toString()).downloads, []);
@@ -87,7 +97,8 @@ test('deployment snapshot hashes nginx configuration together with static conten
     assert.ok(![...entries.keys()].some(name => /recovered|\.sqlite|schema\.ts/u.test(name)));
     const showcase = JSON.parse(entries.get('showcase.json').toString());
     assert.equal(showcase.items[0].title, 'Cat Pond');
-    assert.equal(showcase.items.length, 21);
+    assert.equal(showcase.items.length, 353);
+    for (const item of showcase.items) assert.ok(entries.has(item.previewURL.slice(1)), item.title);
     assert.ok(showcase.items.every(item => item.origin === 'recovered-wallper' && item.remoteURL === ''));
     assert.notEqual(digest, createHash('sha256').update(archive).update(`${config.data['nginx.conf']}\n`).digest('hex'));
     const again = spawnSync('python3', ['-c', offlinePublisher, script, directory], { encoding: 'utf8' });

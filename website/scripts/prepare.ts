@@ -36,7 +36,12 @@ for (const candidate of recovered ? [...selected, ...cached.filter(item => !sele
   const localPreview = recovered ? `/recovered/${candidate.id}.jpg` : `/defaults/${candidate.id}.webp`;
   await mkdir(resolve(output, recovered ? 'recovered' : 'defaults'), { recursive: true });
   if (recovered) await cp(preview, resolve(output, localPreview.slice(1)));
-  else await sharp(preview).resize({ width: 640, withoutEnlargement: true }).webp({ quality: 65 }).toFile(resolve(output, localPreview.slice(1)));
+  else {
+    let image = await sharp(preview).resize({ width: 640, withoutEnlargement: true }).webp({ quality: 65 }).toBuffer();
+    if (image.byteLength > 50_000) image = await sharp(preview).resize({ width: 480, withoutEnlargement: true }).webp({ quality: 55 }).toBuffer();
+    if (image.byteLength > 50_000) throw new Error(`Thumbnail ${candidate.id} exceeds the image budget.`);
+    await writeFile(resolve(output, localPreview.slice(1)), image);
+  }
   rows.push({
     id: candidate.id, title: String(candidate.title), category: String(candidate.category), origin: 'recovered-wallper',
     previewURL: localPreview, remoteURL: '', sourceURL: normalized.sourceURL,

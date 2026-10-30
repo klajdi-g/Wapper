@@ -25,10 +25,10 @@ image previews, and keyboard dismissal work with these familiar defaults.
 Recovered cards are image references, not remote video players or download links.
 They show the origin and unverified-rights status, not invented artist credits.
 The local server binds to loopback. Do not expose it through a tunnel or LAN host.
-Do not publish `.generated/`, the SQLite database, or recovered image screenshots.
+Do not publish `.generated/`, the SQLite database, or original source JPEGs.
 
 For the public showcase, use `bun run dev`. The production command always resets
-the generated assets and exports only the 21 IDs in `showcase-selection.json`:
+the generated assets and exports all 353 cached IDs in `showcase-selection.json`:
 
 ```sh
 bun run build
@@ -36,10 +36,25 @@ bun run preview
 ```
 
 At the user's explicit request, the public website showcases optimized cached
-thumbnails of Cat Pond and 20 familiar defaults. No Aurora assets, remote video
+thumbnails of all 353 available wallpapers, with Cat Pond first. No Aurora assets, remote video
 URLs, video playback, or downloads are included. This separate, image-only
 selection is not a rights approval: creators/reuse rights remain unverified.
 The existing video/native shared rights policy remains paused with no approvals.
+
+## Library
+
+Use **Explore** to browse/search/filter the complete collection and **Library**
+to see personal favorites. Heart buttons add/remove items, and the Library count
+reflects available saved wallpapers rather than stale IDs. The header Library
+link and `/#library` open the same view, including after reload or browser history
+navigation. Existing favorites are retained under the original localStorage key;
+there is no account, cross-device sync, or server-side personal-media upload.
+Blocked storage falls back to session-only favorites with an explicit notice.
+Internal recovery/default labels are not displayed on cards or collection pages.
+
+Thumbnails are lazy loaded and cards are paginated in batches of 24. Deployment
+splits the complete image set into deterministic, bounded immutable ConfigMaps;
+it never truncates the collection to make one ConfigMap fit.
 
 ## Structure
 

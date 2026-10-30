@@ -119,9 +119,9 @@ block downloads; build locally instead of disabling system protections.
 requires an installed Developer ID identity and a notarytool keychain profile,
 provided through `SIGN_IDENTITY` and `NOTARY_PROFILE`.
 
-The website now uses the familiar recovered defaults for its explicit local
-reference mode (`cd website && bun run dev:recovered`), not the unrelated NASA
-catalog. The complete 353-thumbnail collection stays local; public hosting shows
-21 selected cached defaults, led by Cat Pond, with Aurora removed. This image-only
+The TypeScript website includes all 353 available wallpaper thumbnails,
+led by Cat Pond, with Aurora removed, and a browser-local favorites Library.
+Run `cd website && bun run dev` to develop the public collection, or use
+`bun run dev:recovered` for source-image reference mode. This image-only
 selection is not rights clearance. No recovered video or Apple aerial is fetched or
 approved for redistribution. Local imports remain on your Mac.

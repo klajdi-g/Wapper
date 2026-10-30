@@ -132,7 +132,7 @@ em { color: #becfaf; font-weight: 400; }
   .brand-product { margin-left: 3px; }
   nav { gap: 15px; font-size: 11px; }
   .nav-about { display: none; }
-  .nav-download { padding: 8px 10px; gap: 6px; }
+  .nav-download { display: none; }
   .hero { grid-template-columns: 1fr; padding-block: 42px 30px; gap: 32px; }
   h1 { font-size: 47px; letter-spacing: -2px; }
   .hero-description { font-size: 13px; }
@@ -162,4 +162,12 @@ em { color: #becfaf; font-weight: 400; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}
+.collection-views { display: flex; gap: 8px; margin: 0 0 24px; }
+.collection-views button { display: flex; align-items: center; gap: 9px; padding: 11px 17px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font-size: 13px; }
+.collection-views button[aria-pressed="true"] { background: #e6eddb; color: #152014; border-color: #e6eddb; }
+.collection-views span { font-size: 11px; opacity: .7; }
+.library-storage { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+@media (max-width: 600px) {
+  .library-storage { display: none; }
 }

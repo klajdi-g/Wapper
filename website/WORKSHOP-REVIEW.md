@@ -29,6 +29,6 @@ as part of the Aurora-removal update.
 6. Add only fully reviewed candidates through the existing shared publication
    policy. The current policy remains paused, with no real IDs approved.
 
-The 21 cached defaults currently selected for the public thumbnail showcase were
+The 353 cached images currently selected for the public thumbnail showcase were
 requested separately by the user; they are not Workshop clearances and their
 image reuse rights remain unverified. See [media policy](MEDIA-POLICY.md).
