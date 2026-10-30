@@ -38,6 +38,12 @@ The macOS Swift application and live website deployment are unchanged.
   are not equivalent to real Windows runtime testing.
 - Full npm advisory audit returned zero advisories at the validation date. This
   is not a guarantee that dependency or platform vulnerabilities do not exist.
+- GitHub native-host CI checkpoint `c9bb9db7` passed all three jobs: Windows,
+  Linux, and publication boundary. Windows compiled the C# helper, exercised the
+  library UI, and built NSIS/ZIP candidates. Linux x64 exercised X11 image/video
+  playback and built AppImage, Debian, and tar.gz candidates. No installer artifacts
+  were uploaded. The final local renderer cleanup additionally removes casting/
+  picture-in-picture overlays and uses a font-independent Import icon.
 - Windows Explorer attachment, Windows physical desktops/DPI layouts, Wayland
   compositor playback, tray availability on each desktop, and Linux x64 package
   execution still need native-host acceptance. CI compiles the Windows helper
@@ -57,9 +63,9 @@ is generated alongside the local binaries.
 
 | File | SHA-256 |
 | --- | --- |
-| `Voltrum-Motion-0.3.0-win-x64.exe` | `475056341b5e78eec8444bf20be80815df319799948a7d819dd6bebac4b48d50` |
-| `Voltrum-Motion-0.3.0-win-x64.zip` | `b110c3e4b57de6d52c18e3c81d2fa67a2a98ab4e759d7af0336e79a7d2e1c9b2` |
-| `Voltrum-Motion-0.3.0-linux-x64.tar.gz` | `20e7c9cff4d53e982f06c44b7cffcaf7999babde75c3163be442533f4fba4328` |
+| `Voltrum-Motion-0.3.0-win-x64.exe` | `dd464de11ef4f719570c35fc7b376397aa00d6bde1c3f4ba81b2e94e17a50391` |
+| `Voltrum-Motion-0.3.0-win-x64.zip` | `a22a814833f74dd07480d323d3384b5d6d15acc5d55af4447ea33c225d000402` |
+| `Voltrum-Motion-0.3.0-linux-x64.tar.gz` | `4e6c7f19638fc9d44c170c14b09d20785b35b4d993e431d6c83250609915103b` |
 
 ## Release gates
 

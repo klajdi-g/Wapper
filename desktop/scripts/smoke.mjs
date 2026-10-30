@@ -22,7 +22,7 @@ try {
   await expect(page.getByRole('heading', { name: 'Start with something you love.' })).toBeVisible();
   expect(await page.evaluate(() => [typeof window.require, typeof window.process])).toEqual(['undefined', 'undefined']);
   await application.evaluate(({ dialog }, file) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [file] }); }, original);
-  await page.getByRole('button', { name: '＋ Import media', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Import media', exact: true }).first().click();
   await expect(page.getByRole('button', { name: 'Preview Midnight Garden', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Favorite Midnight Garden', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Unfavorite Midnight Garden', exact: true })).toHaveAttribute('aria-pressed', 'true');
@@ -55,8 +55,10 @@ try {
     await expect.poll(() => page.evaluate(async () => Object.keys((await window.motion.snapshot()).assignments).length)).toBe(0);
     if (generatedVideo) {
       await application.evaluate(({ dialog }, file) => { dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [file] }); }, video);
-      await page.getByRole('button', { name: '＋ Import media', exact: true }).click();
+      await page.getByRole('button', { name: 'Import media', exact: true }).click();
       await expect(page.getByRole('button', { name: 'Preview Quiet Horizon', exact: true })).toBeVisible();
+      await expect(page.locator('.card-art video')).toHaveJSProperty('disableRemotePlayback', true);
+      await expect(page.locator('.card-art video')).toHaveJSProperty('disablePictureInPicture', true);
       await page.evaluate(async () => { const state = await window.motion.snapshot(); await window.motion.apply(state.items.find(item => item.title === 'Quiet Horizon').id, 'all'); });
       await expect.poll(() => page.evaluate(async () => Object.keys((await window.motion.snapshot()).assignments).length)).toBeGreaterThan(0);
       await page.getByRole('button', { name: 'Resume wallpapers', exact: true }).click();
@@ -75,6 +77,7 @@ try {
   await page.getByRole('searchbox').fill('no match');
   await expect(page.getByRole('heading', { name: 'A little too quiet.' })).toBeVisible();
   await page.getByRole('searchbox').fill('');
+  await page.locator('.card-art img').evaluateAll(images => Promise.all(images.map(image => image.decode())));
   await page.screenshot({ path: 'test-results/desktop-library.png' });
   await application.close(); application = await launch();
   const reopened = await application.firstWindow();

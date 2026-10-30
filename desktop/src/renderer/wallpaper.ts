@@ -11,6 +11,8 @@ document.body.append(media);
 if (media instanceof HTMLVideoElement) {
   media.loop = true;
   media.playsInline = true;
+  media.disablePictureInPicture = true;
+  media.disableRemotePlayback = true;
   media.volume = Number(parameters.get('volume')) || 0;
   media.muted = media.volume === 0;
   const play = async (paused: boolean) => { if (paused) { media.pause(); return true; } else { try { await media.play(); return true; } catch { window.wallpaper.failed(); return false; } } };
