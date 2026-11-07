@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { copyFile, mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -32,6 +32,10 @@ test('macOS release resources must have an empty catalog and no bundled demo', a
   try {
     await writeFile(join(directory, 'media-policy.json'), JSON.stringify({ publication: 'paused', allowNativeDownloads: false, approvedMedia: [] }));
     await writeFile(join(directory, 'public-gallery.json'), '[]');
+    assert.notEqual(run().status, 0, 'the selected native catalog is required');
+    await writeFile(join(directory, 'native-catalog.json'), '{"schemaVersion":1,"wallpapers":[]}');
+    assert.notEqual(run().status, 0, 'a catalog differing from the source manifest is rejected');
+    await copyFile(resolve('../WallperRebuilt/Sources/WallperRebuilt/Resources/native-catalog.json'), join(directory, 'native-catalog.json'));
     assert.equal(run().status, 0);
     await writeFile(join(directory, 'media-host.json'), '{"mediaHost":"fixture.invalid"}');
     assert.equal(run().status, 0, 'the media host name travels with the Mac resources');
