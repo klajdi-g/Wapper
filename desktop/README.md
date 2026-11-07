@@ -11,7 +11,7 @@ imports, previews, favorites, search, display selection, and playback controls.
 | --- | --- | --- |
 | Windows 10/11, x64 | Electron video/image window attached behind Explorer icons using a narrow Win32 helper | WorkerW is an undocumented Explorer implementation detail. Attachment is checked, and failure closes the new player rather than leaving a foreground overlay. Physical Windows desktop QA is still required. |
 | Linux X11 | Electron `desktop` windows, one per selected display | Window-manager/desktop-icon layering varies. Openbox/Xvfb is a test environment, not proof of GNOME/KDE desktop compatibility. |
-| Sway, Hyprland, river, Wayfire, labwc, dwl on Wayland | User-installed `mpvpaper`, controlled over a private Unix socket | All outputs share one wallpaper in this version. `mpvpaper` must be on PATH. No player binary is bundled. |
+| Sway, Hyprland, river, Wayfire, labwc, dwl on Wayland | User-installed `mpvpaper`, controlled over a private Unix socket, with hardware decoding when mpv supports it | All outputs share one wallpaper in this version. `mpvpaper` must be on PATH. No player binary is bundled. On Hyprland it uses the bottom layer while that layer is free, so a shell that draws its own wallpaper, such as Caelestia, cannot cover it by restarting. |
 | GNOME/KDE Wayland or unknown compositor | Explicitly unavailable | The library and previews work, but Apply is disabled. Use X11 or a supported compositor; this app does not silently draw a foreground window. |
 | macOS | Existing Swift application | Use `../run-wallper.sh`; the Electron UI can be tested on Mac, but its desktop backend is intentionally unavailable there. |
 

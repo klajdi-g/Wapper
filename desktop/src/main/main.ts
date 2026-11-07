@@ -83,7 +83,9 @@ async function start() {
     } catch { return new Response(null, { status: 404 }); }
   });
   const bounds = screen.getPrimaryDisplay().workArea;
-  window = new BrowserWindow({ width: Math.min(1300, bounds.width), height: Math.min(820, bounds.height), minWidth: 800, minHeight: 560, backgroundColor: '#0e1517', autoHideMenuBar: true, title: 'Voltrum Motion', icon: join(__dirname, 'renderer', 'icon.png'), webPreferences: { preload: join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true, devTools: !app.isPackaged } });
+  // Tiling compositors ignore minimum sizes: the page keeps laying out at the minimum and the
+  // compositor clips it, so the minimum has to stay below any size a tile can realistically be.
+  window = new BrowserWindow({ width: Math.min(1300, bounds.width), height: Math.min(820, bounds.height), minWidth: 360, minHeight: 320, backgroundColor: '#0e1517', autoHideMenuBar: true, title: 'Voltrum Motion', icon: join(__dirname, 'renderer', 'icon.png'), webPreferences: { preload: join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true, devTools: !app.isPackaged } });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', event => event.preventDefault());
   window.on('closed', () => { window = null; app.quit(); });

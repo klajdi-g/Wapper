@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { Library, matchesHeader, parseLibrary, validID, validVolume } from '../src/core/library';
 import { appAsset, mediaResponse, parseRange } from '../src/core/media-response';
 import { detectBackend } from '../src/core/platform';
-import { mpvCommand } from '../src/main/mpvpaper';
+import { chooseLayer, mpvCommand, playerArguments } from '../src/main/mpvpaper';
 import { createServer } from 'node:net';
 
 const identifier = '550e8400-e29b-41d4-a716-446655440000';
@@ -123,4 +123,19 @@ test('mpv control accepts a matching response and sends a fixed request envelope
     await new Promise<void>(resolve => server.listen(path, resolve));
     await mpvCommand(path, ['set_property', 'pause', true]);
   } finally { await new Promise<void>(resolve => server.close(() => resolve())); await rm(directory, { recursive: true, force: true }); }
+});
+test('mpvpaper decodes in hardware and leaves mpv options on one argument', () => {
+  const arguments_ = playerArguments('/run/player.sock', '/library/scene.mp4', true, 0.5, 'bottom');
+  assert.deepEqual([arguments_[0], arguments_[1], arguments_[2]], ['-l', 'bottom', '-o']);
+  assert.deepEqual(arguments_.slice(-2), ['ALL', '/library/scene.mp4']);
+  assert.match(arguments_[3], /(?:^| )hwdec=auto-safe(?: |$)/);
+  assert.match(arguments_[3], / volume=50 pause=yes /);
+});
+test('mpvpaper stays above shell wallpapers without covering a bottom-layer panel', () => {
+  const monitor = (...namespaces: string[]) => ({ 'eDP-1': { levels: { 0: [{ namespace: 'caelestia-background' }], 1: namespaces.map(namespace => ({ namespace })), 2: [{ namespace: 'caelestia-drawers' }] } } });
+  assert.equal(chooseLayer(monitor()), 'bottom');
+  assert.equal(chooseLayer(monitor('mpvpaper')), 'bottom', 'the wallpaper being replaced must not force a lower layer');
+  assert.equal(chooseLayer(monitor('waybar')), 'background');
+  assert.equal(chooseLayer({ ...monitor(), 'HDMI-A-1': monitor('waybar')['eDP-1'] }), 'background');
+  for (const value of [null, 'text', undefined]) assert.equal(chooseLayer(value), 'background');
 });

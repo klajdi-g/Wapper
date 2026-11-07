@@ -43,7 +43,7 @@
     "win": { "target": ["nsis", "zip"], "icon": "dist/icon.ico", "signExecutable": false },
     "nsis": { "oneClick": false, "perMachine": false, "allowElevation": false, "allowToChangeInstallationDirectory": true },
     "rpm": { "compression": "gzip" },
-    "linux": { "target": ["AppImage", "deb", "tar.gz"], "executableName": "voltrum-motion", "category": "Utility", "icon": "dist/renderer/icon.png", "maintainer": "Voltrum", "desktop": { "entry": { "StartupWMClass": "voltrum-motion" } } },
+    "linux": { "target": ["AppImage", "deb", "tar.gz"], "executableName": "voltrum-motion", "category": "Utility", "icon": "dist/renderer/icon.png", "maintainer": "Voltrum", "desktop": { "entry": { "StartupWMClass": "voltrum-motion-desktop" } } },
     "publish": null
   }
 }

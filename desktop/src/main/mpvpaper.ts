@@ -3,7 +3,8 @@ import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { createConnection } from 'node:net';
-import { spawn, type ChildProcess } from 'node:child_process';
+import { execFile, spawn, type ChildProcess } from 'node:child_process';
+import { promisify } from 'node:util';
 
 export async function findMpvpaper(): Promise<string | null> {
   for (const directory of (process.env.PATH ?? '').split(':').filter(Boolean)) {
@@ -11,6 +12,28 @@ export async function findMpvpaper(): Promise<string | null> {
     try { await access(path, constants.X_OK); return path; } catch { }
   }
   return null;
+}
+export type WallpaperLayer = 'background' | 'bottom';
+// Surfaces on the background layer stack in mapping order, so a shell or wallpaper daemon that
+// starts after mpvpaper covers it. The bottom layer stays above them, but also above any panel
+// that lives there (Waybar's default), so it is only used while nothing else occupies it.
+export function chooseLayer(hyprlandLayers: unknown): WallpaperLayer {
+  if (!hyprlandLayers || typeof hyprlandLayers !== 'object') return 'background';
+  for (const monitor of Object.values(hyprlandLayers as Record<string, { levels?: Record<string, { namespace?: unknown }[]> }>)) {
+    const bottom = monitor?.levels?.['1'];
+    if (Array.isArray(bottom) && bottom.some(surface => surface?.namespace !== 'mpvpaper')) return 'background';
+  }
+  return 'bottom';
+}
+const execute = promisify(execFile);
+export async function detectLayer(environment: NodeJS.ProcessEnv): Promise<WallpaperLayer> {
+  if (!environment.HYPRLAND_INSTANCE_SIGNATURE) return 'background';
+  try { return chooseLayer(JSON.parse((await execute('hyprctl', ['layers', '-j'], { timeout: 1500, maxBuffer: 1024 * 1024 })).stdout)); }
+  catch { return 'background'; }
+}
+export function playerArguments(socket: string, file: string, paused: boolean, volume: number, layer: WallpaperLayer): string[] {
+  const options = `loop-file=inf image-display-duration=inf keep-open=yes load-scripts=no ytdl=no access-references=no audio-file-auto=no sub-auto=no input-default-bindings=no input-vo-keyboard=no panscan=1 hwdec=auto-safe volume=${Math.round(volume * 100)} pause=${paused ? 'yes' : 'no'} input-ipc-server=${socket}`;
+  return ['-l', layer, '-o', options, 'ALL', file];
 }
 export function mpvCommand(socketPath: string, command: (string | number | boolean)[]): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -42,8 +65,7 @@ export class MpvSession {
   static async create(binary: string, file: string, paused: boolean, volume: number, failed: (message: string) => void): Promise<MpvSession> {
     const directory = await mkdtemp(join(tmpdir(), 'motion-'));
     const socket = join(directory, 'player.sock');
-    const options = `loop-file=inf image-display-duration=inf keep-open=yes load-scripts=no ytdl=no access-references=no audio-file-auto=no sub-auto=no input-default-bindings=no input-vo-keyboard=no panscan=1 volume=${Math.round(volume * 100)} pause=${paused ? 'yes' : 'no'} input-ipc-server=${socket}`;
-    const child = spawn(binary, ['-o', options, 'ALL', file], { stdio: ['ignore', 'ignore', 'pipe'] });
+    const child = spawn(binary, playerArguments(socket, file, paused, volume, await detectLayer(process.env)), { stdio: ['ignore', 'ignore', 'pipe'] });
     const session = new MpvSession(child, directory, socket);
     let failure = '';
     let stopped = false;
