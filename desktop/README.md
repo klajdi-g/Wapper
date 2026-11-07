@@ -68,7 +68,7 @@ npm run installer:linux
 ```
 
 NSIS installs per user without requesting elevation. Linux targets are AppImage,
-Debian `.deb`, and RPM; distro/FUSE requirements differ. The GitHub workflow retains
+Debian `.deb`, and RPM; distro/FUSE requirements differ. The Forgejo Actions workflow retains
 installers and can publish a complete offline-only preview by manual dispatch.
 No certificate, signing key or auto-updater has been configured. Windows is unsigned.
 See [distribution and package-manager installation](../docs/DISTRIBUTION.md).

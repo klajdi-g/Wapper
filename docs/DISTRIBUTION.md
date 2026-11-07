@@ -15,7 +15,9 @@ Windows/Linux use version 0.3.0. macOS uses 0.3.1, fixing the preview crash on m
 Download assets from [the macOS 0.3.1 hotfix](https://github.com/klajdi-g/Wapper/releases/tag/motion-v0.3.1-preview),
 [the Windows/Linux 0.3.0 preview](https://github.com/klajdi-g/Wapper/releases/tag/motion-v0.3.0-preview),
 or [the website](https://motion.voltrum.co/#download).
-Verify the downloaded files against the release's `SHA256SUMS.txt`.
+Verify the downloaded files against the release's `SHA256SUMS.txt`. These existing
+releases are on GitHub; new releases are published to
+[the forge](https://forge.voltrum.co/QuadCoreTech/Wapper/releases).
 
 - Windows x64: run the NSIS `.exe`, or extract the complete `.zip` and run
   `Voltrum Motion.exe`. The executable needs its adjacent resources.
@@ -56,12 +58,14 @@ On macOS, `./release-motion.sh` compiles both architectures, audits the resource
 allowlist, checks the signature, creates/verifies the DMG, and records its checksum.
 Its `release.json` deliberately has no public URL: packaging is not publication.
 
-The `Motion desktop builds` workflow runs on native Windows/Linux/macOS runners,
+The `Motion desktop builds` workflow (`.forgejo/workflows/motion-desktop.yml`, Forgejo
+Actions on forge.voltrum.co) runs on native Windows/Linux/macOS runners,
 retains installers for 14 days, and audits the offline resource boundary. For a
 public preview, manually dispatch on `main` with `release_tag` set to
 `motion-v0.3.0-preview` (or the current desktop version). Blank input only builds.
 The release job requires all platform builds to pass, assembles all seven installer
-formats and checksums, and creates a prerelease. Existing releases are not overwritten.
+formats and checksums, and creates a forge prerelease through the Forgejo API using the
+`FORGE_RELEASE_TOKEN` repository secret. Existing releases are not overwritten.
 
 The macOS `.dmg.audit.json` records the exact DMG hash after the import-only resource
 audit; release preparation rejects missing/mismatched audit records, so an older
@@ -69,7 +73,7 @@ demo-containing DMG cannot accidentally be reused.
 
 `tools/prepare-desktop-release.py` builds the complete manifest, checksum list and
 Homebrew cask from artifact bytes. The manifest's `publication: candidate` records
-build-time status; existence of the public GitHub release is the publication check.
+build-time status; existence of the public forge release is the publication check.
 After publishing, synchronize the generated `voltrum-motion.rb` to `Casks/` in
 this repository and the dedicated `klajdi-g/homebrew-motion` tap. Never update its
 checksum without the corresponding DMG.
@@ -80,7 +84,7 @@ an otherwise empty directory, then run (after committing the matching app source
 ```sh
 python3 tools/prepare-desktop-release.py \
   --directory build/distribution --mac-directory build/releases \
-  --repository klajdi-g/Wapper --tag motion-v0.3.0-preview \
+  --repository QuadCoreTech/Wapper --tag motion-v0.3.0-preview \
   --commit "$(git rev-parse HEAD)"
 ```
 

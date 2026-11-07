@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--directory', type=pathlib.Path, required=True)
 parser.add_argument('--mac-directory', type=pathlib.Path)
 parser.add_argument('--repository', required=True)
+parser.add_argument('--server-url', default='https://forge.voltrum.co', help='Forge base URL that hosts the release assets')
 parser.add_argument('--tag', required=True)
 parser.add_argument('--commit', required=True)
 parser.add_argument('--website-metadata', type=pathlib.Path, help='Generate website release metadata (publish artifacts before deploying it)')
@@ -19,6 +20,9 @@ parser.add_argument('--mac-only', action='store_true', help='Publish a macOS hot
 args = parser.parse_args()
 if not re.fullmatch(r'[\w.-]+/[\w.-]+', args.repository) or not re.fullmatch(r'[\w.-]+', args.tag) or not re.fullmatch(r'[a-f0-9]{40}', args.commit):
     parser.error('Invalid repository, tag or full commit SHA')
+if not re.fullmatch(r'https://[\w.-]+(:\d+)?', args.server_url.rstrip('/')):
+    parser.error('Invalid server URL; use an https:// origin without a path')
+server_url = args.server_url.rstrip('/')
 root = pathlib.Path(__file__).resolve().parents[1]
 version = json.loads((root / 'desktop/package.json').read_text())['version']
 import plistlib
@@ -65,7 +69,7 @@ for name, platform, architecture, artifact_version in specs:
                           minimumSystem={'macos': 'macOS 14 Sonoma', 'windows': 'Windows 10 (64-bit)', 'linux': '64-bit Linux with X11 or supported wlroots Wayland'}[platform],
                           contentScope='local-import-only', signed=False, notarized=False, installInstructions=instructions,
                           bytes=path.stat().st_size, sha256=digest,
-                          url=f'https://github.com/{args.repository}/releases/download/{args.tag}/{name}'))
+                          url=f'{server_url}/{args.repository}/releases/download/{args.tag}/{name}'))
 manifest = dict(schemaVersion=1, tag=args.tag, sourceCommit=args.commit, repository=args.repository,
                 publication='candidate', media='local-imports-only-empty-library',
                 signing={'macos': 'ad-hoc, not notarized', 'windows': 'unsigned', 'linux': 'unsigned'}, downloads=downloads)

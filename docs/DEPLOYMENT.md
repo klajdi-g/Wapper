@@ -6,7 +6,8 @@ browser screenshots, and remaining production-release gates.
 ## Public surfaces
 
 - Website: https://motion.voltrum.co (the existing root Voltrum website is unchanged).
-- Source: https://github.com/klajdi-g/Wapper. Earlier preview downloads are withdrawn.
+- Source: https://forge.voltrum.co/QuadCoreTech/Wapper (moved from GitHub `klajdi-g/Wapper`,
+  which still hosts the 0.3.0/0.3.1 preview assets). Earlier preview downloads are withdrawn.
 - Native bundle: `co.voltrum.motion`, version 0.2.2 local-only, macOS 14+, universal Intel/Apple silicon.
 - Preview builds are ad-hoc signed and unnotarized, not production-trusted installers.
 

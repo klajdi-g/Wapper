@@ -7,9 +7,9 @@ on:
         required: false
         type: string
   push:
-    paths: ['desktop/**', 'WallperRebuilt/**', 'build-wallper.sh', 'release-motion.sh', 'tools/prepare-desktop-release.py', 'tools/package-approved-catalog.py', 'tools/catalog_gate.py', 'website/assets/mark.svg', 'website/media-policy.json', 'website/media-host.json', 'website/src/lib/policy.ts', '.github/workflows/motion-desktop.yml']
+    paths: ['desktop/**', 'WallperRebuilt/**', 'build-wallper.sh', 'release-motion.sh', 'tools/prepare-desktop-release.py', 'tools/package-approved-catalog.py', 'tools/catalog_gate.py', 'website/assets/mark.svg', 'website/media-policy.json', 'website/media-host.json', 'website/src/lib/policy.ts', '.forgejo/workflows/motion-desktop.yml']
   pull_request:
-    paths: ['desktop/**', 'WallperRebuilt/**', 'tools/**', 'release-motion.sh', '.github/workflows/motion-desktop.yml']
+    paths: ['desktop/**', 'WallperRebuilt/**', 'tools/**', 'release-motion.sh', '.forgejo/workflows/motion-desktop.yml']
 permissions:
   contents: read
 jobs:
@@ -50,7 +50,7 @@ jobs:
       - if: runner.os == 'Linux'
         run: npx electron-builder --linux AppImage deb rpm tar.gz --x64 --publish never
         working-directory: desktop
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: https://code.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: installers-${{ runner.os }}
           if-no-files-found: error
@@ -75,7 +75,7 @@ jobs:
           command -v ffmpeg >/dev/null || brew install ffmpeg
           ffmpeg -nostdin -hide_banner -loglevel error -y -f lavfi -i 'testsrc2=size=320x180:rate=30' -t 3 -c:v libx264 -pix_fmt yuv420p build/smoke-fixture.mp4
           MOTION_SMOKE_VIDEO="$PWD/build/smoke-fixture.mp4" "./build/Voltrum Motion.app/Contents/MacOS/WallperRebuilt" --smoke-test build/smoke-report.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: https://code.forgejo.org/forgejo/upload-artifact@v4
         with:
           name: installers-macOS
           if-no-files-found: error
@@ -90,11 +90,12 @@ jobs:
     permissions:
       contents: write
     env:
-      GH_TOKEN: ${{ github.token }}
+      # Repository secret with write:repository scope; falls back to the job's automatic token.
+      FORGE_TOKEN: ${{ secrets.FORGE_RELEASE_TOKEN || github.token }}
       RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+      - uses: https://code.forgejo.org/forgejo/download-artifact@v4
         with:
           pattern: installers-*
           merge-multiple: true
@@ -103,8 +104,19 @@ jobs:
         run: |
           python3 -m unittest discover -s tools/tests -v
           python3 -c 'import os,json; assert os.environ["RELEASE_TAG"] == "motion-v" + json.load(open("desktop/package.json"))["version"] + "-preview"'
-          python3 tools/prepare-desktop-release.py --directory release --repository "$GITHUB_REPOSITORY" --tag "$RELEASE_TAG" --commit "$GITHUB_SHA"
+          python3 tools/prepare-desktop-release.py --directory release --server-url "$GITHUB_SERVER_URL" --repository "$GITHUB_REPOSITORY" --tag "$RELEASE_TAG" --commit "$GITHUB_SHA"
           cd release && sha256sum -c SHA256SUMS.txt
       - name: Publish offline-only preview
         run: |
-          gh release create "$RELEASE_TAG" release/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease --title "Voltrum Motion offline preview" --notes-file docs/DESKTOP-RELEASE-NOTES.md
+          set -eu
+          api="$GITHUB_SERVER_URL/api/v1/repos/$GITHUB_REPOSITORY"
+          auth="Authorization: token $FORGE_TOKEN"
+          if curl -fsS -o /dev/null -H "$auth" "$api/releases/tags/$RELEASE_TAG"; then
+            echo "Release $RELEASE_TAG already exists; refusing to overwrite" >&2; exit 1
+          fi
+          body=$(python3 -c 'import json,os,sys; print(json.dumps(dict(tag_name=os.environ["RELEASE_TAG"], target_commitish=os.environ["GITHUB_SHA"], name="Voltrum Motion offline preview", body=open("docs/DESKTOP-RELEASE-NOTES.md").read(), prerelease=True, draft=False)))')
+          id=$(curl -fsS -X POST -H "$auth" -H 'Content-Type: application/json' -d "$body" "$api/releases" | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')
+          for file in release/*; do
+            curl -fsS -X POST -H "$auth" -F "attachment=@$file" "$api/releases/$id/assets?name=$(basename "$file")" >/dev/null
+            echo "Uploaded $(basename "$file")"
+          done
