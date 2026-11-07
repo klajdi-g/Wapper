@@ -77,9 +77,38 @@ See [distribution and package-manager installation](../docs/DISTRIBUTION.md).
 catalog policy to remain paused. `distribution-policy.json` independently permits
 offline-only installers; it does not grant rights to third-party media or signing.
 
+## Browse: the Voltrum catalog
+
+**Browse** lists wallpapers from Voltrum's own catalog and downloads the ones you
+choose into your library. Today it shows an intentional empty state: the shared
+policy is paused and nothing is approved, so there is nothing to list.
+
+- Only the main process uses the network, and only after you open Browse. It reads
+  `https://motion.voltrum.co/media-policy.json` and `/catalog.json`, then preview and
+  media files named `<sha256>.<ext>` from the media host in `website/media-host.json`.
+  It uses its own in-memory session whose request filter allows those addresses and
+  nothing else. Redirects are refused and responses are size-limited.
+- Every entry is re-checked against the published policy with the same gate as the
+  website (`website/src/lib/policy.ts`). One bad entry, a paused or malformed policy,
+  or an oversized response shows nothing.
+- The last good catalog and hash-verified previews are kept in `userData/catalog`.
+  Offline, Browse shows that saved copy as stale and does not download. A paused or
+  empty catalog deletes the saved copy.
+- Downloads ask for confirmation, run one at a time, and stream to
+  `userData/downloads/*.part`. A file joins the library only if its size, SHA-256 and
+  file signature match the catalog. Library records keep the catalog ID.
+
+A build that contains Browse is not an import-only build. Do not package or publish
+one under the current `local-import-only` installer scope until the publication
+route is decided (Phase 5 in `docs/REMOTE-CATALOG-PLAN.md`).
+
+For development, `MOTION_TEST_CATALOG_ORIGIN=http://127.0.0.1:<port>` points an
+unpackaged build at a loopback fixture server. Packaged builds ignore it.
+
 ## Media boundary
 
-There are **zero bundled third-party wallpapers** and no remote-video downloader.
+There are **zero bundled third-party wallpapers**. The only downloader is Browse,
+which accepts verified files from Voltrum's own hosts and nowhere else.
 Aurora is not included. The paused shared policy is copied as a record, not changed.
 The existing image-only web gallery is reachable through **Explore online**, which
 opens the fixed Voltrum site in the system browser. It is not imported into the
@@ -100,8 +129,10 @@ Engine data is scanned automatically. Import only media you have rights to use.
 
 Renderers are sandboxed, isolated from Node, and receive narrow preload methods,
 not arbitrary IPC or filesystem access. A custom `motion:` protocol serves bundled
-assets and library IDs, never renderer-supplied paths. Video seeking uses validated
-byte ranges. CSP and the session request filter deny network resources in the app.
+assets, library IDs, and verified catalog previews, never renderer-supplied paths.
+Video seeking uses validated byte ranges. CSP and the session request filter deny
+network resources in the renderer; only the main process's separate catalog session
+can reach the fixed Voltrum addresses described under Browse.
 The only browser handoff is the fixed Explore address. Production fuses disable
 RunAsNode, Node environment/inspection flags, and file-protocol extra privileges.
 No MPV scripting/online playlists are enabled by this application. External player
@@ -121,7 +152,11 @@ npm run test:smoke
 
 The smoke harness uses an isolated temporary profile, generated artwork/video,
 native import-dialog stubs, real renderer isolation, media preview, favorites,
-search, persistence, and source-preserving removal. On Linux X11 it also tests
+search, persistence, and source-preserving removal. It also runs Browse against a
+loopback fixture server with synthetic media: the paused state, search, category,
+credits, confirmation, progress, cancel, download into the library, the offline
+copy, and layout at 588px and 1280px wide. It does not apply wallpapers on
+mpvpaper, so a pass says nothing about Wayland playback. On Linux X11 it also tests
 actual desktop windows and video playback. On Mac it validates the library UI,
 not a Mac wallpaper backend. Windows desktop attachment is opt-in for a real
 interactive session: `MOTION_REQUIRE_WINDOWS_PLAYBACK=1 npm run test:smoke`
