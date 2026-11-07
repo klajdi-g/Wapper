@@ -1,15 +1,21 @@
 import AppKit
 import Combine
+import Carbon
 import SwiftUI
 
 @MainActor
 final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var controller: AppController!
-    private var window: NSWindow?
-    private var statusItem: NSStatusItem?
+    private(set) var window: NSWindow?
+    private(set) var statusItem: NSStatusItem?
     private var subscriptions: Set<AnyCancellable> = []
+    private var explicitlyQuitting = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        if let index = CommandLine.arguments.firstIndex(of: "--lifecycle-smoke-test"), CommandLine.arguments.count > index + 1 {
+            Task { await runLifecycleSmokeTest(reportURL: URL(fileURLWithPath: CommandLine.arguments[index + 1])) }
+            return
+        }
         if let index = CommandLine.arguments.firstIndex(of: "--import-installed-library"), CommandLine.arguments.count > index + 2 {
             Task {
                 await importInstalledLibrary(source: URL(fileURLWithPath: CommandLine.arguments[index + 1]),
@@ -21,10 +27,8 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
             Task { await runSmokeTest(reportURL: URL(fileURLWithPath: CommandLine.arguments[index + 1])) }
             return
         }
-        controller = AppController()
-        createMenus()
+        configure(controller: AppController())
         createWindow()
-        createStatusItem()
         controller.restore()
         NSApp.activate(ignoringOtherApps: true)
         Task {
@@ -58,6 +62,68 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        // System logout/shutdown must never be cancelled. Ordinary Quit closes
+        // the library while the menu-bar playback engine keeps the desktop alive.
+        terminationReply(quitReason: NSAppleEventManager.shared().currentAppleEvent?
+            .paramDescriptor(forKeyword: AEKeyword(kAEQuitReason))?.enumCodeValue)
+    }
+
+    func terminationReply(quitReason: OSType?) -> NSApplication.TerminateReply {
+        let systemQuit = quitReason.map {
+            [OSType(kAEQuitAll), OSType(kAEShutDown), OSType(kAERestart), OSType(kAEReallyLogOut)].contains($0)
+        } ?? false
+        if !explicitlyQuitting && !systemQuit && !(controller?.playback.active.isEmpty ?? true) {
+            closeLibrary()
+            return .terminateCancel
+        }
+        return .terminateNow
+    }
+
+    func configure(controller: AppController) {
+        explicitlyQuitting = false
+        self.controller = controller
+        createMenus()
+        if let statusItem { NSStatusBar.system.removeStatusItem(statusItem) }
+        subscriptions.removeAll()
+        createStatusItem()
+    }
+
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        guard sender === window else { return true }
+        closeLibrary()
+        return false
+    }
+
+    @objc func closeLibrary() {
+        // This process remains the playback/menu-bar owner. Release the expensive
+        // library hierarchy, rather than merely hiding it or restarting players.
+        defer { NSApp.setActivationPolicy(.accessory) }
+        guard let libraryWindow = window else { return }
+        window = nil
+        libraryWindow.delegate = nil
+        libraryWindow.endEditing(for: nil)
+        for sheet in libraryWindow.sheets {
+            libraryWindow.endSheet(sheet)
+            sheet.orderOut(nil)
+            sheet.contentView = nil
+            sheet.close()
+        }
+        libraryWindow.orderOut(nil)
+        libraryWindow.contentView = nil
+        libraryWindow.close()
+    }
+
+    @objc private func quitAndStopWallpapers() {
+        prepareToQuitAndStopWallpapers()
+        NSApp.terminate(nil)
+    }
+
+    func prepareToQuitAndStopWallpapers() {
+        explicitlyQuitting = true
+        controller?.stop()
+    }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         showWindow()
@@ -103,9 +169,10 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
 
     func windowDidResize(_ notification: Notification) {
         guard let window = notification.object as? NSWindow else { return }
-        Task { @MainActor in
+        Task { @MainActor [weak self, weak window] in
             await Task.yield()
-            positionWindowButtons(window)
+            guard let self, let window, window === self.window else { return }
+            self.positionWindowButtons(window)
         }
     }
 
@@ -119,8 +186,11 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         appMenu.addItem(withTitle: "Import Video…", action: #selector(importVideo), keyEquivalent: "o")
         appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "Hide Voltrum Motion", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        appMenu.addItem(withTitle: "Quit Voltrum Motion", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-        for item in appMenu.items where [#selector(showAbout), #selector(showWindow), #selector(importVideo)].contains(item.action) {
+        appMenu.addItem(withTitle: "Close Library", action: #selector(closeLibrary), keyEquivalent: "q")
+        let quit = appMenu.addItem(withTitle: "Quit & Stop Wallpapers", action: #selector(quitAndStopWallpapers), keyEquivalent: "q")
+        quit.keyEquivalentModifierMask = [.command, .option]
+        quit.target = self
+        for item in appMenu.items where [#selector(showAbout), #selector(showWindow), #selector(importVideo), #selector(closeLibrary)].contains(item.action) {
             item.target = self
         }
         appItem.submenu = appMenu
@@ -158,7 +228,7 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         addMenuItem(controller.library.state.wantsPlaying ? "Pause Wallpapers" : "Resume Wallpapers", action: #selector(togglePlayback), to: menu)
         addMenuItem("Stop Wallpapers", action: #selector(stopWallpapers), to: menu)
         menu.addItem(.separator())
-        addMenuItem("Quit Voltrum Motion", action: #selector(NSApplication.terminate(_:)), to: menu)
+        addMenuItem("Quit & Stop Wallpapers", action: #selector(quitAndStopWallpapers), to: menu)
         statusItem?.menu = menu
     }
 
@@ -168,7 +238,10 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         menu.addItem(item)
     }
 
-    @objc private func showWindow() {
+    @objc func showWindow() {
+        NSApp.setActivationPolicy(.regular)
+        if window == nil { createWindow() }
+        if window?.isMiniaturized == true { window?.deminiaturize(nil) }
         window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
@@ -179,7 +252,7 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
     @objc private func showAbout() {
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationName: "Voltrum Motion",
-            .applicationVersion: "0.2.0",
+            .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
             .credits: NSAttributedString(string: "Independent Swift reconstruction from recovered metadata and behavior. Not the original source or complete original feature set.")
         ])
     }
@@ -188,10 +261,10 @@ final class ApplicationDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
 @main
 struct AppLauncher {
     @MainActor static func main() {
-        let application = NSApplication.shared
+        let application = BackgroundApplication.shared
         let delegate = ApplicationDelegate()
         application.delegate = delegate
-        let backgroundMode = CommandLine.arguments.contains("--smoke-test") || CommandLine.arguments.contains("--import-installed-library")
+        let backgroundMode = CommandLine.arguments.contains("--smoke-test") || CommandLine.arguments.contains("--lifecycle-smoke-test") || CommandLine.arguments.contains("--import-installed-library")
         application.setActivationPolicy(backgroundMode ? .accessory : .regular)
         application.appearance = NSAppearance(named: .darkAqua)
         withExtendedLifetime(delegate) { application.run() }

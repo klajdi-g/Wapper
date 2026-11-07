@@ -5,8 +5,10 @@ configuration=${CONFIGURATION:-release}
 case "$configuration" in debug|release) ;; *) printf 'CONFIGURATION must be debug or release\n' >&2; exit 1 ;; esac
 architecture=${ARCH:-$(uname -m)}
 case "$architecture" in arm64|x86_64) ;; *) printf 'ARCH must be arm64 or x86_64\n' >&2; exit 1 ;; esac
-swift build --package-path "$root/WallperRebuilt" --scratch-path "$root/WallperRebuilt/.build-$architecture" -c "$configuration" --arch "$architecture"
-binary_dir=$(swift build --package-path "$root/WallperRebuilt" --scratch-path "$root/WallperRebuilt/.build-$architecture" -c "$configuration" --arch "$architecture" --show-bin-path)
+python3 "$root/tools/package-selected-native-catalog.py"
+scratch_path=${SWIFT_SCRATCH_PATH:-"$root/WallperRebuilt/.build-$architecture"}
+swift build --package-path "$root/WallperRebuilt" --scratch-path "$scratch_path" -c "$configuration" --arch "$architecture"
+binary_dir=$(swift build --package-path "$root/WallperRebuilt" --scratch-path "$scratch_path" -c "$configuration" --arch "$architecture" --show-bin-path)
 app="$root/build/Voltrum Motion.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 install -m 755 "$binary_dir/WallperRebuilt" "$app/Contents/MacOS/WallperRebuilt"

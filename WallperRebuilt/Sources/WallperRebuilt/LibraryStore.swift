@@ -3,6 +3,14 @@ import AVFoundation
 import Combine
 import UniformTypeIdentifiers
 
+/// Selected collection requests never follow redirects, including same-origin ones.
+private final class SelectedCatalogRedirectGuard: NSObject, URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        completionHandler(nil)
+    }
+}
+
 @MainActor
 final class LibraryStore: ObservableObject {
     @Published private(set) var state: SavedLibrary
@@ -10,18 +18,24 @@ final class LibraryStore: ObservableObject {
     @Published private(set) var gallery: [Wallpaper] = []
     @Published private(set) var downloading: Set<String> = []
     @Published private(set) var importing = false
+    @Published private(set) var catalogLoading = false
+    @Published private(set) var catalogNotice: String?
     @Published var errorMessage: String?
     let root: URL
     private var downloads: [String: Task<Void, Never>] = [:]
     private let stateURL: URL
     private var canSave = true
     private let mediaPolicy = MediaPublicationPolicy.bundled()
-
-    var mediaPublicationPaused: Bool { !mediaPolicy.isEnabled }
+    private var selectedIDs: Set<String> = []
+    private var selectedWallpapers: [Wallpaper] = []
+    private var catalogTask: Task<Void, Never>?
+    private let catalogSession: URLSession
+    private let selectedDownloadSession = URLSession(configuration: .default, delegate: SelectedCatalogRedirectGuard(), delegateQueue: nil)
 
     var library: [Wallpaper] { state.wallpapers }
 
-    init(root: URL? = nil) {
+    init(root: URL? = nil, refreshCatalog: Bool = true, catalogSession: URLSession? = nil) {
+        self.catalogSession = catalogSession ?? URLSession(configuration: .ephemeral, delegate: SelectedCatalogRedirectGuard(), delegateQueue: nil)
         self.root = root ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("WallperRebuilt", isDirectory: true)
         stateURL = self.root.appendingPathComponent("library.json")
@@ -51,6 +65,8 @@ final class LibraryStore: ObservableObject {
         }
         loadCatalog()
         loadGallery()
+        loadSelectedCatalog()
+        if refreshCatalog { refreshSelectedCatalog() }
     }
 
     var mediaDirectory: URL { root.appendingPathComponent("Media", isDirectory: true) }
@@ -156,9 +172,12 @@ final class LibraryStore: ObservableObject {
     }
 
     func download(_ wallpaper: Wallpaper, onComplete: (@MainActor () -> Void)? = nil) {
-        guard mediaPolicy.approves(wallpaper), !isDownloaded(wallpaper), !downloading.contains(wallpaper.id),
-              let url = wallpaper.remoteURL, url.scheme == "https",
-              ["sylvan.apple.com", "cdn.wallper.app", "images-assets.nasa.gov"].contains(url.host ?? "") else { return }
+        guard !isDownloaded(wallpaper), !downloading.contains(wallpaper.id) else { return }
+        guard canDownload(wallpaper), let url = wallpaper.remoteURL else {
+            errorMessage = "This wallpaper is not available from the selected catalog. Refresh Explore and try again."
+            return
+        }
+        let selected = isSelectedCatalogItem(wallpaper)
         downloading.insert(wallpaper.id)
         downloads[wallpaper.id] = Task {
             defer { downloading.remove(wallpaper.id); downloads[wallpaper.id] = nil }
@@ -170,11 +189,18 @@ final class LibraryStore: ObservableObject {
                    Double(available) < sizeMB * 1_048_576 * 2 + 100_000_000 {
                     throw RebuildError.message("There is not enough free space for this wallpaper and its temporary download.")
                 }
-                let (file, response) = try await URLSession.shared.download(from: url)
+                let session = selected ? selectedDownloadSession : URLSession.shared
+                let (file, response) = try await session.download(from: url)
                 temporaryURL = file
                 try Task.checkCancellation()
                 guard let response = response as? HTTPURLResponse, (200..<300).contains(response.statusCode) else {
                     throw RebuildError.message("The catalog server did not return a video.")
+                }
+                if selected {
+                    guard NativeCatalog.validVideoResponse(response, for: url) else {
+                        throw RebuildError.message("The collection server returned an unexpected video URL or format.")
+                    }
+                    try NativeCatalog.validateVideoFile(file, response: response)
                 }
                 let suffix = ["mp4", "mov", "m4v"].contains(url.pathExtension.lowercased()) ? url.pathExtension.lowercased() : "mp4"
                 let video = file.deletingPathExtension().appendingPathExtension(suffix)
@@ -189,6 +215,70 @@ final class LibraryStore: ObservableObject {
     }
 
     func cancelDownload(_ wallpaper: Wallpaper) { downloads[wallpaper.id]?.cancel() }
+
+    func isSelectedCatalogItem(_ wallpaper: Wallpaper) -> Bool {
+        selectedWallpapers.contains(wallpaper) && NativeCatalog.validRecord(wallpaper)
+    }
+
+    func canDownload(_ wallpaper: Wallpaper) -> Bool {
+        if isSelectedCatalogItem(wallpaper) { return true }
+        return mediaPolicy.approves(wallpaper) && wallpaper.remoteURL?.scheme == "https" &&
+            ["sylvan.apple.com", "cdn.wallper.app", "images-assets.nasa.gov"].contains(wallpaper.remoteURL?.host ?? "")
+    }
+
+    private var catalogCacheURL: URL { root.appendingPathComponent("native-catalog.json") }
+
+    private func installSelectedCatalog(_ records: [Wallpaper]) {
+        selectedWallpapers = records
+        gallery = records + gallery.filter { !selectedIDs.contains($0.id) }
+    }
+
+    private func loadSelectedCatalog() {
+        do {
+            guard let url = resourceURL("native-catalog", extension: "json") else {
+                throw RebuildError.message("The bundled selected collection is missing.")
+            }
+            let bundled = try NativeCatalog.decode(Data(contentsOf: url))
+            selectedIDs = Set(bundled.wallpapers.map(\.id))
+            installSelectedCatalog(bundled.wallpapers)
+            if let data = try? Data(contentsOf: catalogCacheURL),
+               let cached = try? NativeCatalog.decode(data, selectedIDs: selectedIDs) {
+                installSelectedCatalog(cached.wallpapers)
+                catalogNotice = "Showing the saved collection."
+            } else { catalogNotice = "Showing the bundled collection." }
+        } catch { catalogNotice = error.localizedDescription }
+    }
+
+    func refreshSelectedCatalog() {
+        guard !catalogLoading else { return }
+        catalogLoading = true
+        catalogTask = Task { [weak self] in
+            guard let self else { return }
+            defer { catalogLoading = false; catalogTask = nil }
+            do {
+                var request = URLRequest(url: NativeCatalog.endpoint)
+                request.timeoutInterval = 20
+                request.cachePolicy = .reloadIgnoringLocalCacheData
+                let (data, response) = try await catalogSession.data(for: request)
+                try Task.checkCancellation()
+                guard let http = response as? HTTPURLResponse, http.statusCode == 200,
+                      http.url == NativeCatalog.endpoint, http.mimeType == "application/json" else {
+                    throw RebuildError.message("The collection server is unavailable.")
+                }
+                let manifest = try NativeCatalog.decode(data, selectedIDs: selectedIDs)
+                installSelectedCatalog(manifest.wallpapers)
+                do {
+                    try data.write(to: catalogCacheURL, options: .atomic)
+                    catalogNotice = nil
+                } catch { catalogNotice = "Collection updated, but the offline cache could not be saved." }
+            } catch {
+                catalogNotice = "Could not refresh Explore. \(gallery.isEmpty ? "Try again when connected." : "Showing the saved or bundled collection; downloads need a connection.") \(error.localizedDescription)"
+            }
+        }
+    }
+
+    // Allows deterministic offline/refresh checks without polling the UI state.
+    func waitForCatalogRefresh() async { await catalogTask?.value }
 
     private func save() {
         guard canSave else { return }

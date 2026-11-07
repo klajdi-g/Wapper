@@ -1,6 +1,7 @@
 import AppKit
 import AVFoundation
 import AVKit
+import Carbon
 import SwiftUI
 
 @MainActor
@@ -18,16 +19,19 @@ func runSmokeTest(reportURL: URL) async {
     }
     var failure: String?
     do {
+        checks += try await runNativeCatalogTests(root: temporaryRoot.appendingPathComponent("catalog"))
         try check(controller.library.errorMessage == nil, "library initialization")
         let policy = MediaPublicationPolicy.bundled()
-        try check(controller.library.catalog.allSatisfy { policy.approves($0) }, "aerial catalog requires explicit item approval")
-        try check(controller.library.gallery.allSatisfy { policy.approves($0) }, "gallery catalog requires explicit item approval")
-        let publicGallery = controller.library.gallery.filter { $0.license != nil }
-        try check(policy.isEnabled || (controller.library.catalog.isEmpty && controller.library.gallery.isEmpty), "paused media policy exposes no remote catalog")
+        let legacyCatalog = controller.library.catalog.filter { !controller.library.isSelectedCatalogItem($0) }
+        let legacyGallery = controller.library.gallery.filter { !controller.library.isSelectedCatalogItem($0) }
+        try check(legacyCatalog.allSatisfy { policy.approves($0) }, "legacy aerial catalog requires explicit item approval")
+        try check(legacyGallery.allSatisfy { policy.approves($0) }, "legacy gallery catalog requires explicit item approval")
+        let publicGallery = legacyGallery.filter { $0.license != nil }
+        try check(policy.isEnabled || (legacyCatalog.isEmpty && legacyGallery.isEmpty), "paused media policy exposes no legacy remote catalog")
         try check(publicGallery.allSatisfy { $0.creator != nil && $0.sourceURL?.host == "images.nasa.gov" && $0.licenseURL?.host == "www.nasa.gov" }, "public catalog retains source credits and usage guidelines")
-        let cachedGallery = controller.library.gallery.filter { $0.previewAsset != nil }
+        let cachedGallery = legacyGallery.filter { $0.previewAsset != nil }
         try check(cachedGallery.allSatisfy { policy.approves($0) && controller.library.thumbnailURL(for: $0) != nil }, "only approved cached gallery images resolve")
-        try check(controller.library.gallery.allSatisfy { $0.source == .gallery && ["cdn.wallper.app", "images-assets.nasa.gov"].contains($0.remoteURL?.host ?? "") && controller.library.mediaURL(for: $0) == nil }, "catalog URLs do not pretend undownloaded videos are local files")
+        try check(legacyGallery.allSatisfy { $0.source == .gallery && ["cdn.wallper.app", "images-assets.nasa.gov"].contains($0.remoteURL?.host ?? "") && controller.library.mediaURL(for: $0) == nil }, "legacy catalog URLs do not pretend undownloaded videos are local files")
         let sample = Wallpaper(id: "test-local", title: "Test fixture", category: "Tests", source: .local)
         let migrationRoot = temporaryRoot.appendingPathComponent("migration")
         try FileManager.default.createDirectory(at: migrationRoot, withIntermediateDirectories: true)
@@ -146,6 +150,14 @@ func runSmokeTest(reportURL: URL) async {
         try check(controller.playback.completedLoops.allSatisfy { $0 > 0 }, "AVPlayerLooper completed a loop on every display")
         try check(controller.playback.renderedDisplayCount == controller.playback.displays.count, "video layers render on every display")
         try check(controller.playback.errorMessage == nil, "no player error reported")
+        // Exercise the real application lifecycle with an isolated library. Keep
+        // player identities and moving clocks, so a stop/restore cannot pass.
+        guard let lifecycle = NSApp.delegate as? ApplicationDelegate else {
+            throw RebuildError.message("Missing application lifecycle delegate")
+        }
+        let savedAssignments = controller.library.state.assignments
+        try await checkBackgroundLifecycle(controller: controller, wallpaper: imported, check: check)
+        try check(LibraryStore(root: temporaryRoot).state.assignments == savedAssignments, "background lifecycle preserves persisted wallpaper assignments")
         // Exercise the actual sheet/preview path, not just desktop AVPlayerLayers.
         // The previous smoke test missed a runtime abort inside SwiftUI VideoPlayer.
         let previewWindow = NSWindow(contentRect: host.frame, styleMask: [.titled], backing: .buffered, defer: false)
@@ -185,7 +197,12 @@ func runSmokeTest(reportURL: URL) async {
             try check(preview?.player == nil && previewPlayer?.rate == 0, "closing detail releases preview player \(index + 1)")
         }
         controller.remove(replacement)
-        controller.stop()
+        lifecycle.applicationWillTerminate(Notification(name: NSApplication.willTerminateNotification))
+        try check(controller.playback.players.isEmpty && controller.library.state.assignments == savedAssignments, "system termination releases players but retains restore assignments")
+        controller.restore()
+        try check(!controller.playback.players.isEmpty, "saved wallpapers restore after shutdown cleanup")
+        lifecycle.prepareToQuitAndStopWallpapers()
+        try check(lifecycle.applicationShouldTerminate(NSApp) == .terminateNow, "explicit quit and stop permits process termination")
         try check(controller.playback.players.isEmpty && controller.playback.active.isEmpty, "stop releases desktop players")
         try check(controller.library.state.assignments.isEmpty, "stop clears saved assignments")
         controller.remove(imported)

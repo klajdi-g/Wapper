@@ -5,6 +5,61 @@ enum MediaSource: String, Codable {
     case bundled, local, aerial, gallery
 }
 
+/// Transport validation for the user-selected collection, not a rights attestation.
+struct NativeCatalog: Codable {
+    var schemaVersion: Int
+    var wallpapers: [Wallpaper]
+    static let endpoint = URL(string: "https://motion.voltrum.co/native-catalog.json")!
+
+    static func isSameOrigin(_ url: URL) -> Bool {
+        url.scheme == "https" && url.host == endpoint.host && (url.port == nil || url.port == 443) &&
+        url.user == nil && url.password == nil && url.query == nil && url.fragment == nil &&
+        !url.absoluteString.contains("%") && !url.absoluteString.contains("\\")
+    }
+
+    static func validRecord(_ item: Wallpaper) -> Bool {
+        guard UUID(uuidString: item.id) != nil, item.id == item.id.lowercased(), item.source == .gallery,
+              item.filename == nil, item.previewAsset == nil,
+              !item.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              !item.category.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              let video = item.remoteURL, isSameOrigin(video), video.path == "/wallpapers/\(item.id).mp4",
+              let still = item.previewURL, isSameOrigin(still),
+              ["/defaults/\(item.id).webp", "/details/\(item.id).webp"].contains(still.path),
+              let provenance = item.sourceURL, provenance.scheme == "https", provenance.host != nil,
+              provenance.user == nil, provenance.password == nil, !provenance.absoluteString.contains("\\"),
+              item.sizeMB.map({ $0.isFinite && $0 >= 0 }) ?? true,
+              item.likes.map({ $0 >= 0 }) ?? true else { return false }
+        return true
+    }
+
+    static func decode(_ data: Data, selectedIDs: Set<String>? = nil) throws -> NativeCatalog {
+        guard data.count <= 4_000_000 else { throw RebuildError.message("The collection manifest is too large.") }
+        let manifest = try JSONDecoder().decode(NativeCatalog.self, from: data)
+        guard manifest.schemaVersion == 1, !manifest.wallpapers.isEmpty, manifest.wallpapers.count <= 1000,
+              Set(manifest.wallpapers.map(\.id)).count == manifest.wallpapers.count,
+              selectedIDs.map({ $0 == Set(manifest.wallpapers.map(\.id)) }) ?? true,
+              manifest.wallpapers.allSatisfy({ validRecord($0) && (selectedIDs?.contains($0.id) ?? true) }) else {
+            throw RebuildError.message("The collection manifest contains unsupported or invalid records.")
+        }
+        return manifest
+    }
+
+    static func validVideoResponse(_ response: HTTPURLResponse, for url: URL) -> Bool {
+        isSameOrigin(url) && response.statusCode == 200 && response.url == url && response.mimeType == "video/mp4"
+    }
+
+    static func validateVideoFile(_ file: URL, response: HTTPURLResponse) throws {
+        let handle = try FileHandle(forReadingFrom: file)
+        defer { try? handle.close() }
+        let header = try handle.read(upToCount: 12) ?? Data()
+        let length = try handle.seekToEnd()
+        guard header.count == 12, header.subdata(in: 4..<8) == Data("ftyp".utf8),
+              response.expectedContentLength < 0 || length == UInt64(response.expectedContentLength) else {
+            throw RebuildError.message("The collection server returned an incomplete or invalid MP4 file.")
+        }
+    }
+}
+
 struct MediaPublicationPolicy: Decodable {
     var publication: String
     var allowNativeDownloads: Bool

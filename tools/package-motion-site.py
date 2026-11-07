@@ -14,6 +14,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from catalog_gate import approved, safe_https  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "server"))
+from package_media import package as package_media
 WEBSITE = ROOT / "website"
 SITE = WEBSITE / "dist/client"
 NIX = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT.parent / "nix"
@@ -244,6 +246,17 @@ http {
     add_header Permissions-Policy 'camera=(), microphone=(), geolocation=()' always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://images-assets.nasa.gov data:; media-src https://images-assets.nasa.gov; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
     location = /healthz { access_log off; return 200 'ok'; }
+    location ~ ^/(native-catalog|workshop-catalog)\\.json$ {
+      proxy_pass http://motion-media;
+    }
+    location /wallpapers/ {
+      proxy_pass http://motion-media;
+      proxy_buffering off;
+      proxy_read_timeout 300s;
+      proxy_send_timeout 300s;
+    }
+    location /defaults/ { try_files $uri @import_preview; }
+    location @import_preview { proxy_pass http://motion-media; }
     location ~ ^/(catalog|release)\\.json$ { expires -1; try_files $uri =404; }
     location / { try_files $uri $uri/ =404; }
   }
@@ -255,6 +268,7 @@ if not media_enabled:
 else:
     nginx = nginx.replace("media-src https://images-assets.nasa.gov", "media-src 'self' https://images-assets.nasa.gov https://cdn.wallper.app")
 nginx = nginx.replace("script-src 'self';", "script-src 'self' " + " ".join(sorted(set(scripts.hashes))) + ";")
+nginx = nginx.replace("media-src https://cdn.wallper.app", "media-src https://cdn.wallper.app 'self'")
 digest = hashlib.sha256(payload + b"".join(preview_archives) + nginx.encode()).hexdigest()
 config_name = "motion-site-" + digest[:12]
 security = {"runAsNonRoot": True, "runAsUser": 101, "runAsGroup": 101, "seccompProfile": {"type": "RuntimeDefault"}}
@@ -290,5 +304,6 @@ resources = [
 ]
 output = NIX / "apps/voltrum-motion/resources.json"
 output.parent.mkdir(parents=True, exist_ok=True)
+package_media(ROOT, output.with_name("media-resources.json"))
 output.write_text(json.dumps({"apiVersion": "v1", "kind": "List", "items": resources}, indent=2) + "\n")
 print(f"Packaged {len(payload) + sum(map(len, preview_archives)):,} bytes across {1 + len(preview_archives)} bounded archives; site SHA-256 {digest}; wrote {output}")

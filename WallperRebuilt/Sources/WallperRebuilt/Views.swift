@@ -295,9 +295,18 @@ struct ContentView: View {
                         .overlay(Capsule().strokeBorder(.white.opacity(0.16), lineWidth: 0.5))
                 }
             }.padding(.top, page == .explore ? 36 : 24).padding(.bottom, 18)
+            if page == .explore {
+                HStack(spacing: 10) {
+                    if library.catalogLoading { ProgressView().controlSize(.small) }
+                    Text(library.catalogLoading ? "Updating collection…" : library.catalogNotice ?? "Selected collection")
+                        .font(.callout).foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Refresh", action: library.refreshSelectedCatalog).disabled(library.catalogLoading)
+                }.padding(.bottom, 16)
+            }
             if items.isEmpty {
-                ContentUnavailableView(page == .explore && library.mediaPublicationPaused ? "Collection paused for rights review" : "No wallpapers found", systemImage: "photo.on.rectangle",
-                                       description: Text(page == .explore && library.mediaPublicationPaused ? "Third-party media is withheld until individually approved. Use My Media to import your own video." : "Import a video, like a wallpaper, or try another search."))
+                ContentUnavailableView(page == .explore && library.catalogLoading ? "Loading collection…" : "No wallpapers found", systemImage: "photo.on.rectangle",
+                                       description: Text(page == .explore ? "Try another search or category, clear date filters, or refresh the collection." : "Import a video or like a wallpaper to see it here."))
                     .frame(maxWidth: .infinity, minHeight: 280)
             } else { wallpaperGrid(items) }
         }
@@ -585,59 +594,201 @@ struct WallpaperDetail: View {
     let controller: AppController
     @ObservedObject var library: LibraryStore
     let download: () -> Void
-    @State private var player: AVPlayer?
+    @StateObject private var preview = WallpaperDetailPlayback()
+    @State private var measuredResolution: String?
+    @State private var measuredSize: Double?
+    @State private var showsOperationStatus = false
+    @State private var operationNotice: String?
     @Environment(\.dismiss) private var dismiss
 
     private var local: Wallpaper? { library.library.first { $0.id == wallpaper.id } }
+    private var mediaURL: URL? { local.flatMap { library.mediaURL(for: $0) } }
+    private var previewURL: URL? { mediaURL ?? (library.canDownload(wallpaper) ? wallpaper.remoteURL : nil) }
+    private var downloading: Bool { library.downloading.contains(wallpaper.id) }
+    private var isFavorite: Bool { library.state.favorites.contains(wallpaper.id) }
+    private var detailSize: CGSize {
+        let available = NSScreen.main?.visibleFrame.size ?? CGSize(width: 1280, height: 900)
+        return CGSize(width: min(1120, available.width - 100), height: min(760, available.height - 100))
+    }
+    private var displayTitle: String {
+        let words = wallpaper.title.split(separator: " ")
+        return words.count == 2 ? words.joined(separator: "\n") : wallpaper.title
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            ZStack {
-                if let player { WallpaperPreviewPlayer(player: player) }
-                else { WallpaperArtwork(url: library.thumbnailURL(for: wallpaper) ?? wallpaper.previewURL, category: wallpaper.category) }
-            }.frame(width: 800, height: 450).clipShape(RoundedRectangle(cornerRadius: 10))
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(wallpaper.title).font(.title2.bold())
-                    Text(displayCategory(wallpaper.category)).foregroundStyle(.secondary)
-                    if let creator = wallpaper.creator { Text(creator).font(.caption).foregroundStyle(.secondary) }
-                    if let source = wallpaper.sourceURL { Link("View original source", destination: source).font(.caption) }
-                    if let license = wallpaper.license, let url = wallpaper.licenseURL { Link(license, destination: url).font(.caption) }
-                    if wallpaper.source == .gallery && local == nil {
-                        Text("Download this wallpaper to play it locally. \(wallpaper.sizeMB.map { String(format: "%.1f MB", $0) } ?? "")")
-                            .font(.caption).foregroundStyle(.secondary)
+        ZStack {
+            WallpaperArtwork(url: library.thumbnailURL(for: wallpaper) ?? wallpaper.previewURL, category: wallpaper.category)
+                .frame(width: detailSize.width, height: detailSize.height).clipped()
+            if let player = preview.player {
+                WallpaperPreviewPlayer(player: player)
+                    .opacity(preview.isReady ? 1 : 0).allowsHitTesting(false)
+            }
+            LinearGradient(stops: [
+                .init(color: .black.opacity(0.2), location: 0),
+                .init(color: .black.opacity(0.12), location: 0.3),
+                .init(color: .black.opacity(0.5), location: 0.7),
+                .init(color: .black.opacity(0.78), location: 1)
+            ], startPoint: .top, endPoint: .bottom).allowsHitTesting(false)
+
+            VStack(spacing: 0) {
+                toolbar
+                ScrollView {
+                    VStack(spacing: detailSize.height < 650 ? 16 : 24) {
+                        Spacer(minLength: 24)
+                        Text(displayTitle)
+                            .font(.system(size: detailSize.height < 650 ? 62 : 80, weight: .regular, design: .serif).italic())
+                            .multilineTextAlignment(.center).lineSpacing(-8)
+                            .lineLimit(3).minimumScaleFactor(0.55)
+                            .shadow(color: .black.opacity(0.3), radius: 16, y: 3)
+                        metadata
+                        Text(displayCategory(wallpaper.category))
+                            .font(.system(size: 17)).foregroundStyle(.white.opacity(0.85))
+                        actions
+                        Label(previewStatus,
+                              systemImage: preview.player == nil ? "photo" : "play.rectangle")
+                            .font(.caption).foregroundStyle(.white.opacity(0.7))
+                        if showsOperationStatus, let error = library.errorMessage {
+                            Text(error).font(.callout).multilineTextAlignment(.center)
+                                .foregroundStyle(.white).textSelection(.enabled)
+                        } else if let operationNotice {
+                            Text(operationNotice).font(.callout).multilineTextAlignment(.center)
+                        }
+                        sourceLinks
+                        Spacer().frame(height: detailSize.height < 650 ? 36 : 64)
+                    }.frame(maxWidth: 880).padding(.horizontal, 48)
+                        .frame(maxWidth: .infinity, minHeight: max(0, detailSize.height - 94))
+                }.scrollIndicators(.hidden)
+            }
+        }
+        .frame(width: detailSize.width, height: detailSize.height)
+        .clipped().background(.black).preferredColorScheme(.dark)
+        .task(id: previewURL) {
+            preview.stop()
+            measuredSize = nil
+            measuredResolution = nil
+            guard let url = previewURL else { return }
+            preview.start(url: url)
+            // Remote metadata comes from the catalog; avoid a second video request.
+            guard url.isFileURL else { return }
+            measuredSize = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize).map { Double($0) / 1_048_576 }
+            let asset = AVURLAsset(url: url)
+            if let track = try? await asset.loadTracks(withMediaType: .video).first,
+               let size = try? await track.load(.naturalSize),
+               let transform = try? await track.load(.preferredTransform), !Task.isCancelled {
+                let dimensions = size.applying(transform)
+                measuredResolution = "\(Int(abs(dimensions.width)))×\(Int(abs(dimensions.height)))"
+            }
+        }
+        .onDisappear { preview.stop() }
+    }
+
+    private var previewStatus: String {
+        if let error = preview.errorMessage { return "Image preview · \(error)" }
+        guard preview.player != nil else { return "Image preview" }
+        if !preview.isReady { return "Loading live preview…" }
+        return "\(preview.isPlaying ? "Live" : "Paused") preview · \(preview.isMuted ? "Sound off" : "Sound on")"
+    }
+
+    private var toolbar: some View {
+        HStack {
+            roundButton("Close preview", icon: "chevron.left") { preview.stop(); dismiss() }
+                .keyboardShortcut(.cancelAction)
+            Spacer()
+            if preview.player != nil {
+                roundButton(preview.isPlaying ? "Pause preview" : "Play preview", icon: preview.isPlaying ? "pause.fill" : "play.fill") {
+                    preview.togglePlayback()
+                }.keyboardShortcut(.space, modifiers: [])
+                roundButton(preview.isMuted ? "Unmute preview" : "Mute preview", icon: preview.isMuted ? "speaker.slash" : "speaker.wave.2") {
+                    preview.toggleMute()
+                }
+            } else if preview.errorMessage != nil, let url = previewURL {
+                roundButton("Retry live preview", icon: "arrow.clockwise") { preview.start(url: url) }
+            }
+        }.padding(24)
+    }
+
+    private var metadata: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) { metadataPills }
+            VStack(spacing: 8) { metadataPills }
+        }
+    }
+
+    @ViewBuilder private var metadataPills: some View {
+        if let creator = wallpaper.creator, !creator.isEmpty { pill("Author: \(creator)") }
+        if let size = wallpaper.sizeMB ?? measuredSize { pill(String(format: "Size: %.1f MB", size)) }
+        if let resolution = wallpaper.resolution ?? measuredResolution { pill("Resolution: \(resolution)") }
+        if let likes = wallpaper.likes { pill("Likes: \(likes)") }
+    }
+
+    private func pill(_ title: String) -> some View {
+        Text(title).font(.system(size: 12, weight: .medium, design: .monospaced))
+            .padding(.horizontal, 13).padding(.vertical, 8).modifier(GlassPill())
+    }
+
+    private var actions: some View {
+        HStack(spacing: 22) {
+            Rectangle().fill(.white.opacity(0.25)).frame(height: 1)
+            roundButton(isFavorite ? "Remove from favorites" : "Add to favorites", icon: isFavorite ? "heart.fill" : "heart") {
+                library.toggleFavorite(wallpaper)
+            }
+            Button {
+                showsOperationStatus = true
+                operationNotice = nil
+                library.errorMessage = nil
+                if let local, mediaURL != nil {
+                    controller.apply(local)
+                    if library.errorMessage == nil { preview.stop(); dismiss() }
+                } else {
+                    library.download(wallpaper) {
+                        controller.apply(wallpaper)
+                        if library.errorMessage == nil { operationNotice = "Wallpaper set on your selected displays." }
                     }
                 }
-                Spacer()
-                Button { library.toggleFavorite(wallpaper) } label: {
-                    Image(systemName: library.state.favorites.contains(wallpaper.id) ? "heart.fill" : "heart")
-                }.buttonStyle(.bordered)
-            }
-            HStack {
-                Button("Close") { dismiss() }.keyboardShortcut(.cancelAction)
-                Spacer()
-                if let local {
-                    Button("Apply Wallpaper") { controller.apply(local); dismiss() }.buttonStyle(.borderedProminent)
-                } else if wallpaper.remoteURL != nil {
-                    Button(library.downloading.contains(wallpaper.id) ? "Downloading…" : "Download Wallpaper") { dismiss(); download() }
-                        .buttonStyle(.borderedProminent).disabled(library.downloading.contains(wallpaper.id))
-                } else {
-                    Button("Import a Video…") { library.chooseFiles() }.buttonStyle(.borderedProminent)
+            } label: {
+                Label(downloading ? "Downloading…" : "Set as Wallpaper", systemImage: "play.fill")
+                    .font(.system(size: 17, weight: .medium))
+                    .padding(.horizontal, 24).padding(.vertical, 18)
+                    .modifier(GlassPill())
+            }.buttonStyle(.plain)
+                .disabled(downloading || (mediaURL == nil && !library.canDownload(wallpaper)))
+                .help(mediaURL == nil ? "Download and apply to your selected displays" : "Apply to your selected displays")
+            if let url = mediaURL {
+                roundButton("Show downloaded wallpaper in Finder", icon: "folder") {
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
                 }
-            }
-        }.padding(22).background(WindowBackdrop()).preferredColorScheme(.dark)
-            .onAppear {
-                if let local, let url = library.mediaURL(for: local) {
-                    let previewPlayer = AVPlayer(url: url)
-                    previewPlayer.isMuted = true
-                    player = previewPlayer
-                    previewPlayer.play()
+            } else if downloading {
+                roundButton("Cancel download", icon: "xmark") {
+                    library.cancelDownload(wallpaper)
+                    operationNotice = "Download cancelled."
                 }
-            }.onDisappear {
-                player?.pause()
-                player?.replaceCurrentItem(with: nil)
-                player = nil
+            } else {
+                roundButton("Download wallpaper", icon: "arrow.down.to.line") {
+                    showsOperationStatus = true
+                    operationNotice = nil
+                    library.errorMessage = nil
+                    library.download(wallpaper) { operationNotice = "Saved to your library." }
+                }.disabled(!library.canDownload(wallpaper))
             }
+            Rectangle().fill(.white.opacity(0.25)).frame(height: 1)
+        }
+    }
+
+    private var sourceLinks: some View {
+        HStack(spacing: 16) {
+            if let source = wallpaper.sourceURL { Link("Original source ↗", destination: source) }
+            if let license = wallpaper.license {
+                if let url = wallpaper.licenseURL { Link(license, destination: url) }
+                else { Text(license) }
+            }
+        }.font(.caption).foregroundStyle(.white.opacity(0.75)).tint(.white.opacity(0.75))
+    }
+
+    private func roundButton(_ title: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon).font(.system(size: 20, weight: .regular))
+                .frame(width: 46, height: 46).modifier(GlassPill())
+        }.buttonStyle(.plain).help(title).accessibilityLabel(title)
     }
 }
 
