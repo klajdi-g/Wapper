@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { Library, validVolume } from '../core/library';
 import { appAsset, mediaResponse } from '../core/media-response';
 import { detectBackend } from '../core/platform';
-import { allowedNetworkURL, productionEndpoints, RemoteCatalog, testEndpoints } from '../core/remote-catalog';
+import { allowedNetworkURL, productionEndpoints, RemoteCatalog, testEndpoints, type Fetcher } from '../core/remote-catalog';
+import { DownloadManager } from '../core/downloads';
 import type { Snapshot } from '../shared';
 import { WallpaperEngine } from './engine';
 import { findMpvpaper } from './mpvpaper';
@@ -19,6 +20,7 @@ let tray: Tray | null = null;
 let engine: WallpaperEngine;
 let library: Library;
 let catalog: RemoteCatalog;
+let downloads: DownloadManager;
 let error: string | null = null;
 let quitting = false;
 let operations: Promise<unknown> = Promise.resolve();
@@ -82,10 +84,18 @@ async function start() {
   network.setPermissionCheckHandler(() => false);
   network.setUserAgent(`VoltrumMotion/${app.getVersion()}`);
   network.webRequest.onBeforeRequest((details, callback) => callback({ cancel: details.method !== 'GET' || !allowedNetworkURL(details.url, endpoints) }));
-  catalog = new RemoteCatalog(join(app.getPath('userData'), 'catalog'), (url, init) => network.fetch(url, init), endpoints, () => {
+  const fetcher: Fetcher = (url, init) => network.fetch(url, init);
+  catalog = new RemoteCatalog(join(app.getPath('userData'), 'catalog'), fetcher, endpoints, () => {
     if (window && !window.isDestroyed()) window.webContents.send('motion:catalog', catalog.view());
   });
   await catalog.load();
+  downloads = new DownloadManager({
+    directory: join(app.getPath('userData'), 'downloads'), fetcher, endpoints,
+    // Library writes stay in the serialized queue with every other library change.
+    accept: (file, entry) => serialize(async () => { await library.addVerified(file, { catalogID: entry.id, title: entry.title, extension: '.' + entry.remoteURL.split('.')[1] }); broadcast(); }),
+    changed: () => { if (window && !window.isDestroyed()) window.webContents.send('motion:downloads', downloads.list()); },
+  });
+  await downloads.cleanup();
   protocol.handle('motion', async request => {
     const url = new URL(request.url);
     if (url.hostname === 'media') return mediaResponse(request, library);
@@ -139,6 +149,14 @@ async function start() {
   handle('motion:explore', async () => { await shell.openExternal('https://motion.voltrum.co'); });
   handle('motion:catalog', async () => catalog.view(), false);
   handle('motion:catalog-refresh', () => catalog.refresh(), false);
+  handle('motion:downloads', async () => downloads.list(), false);
+  handle('motion:download', async id => {
+    const entry = catalog.entry(id);
+    if (library.hasCatalogItem(entry.id)) throw new Error('This wallpaper is already in your library.');
+    downloads.start(entry);
+    return downloads.list();
+  }, false);
+  handle('motion:download-cancel', async id => { if (typeof id !== 'string') throw new Error('Invalid download.'); downloads.cancel(id); return downloads.list(); }, false);
   await window.loadURL('motion://app/index.html');
   try { tray = new Tray(nativeImage.createFromPath(join(__dirname, 'renderer', 'tray.png'))); tray.setToolTip('Voltrum Motion'); tray.on('click', () => { window?.show(); window?.focus(); }); } catch { tray = null; }
   broadcast();
@@ -154,6 +172,7 @@ app.on('before-quit', event => {
   if (quitting || !engine) return;
   event.preventDefault();
   quitting = true;
-  void serialize(async () => { await engine.quit(); tray?.destroy(); }).catch(() => {}).finally(() => app.quit());
+  // Downloads stop first and outside the queue: a finishing download waits on that queue.
+  void (downloads?.shutdown() ?? Promise.resolve()).catch(() => {}).then(() => serialize(async () => { await engine.quit(); tray?.destroy(); })).catch(() => {}).finally(() => app.quit());
 });
 if (locked) void app.whenReady().then(start).catch(cause => { dialog.showErrorBox('Voltrum Motion could not start', cause instanceof Error ? cause.message : String(cause)); app.quit(); });

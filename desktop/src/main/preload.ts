@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { CatalogView, MotionAPI, Snapshot } from '../shared';
+import type { CatalogView, DownloadProgress, MotionAPI, Snapshot } from '../shared';
 const api: MotionAPI = {
   snapshot: () => ipcRenderer.invoke('motion:snapshot'),
   importMedia: () => ipcRenderer.invoke('motion:import'),
@@ -12,6 +12,9 @@ const api: MotionAPI = {
   explore: () => ipcRenderer.invoke('motion:explore'),
   catalog: () => ipcRenderer.invoke('motion:catalog'),
   refreshCatalog: () => ipcRenderer.invoke('motion:catalog-refresh'),
+  downloads: () => ipcRenderer.invoke('motion:downloads'),
+  download: id => ipcRenderer.invoke('motion:download', id),
+  cancelDownload: id => ipcRenderer.invoke('motion:download-cancel', id),
   subscribe: callback => {
     const listener = (_event: Electron.IpcRendererEvent, state: Snapshot) => callback(state);
     ipcRenderer.on('motion:state', listener);
@@ -21,6 +24,11 @@ const api: MotionAPI = {
     const listener = (_event: Electron.IpcRendererEvent, state: CatalogView) => callback(state);
     ipcRenderer.on('motion:catalog', listener);
     return () => ipcRenderer.removeListener('motion:catalog', listener);
+  },
+  subscribeDownloads: callback => {
+    const listener = (_event: Electron.IpcRendererEvent, state: DownloadProgress[]) => callback(state);
+    ipcRenderer.on('motion:downloads', listener);
+    return () => ipcRenderer.removeListener('motion:downloads', listener);
   },
 };
 contextBridge.exposeInMainWorld('motion', api);

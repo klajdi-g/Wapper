@@ -1,42 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { allowedNetworkURL, parseCatalog, productionEndpoints, RemoteCatalog, testEndpoints, type Fetcher } from '../src/core/remote-catalog';
 import { mediaHost } from '../../website/src/lib/policy';
+import { fixture, png } from './fixtures';
 
 // No test may reach the network. Everything goes through the injected fetchers below.
 globalThis.fetch = () => { throw new Error('Unit tests must not use the network.'); };
 
-// Synthetic fixtures only: none of these is a real wallpaper, review, or approval.
-const sha = (bytes: Buffer | string) => createHash('sha256').update(bytes).digest('hex');
-export const png = (seed: string) => Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), Buffer.from(seed)]);
-export function fixture(count = 1) {
-  const previews = new Map<string, Buffer>();
-  const entries = Array.from({ length: count }, (_, index) => {
-    const media = `synthetic media ${index}`;
-    const preview = png(`synthetic preview ${index}`);
-    const previewKey = `${sha(preview)}.png`;
-    previews.set(previewKey, preview);
-    return {
-      id: `synthetic-${index}`, title: `Synthetic ${index}`, category: 'Test', creator: 'Fixture author', license: 'Test fixture only',
-      sourceURL: 'https://example.org/source', mediaHost, remoteURL: `${sha(media)}.mp4`, previewURL: previewKey,
-      sha256: sha(media), bytes: 4096, kind: 'video', width: 1920, height: 1080, tags: ['fixture'],
-    };
-  });
-  const policy = {
-    publication: 'enabled', allowNativeDownloads: false,
-    approvedMedia: entries.map(entry => ({
-      id: entry.id, previewURL: entry.previewURL, remoteURL: entry.remoteURL, sourceURL: entry.sourceURL, sha256: entry.sha256, bytes: entry.bytes,
-      kind: entry.kind, width: entry.width, height: entry.height, mediaHost, credit: entry.creator, reviewer: 'Synthetic fixture only',
-      reviewedAt: '2026-11-07T00:00:00Z', rightsBasis: 'Test only', evidenceURLs: ['https://example.org/evidence'],
-      permittedUses: ['website-preview', 'video-download', 'native-library'],
-    })),
-  };
-  return { entries, policy, previews };
-}
 type Route = Response | (() => Response | Promise<Response>) | Error;
 function server(routes: Record<string, Route>) {
   const requests: { url: string; init: RequestInit }[] = [];

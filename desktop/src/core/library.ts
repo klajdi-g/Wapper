@@ -6,6 +6,7 @@ import type { LibraryData, MediaItem, MediaKind } from '../shared';
 
 const extensions: Record<string, MediaKind> = { '.mp4': 'video', '.m4v': 'video', '.webm': 'video', '.png': 'image', '.jpg': 'image', '.jpeg': 'image', '.webp': 'image', '.gif': 'image' };
 export const validID = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+export const validCatalogID = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value);
 export const validVolume = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
 export function parseLibrary(input: unknown): LibraryData {
   if (!input || typeof input !== 'object') throw new Error('Invalid library. Your saved file has not been overwritten.');
@@ -13,9 +14,10 @@ export function parseLibrary(input: unknown): LibraryData {
   if (data.version !== 1 || !Array.isArray(data.items) || !data.assignments || typeof data.assignments !== 'object' || Array.isArray(data.assignments) || !validVolume(data.volume)) throw new Error('Unsupported or damaged library. Your saved file has not been overwritten.');
   const identifiers = new Set<string>();
   const items: MediaItem[] = data.items.map(item => {
-    if (!item || !validID(item.id) || identifiers.has(item.id) || typeof item.title !== 'string' || !item.title.trim() || item.title.length > 200 || !Object.hasOwn(extensions, item.extension) || extensions[item.extension] !== item.kind || typeof item.favorite !== 'boolean' || typeof item.addedAt !== 'string' || !Number.isFinite(Date.parse(item.addedAt))) throw new Error('Invalid media record. Your saved file has not been overwritten.');
+    if (!item || !validID(item.id) || identifiers.has(item.id) || typeof item.title !== 'string' || !item.title.trim() || item.title.length > 200 || !Object.hasOwn(extensions, item.extension) || extensions[item.extension] !== item.kind || typeof item.favorite !== 'boolean' || typeof item.addedAt !== 'string' || !Number.isFinite(Date.parse(item.addedAt)) || (item.catalogID !== undefined && !validCatalogID(item.catalogID))) throw new Error('Invalid media record. Your saved file has not been overwritten.');
     identifiers.add(item.id);
-    return { id: item.id, title: item.title, extension: item.extension, kind: item.kind, favorite: item.favorite, addedAt: item.addedAt };
+    // catalogID is optional, so libraries saved before the catalog existed load unchanged.
+    return { id: item.id, title: item.title, extension: item.extension, kind: item.kind, favorite: item.favorite, addedAt: item.addedAt, ...(item.catalogID ? { catalogID: item.catalogID } : {}) };
   });
   const assignments = Object.fromEntries(Object.entries(data.assignments).filter(([display, id]) => /^(?:all|-?\d+)$/.test(display) && identifiers.has(id)));
   return { version: 1, items, assignments, volume: data.volume };
@@ -65,6 +67,25 @@ export class Library {
     if (!matchesHeader(extension, bytes)) throw new Error('The file contents do not match the selected media format.');
     const item: MediaItem = { id: randomUUID(), title: basename(source, extname(source)).slice(0, 200) || 'Untitled', extension, kind: extensions[extension], favorite: false, addedAt: new Date().toISOString() };
     await copyFile(source, this.path(item), constants.COPYFILE_EXCL);
+    this.data.items.push(item);
+    try { await this.save(); } catch (error) { this.data.items = this.data.items.filter(candidate => candidate.id !== item.id); await unlink(this.path(item)).catch(() => {}); throw error; }
+    return item;
+  }
+  hasCatalogItem(catalogID: string) { return this.data.items.some(item => item.catalogID === catalogID); }
+  /**
+   * Adds a file the download manager has already verified (size, SHA-256 and signature). The file
+   * is moved, not copied, so it must be on the same file system as the library.
+   */
+  async addVerified(file: string, details: { catalogID: string; title: string; extension: string }) {
+    if (!validCatalogID(details.catalogID)) throw new Error('Invalid catalog identifier.');
+    if (this.hasCatalogItem(details.catalogID)) throw new Error('This wallpaper is already in your library.');
+    if (!Object.hasOwn(extensions, details.extension)) throw new Error('Unsupported media format.');
+    const descriptor = await open(file, 'r');
+    const bytes = Buffer.alloc(64);
+    try { await descriptor.read(bytes, 0, bytes.length, 0); } finally { await descriptor.close(); }
+    if (!matchesHeader(details.extension, bytes)) throw new Error('The file contents do not match the expected media format.');
+    const item: MediaItem = { id: randomUUID(), title: details.title.trim().slice(0, 200) || 'Untitled', extension: details.extension, kind: extensions[details.extension], favorite: false, addedAt: new Date().toISOString(), catalogID: details.catalogID };
+    await rename(file, this.path(item));
     this.data.items.push(item);
     try { await this.save(); } catch (error) { this.data.items = this.data.items.filter(candidate => candidate.id !== item.id); await unlink(this.path(item)).catch(() => {}); throw error; }
     return item;

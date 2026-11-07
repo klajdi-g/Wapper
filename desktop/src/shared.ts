@@ -6,6 +6,8 @@ export interface MediaItem {
   kind: MediaKind;
   favorite: boolean;
   addedAt: string;
+  /** Set when the file came from the Voltrum catalog, so it is not downloaded twice. */
+  catalogID?: string;
 }
 export interface LibraryData {
   version: 1;
@@ -49,6 +51,13 @@ export interface CatalogItem {
   /** A `motion://catalog/` URL once a verified preview is saved, otherwise null. */
   preview: string | null;
 }
+export interface DownloadProgress {
+  id: string;
+  status: 'queued' | 'downloading' | 'verifying' | 'failed';
+  received: number;
+  total: number;
+  error: string | null;
+}
 export interface CatalogView { status: CatalogStatus; items: CatalogItem[]; stale: boolean; checkedAt: string | null }
 export interface MotionAPI {
   snapshot(): Promise<Snapshot>;
@@ -62,8 +71,12 @@ export interface MotionAPI {
   explore(): Promise<void>;
   catalog(): Promise<CatalogView>;
   refreshCatalog(): Promise<CatalogView>;
+  downloads(): Promise<DownloadProgress[]>;
+  download(id: string): Promise<DownloadProgress[]>;
+  cancelDownload(id: string): Promise<DownloadProgress[]>;
   subscribe(callback: (snapshot: Snapshot) => void): () => void;
   subscribeCatalog(callback: (catalog: CatalogView) => void): () => void;
+  subscribeDownloads(callback: (downloads: DownloadProgress[]) => void): () => void;
 }
 declare global {
   interface Window {
