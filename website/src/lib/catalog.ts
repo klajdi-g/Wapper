@@ -3,6 +3,7 @@ import type { Release, Showcase, Wallpaper } from './types';
 import selection from '../../showcase-selection.json';
 import { normalizeColor } from './colors';
 import showcaseVideos from '../../showcase-videos.json';
+import personal from '../../personal-showcase.json';
 
 export function safeURL(value: unknown): string | null {
   if (typeof value !== 'string' || !value || value !== value.trim() || /[\\\u0000-\u001f\u007f]/u.test(value)) return null;
@@ -25,8 +26,9 @@ export function parseShowcase(payload: unknown, allowRecovered = false): Showcas
     const entry = record(value);
     if (!entry || !['id', 'title', 'category', 'creator', 'license'].every(key => typeof entry[key] === 'string' && (entry[key] as string).trim())) continue;
     if (entry.id === 'rebuilt-aurora') continue;
-    if (identifiers.has(entry.id as string) || !['original', 'recovered-wallper', 'apple-aerial'].includes(String(entry.origin))) continue;
-    const thumbnail = input.mode === 'public' && entry.origin === 'recovered-wallper' && selection.ids.includes(entry.id as string) && entry.previewURL === `/defaults/${entry.id}.webp` && entry.remoteURL === '';
+    if (identifiers.has(entry.id as string) || !['original', 'recovered-wallper', 'apple-aerial', 'personal'].includes(String(entry.origin))) continue;
+    const listed = entry.origin === 'recovered-wallper' ? selection.ids.includes(entry.id as string) : entry.origin === 'personal' && personal.items.some(item => item.id === entry.id);
+    const thumbnail = input.mode === 'public' && listed && entry.previewURL === `/defaults/${entry.id}.webp` && entry.remoteURL === '';
     if (entry.origin !== 'original' && !thumbnail && !(allowRecovered && input.mode === 'local-recovered')) continue;
     const previewURL = safeURL(entry.previewURL);
     const remoteURL = entry.origin === 'original' ? safeURL(entry.remoteURL) : entry.remoteURL === '' ? '' : null;

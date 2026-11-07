@@ -23,7 +23,7 @@ The packager rechecks current `media-policy.json`, `desktop/distribution-policy.
 and source `release.json` instead of trusting stale build metadata. Third-party
 `catalog.json` remains empty. Local-import installer links require offline-only distribution settings
 and an anonymous download matching the declared byte count and SHA-256 (see below).
-The separate `/showcase.json` contains all 353
+The separate `/showcase.json` contains all 369
 user-requested cached thumbnails, with Cat Pond first. This selection is not a
 rights approval of the images or videos. While the shared policy is paused,
 `media-src 'none'` denies all video playback and
@@ -64,7 +64,7 @@ Responses use revalidation headers; nonexistent resources return 404 rather than
 the app shell. Retain safe previous ConfigMaps while corresponding ReplicaSets
 are needed, but never roll back to a pre-quarantine media/installer snapshot.
 
-After deploying, check `/showcase.json` has the exact selected 353 wallpapers with stills and exact source-CDN `videoPreviewURL` values, `/catalog.json`
+After deploying, check `/showcase.json` has the exact selected 369 wallpapers with stills, and exact source-CDN `videoPreviewURL` values on the 353 defaults, `/catalog.json`
 is `[]`, `/release.json` has seven verified installer downloads, `/media-policy.json` remains paused with
 no approvals, `/recovered/anything.jpg` and `/media/aurora.mp4` return 404, and both replicas are ready.
 Confirm the page renders under its production CSP and only an opened live preview

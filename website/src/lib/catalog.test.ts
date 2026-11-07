@@ -2,12 +2,22 @@ import { describe, expect, test } from 'bun:test';
 import { filterWallpapers, parseFavorites, parseRelease, parseShowcase, safeURL } from './catalog';
 import { approves, safeEvidence } from './policy';
 import type { Wallpaper } from './types';
+import personal from '../../personal-showcase.json';
 
 const original: Wallpaper = { id: 'original', title: 'Synthetic Fixture', category: 'Originals', creator: 'Test', license: 'Test fixture', previewURL: '/media/fixture.jpg', remoteURL: '/media/fixture.mp4', sourceURL: '/#about', origin: 'original', tags: ['calm'], colors: ['0066cc', '000000'], resolution: '1280 × 720', author: 'Unknown', description: '', sizeMB: null, likes: 0 };
 const recovered: Wallpaper = { ...original, id: '025fce0a-a7e8-4f6f-9d49-075cb51a1316', title: 'Peaceful Candles', category: 'Winter', origin: 'recovered-wallper', previewURL: '/recovered/025fce0a-a7e8-4f6f-9d49-075cb51a1316.jpg', remoteURL: '' };
 const data = { mode: 'public', items: [original, recovered], recoveredCount: 3026, cachedCount: 353, aerialCount: 152 };
 
 describe('typed collection', () => {
+  test('personal thumbnails appear only when listed, previewed locally, and without a media URL', () => {
+    const { id } = personal.items[0];
+    const item: Wallpaper = { ...original, id, title: personal.items[0].title, origin: 'personal', previewURL: `/defaults/${id}.webp`, remoteURL: '' };
+    expect(parseShowcase({ ...data, items: [item] }).items).toEqual([item]);
+    expect(parseShowcase({ ...data, items: [{ ...item, id: '00000000-0000-5000-a000-000000000000' }] }).items).toEqual([]);
+    expect(parseShowcase({ ...data, items: [{ ...item, remoteURL: '/media/video.mp4' }] }).items).toEqual([]);
+    expect(parseShowcase({ ...data, items: [{ ...item, previewURL: 'https://example.org/image.webp' }] }).items).toEqual([]);
+    expect(parseShowcase({ ...data, mode: 'local-recovered', items: [item] }).items).toEqual([]);
+  });
   test('public defaults exclude recovered references even if injected', () => {
     expect(parseShowcase(data).items).toEqual([original]);
     expect(parseShowcase({ ...data, mode: 'local-recovered' }).items).toEqual([original]);

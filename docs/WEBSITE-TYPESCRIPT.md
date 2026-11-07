@@ -16,7 +16,7 @@ a compiled static deployment, not a new persistent-database service.
   on `127.0.0.1:3000`. It loads cached images only, never remote recovered videos.
 - Search, categories, saved favorites, incremental loading, and image previews
   operate on the recovered defaults. Native Swift user storage is untouched.
-- Production starts with a clean public asset directory and includes all 353 optimized
+- Production starts with a clean public asset directory and includes 16 user-supplied previews and all 353 optimized
   cached thumbnails selected in `website/showcase-selection.json`, Cat Pond first.
   Familiar defaults include Japanese Village, Winter Forest, Train Ride From Work,
   Rain, Dreamy Clouds, and more cats/space scenes. No Aurora files are deployed.

@@ -38,7 +38,7 @@ for (const [name, width, height] of [['desktop', 1440, 1000], ['mobile', 390, 84
     page.on('request', request => { if (!request.url().startsWith(publicURL)) external.push(request.url()); });
     await page.goto(publicURL);
     await expect(page.locator('#gallery article')).toHaveCount(24);
-    await expect(page.getByRole('button', { name: 'Explore 353', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Explore 369', exact: true })).toBeVisible();
     await expect(page.getByText(/recovered default|local reference|view default/iu)).toHaveCount(0);
     const release = await (await page.request.get(`${publicURL}/release.json`)).json();
     await expect(page.locator('#release-downloads a')).toHaveCount(release.downloads.length);
@@ -167,11 +167,11 @@ test('collection fetch failures have an honest retry state', async ({ page }) =>
   await expect(page.locator('#gallery article')).toHaveCount(24);
 });
 
-test('all 353 wallpapers are reachable and library navigation supports remove and history', async ({ page }) => {
+test('all 369 wallpapers are reachable and library navigation supports remove and history', async ({ page }) => {
   await page.goto(publicURL);
-  await expect(page.getByRole('button', { name: 'Explore 353', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Explore 369', exact: true })).toBeVisible();
   while (await page.getByRole('button', { name: 'Show more wallpapers' }).count()) await page.getByRole('button', { name: 'Show more wallpapers' }).click();
-  await expect(page.locator('#gallery article')).toHaveCount(353);
+  await expect(page.locator('#gallery article')).toHaveCount(369);
   const finalCard = page.locator('#gallery article').last();
   const finalTitle = await finalCard.locator('h3').innerText();
   await finalCard.getByRole('button', { name: `Save ${finalTitle}`, exact: true }).click();

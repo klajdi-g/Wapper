@@ -119,20 +119,29 @@ selected_ids = selection.get("ids", [])
 if selection.get("presentation") != "selected-live-preview" or not isinstance(selected_ids, list) or not selected_ids or any(not isinstance(identifier, str) for identifier in selected_ids) or len(set(selected_ids)) != len(selected_ids):
     raise SystemExit("Invalid thumbnail showcase selection.")
 gallery = {item["id"]: item for item in json.loads((original_resources / "gallery.json").read_text())}
+personal_selection = json.loads((WEBSITE / "personal-showcase.json").read_text())
+if personal_selection.get("presentation") != "website-stills-only":
+    raise SystemExit("Invalid personal thumbnail selection.")
+personal = {item["id"]: item for item in personal_selection["items"]}
 items = showcase.get("items", [])
-if not isinstance(items, list) or [item.get("id") for item in items if isinstance(item, dict)] != selected_ids:
+if not isinstance(items, list) or [item.get("id") for item in items if isinstance(item, dict)] != selected_ids[:1] + list(personal) + selected_ids[1:]:
     raise SystemExit("Public thumbnail showcase must exactly match the selected defaults.")
 allowed_images = set()
 for item in items:
     identifier = item["id"]
     source = gallery.get(identifier)
     preview = f"defaults/{identifier}.webp"
-    if not source or any(item.get(key) != source.get(key) for key in ("title", "category")) or item.get("origin") != "recovered-wallper" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://wallper.app" or item.get("creator") != "Wallper collection · original creator unverified" or item.get("license") != "Rights unverified · website showcase preview only":
+    if identifier in personal:
+        listed = personal[identifier]
+        if any(item.get(key) != listed.get(key) for key in ("title", "category")) or item.get("origin") != "personal" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://motion.voltrum.co" or item.get("creator") != "Personal collection · original creator unverified" or item.get("license") != "Rights unverified · website showcase preview only" or "videoPreviewURL" in item:
+            raise SystemExit("Public thumbnail showcase metadata differs from the personal selection.")
+    elif not source or any(item.get(key) != source.get(key) for key in ("title", "category")) or item.get("origin") != "recovered-wallper" or item.get("previewURL") != "/" + preview or item.get("remoteURL") != "" or item.get("sourceURL") != "https://wallper.app" or item.get("creator") != "Wallper collection · original creator unverified" or item.get("license") != "Rights unverified · website showcase preview only":
         raise SystemExit("Public thumbnail showcase metadata differs from the selected recovered defaults.")
-    video = item.get("videoPreviewURL")
-    if video != source.get("remoteURL") or not isinstance(video, str) or not video.startswith("https://cdn.wallper.app/") or not video.endswith(".mp4"):
-        raise SystemExit("Live preview must use the exact selected source-catalog video URL.")
-    if item.get("author") != (source.get("author") or "Unknown") or item.get("likes") != source.get("likes", 0) or item.get("sizeMB") != source.get("sizeMB"):
+    if identifier not in personal:
+        video = item.get("videoPreviewURL")
+        if video != source.get("remoteURL") or not isinstance(video, str) or not video.startswith("https://cdn.wallper.app/") or not video.endswith(".mp4"):
+            raise SystemExit("Live preview must use the exact selected source-catalog video URL.")
+    if identifier not in personal and (item.get("author") != (source.get("author") or "Unknown") or item.get("likes") != source.get("likes", 0) or item.get("sizeMB") != source.get("sizeMB")):
         raise SystemExit("Public thumbnail showcase detail metadata differs from the source snapshot.")
     data = (SITE / preview).read_bytes()
     if len(data) > 120_000 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":

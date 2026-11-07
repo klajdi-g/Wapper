@@ -74,6 +74,15 @@ clearance**. Creator and reuse rights remain explicitly unverified. No reviewer,
 rights evidence, or ownership claim has been invented. Image reuse itself may
 require permission; rights review must cover thumbnails too.
 
+On November 7 the user also requested their own wallpaper folder on the website.
+`personal-showcase.json` lists those 16 entries, with `origin: "personal"`. Only the
+bounded WebP stills in `personal-images/` enter the repository; the source images and
+videos stay local, and live wallpapers appear as a still poster frame with no
+`videoPreviewURL`. Like the rest of
+the showcase this is **not legal clearance**: these works show recognizable third-party
+characters, and their artists and reuse rights are unverified. No credit or rights
+basis has been invented. It does not change the video/native approval list.
+
 The original source JPEGs and complete source metadata are not deployable.
 Packaging exports only optimized previews and rejects local mode, unselected IDs, modified provenance, source JPEGs,
 video files, retired bundled assets, and video URLs that differ from the selected source. Native

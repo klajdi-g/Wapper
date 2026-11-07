@@ -43,6 +43,10 @@ No demo assets or video downloads are bundled. This presentation-only
 selection is not a rights approval: creators/reuse rights remain unverified.
 The existing video/native shared rights policy remains paused with no approvals.
 
+The 16 entries in `personal-showcase.json` follow Cat Pond, for 369 in total. Run
+`bun run scripts/import-personal.ts <folder>` to regenerate their stills from a local
+wallpaper folder with a `live/` subfolder and `live/.posters`. See `MEDIA-POLICY.md`.
+
 ## Library
 
 Use **Explore** to browse/search/filter the complete collection and **Library**

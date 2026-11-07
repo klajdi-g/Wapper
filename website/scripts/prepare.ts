@@ -7,6 +7,7 @@ import { wallpapers, type WallpaperRow } from '../src/db/schema';
 import { parseRelease } from '../src/lib/catalog';
 import { nativeDownloadApproved } from '../src/lib/native-publication';
 import selection from '../showcase-selection.json';
+import personal from '../personal-showcase.json';
 import sharp from 'sharp';
 import { detailDescriptions } from '../src/lib/detail-copy';
 import { extractColors } from './extract-colors';
@@ -22,6 +23,13 @@ await cp(resolve(root, 'assets'), resolve(output, 'assets'), { recursive: true }
 let policy: unknown = {};
 try { policy = JSON.parse(await readFile(resolve(root, 'media-policy.json'), 'utf8')); } catch { }
 const rows: WallpaperRow[] = [];
+async function thumbnail(source: string, id: string) {
+  let image = await sharp(source).resize({ width: 960, withoutEnlargement: true }).webp({ quality: 80 }).toBuffer();
+  if (image.byteLength > 120_000) image = await sharp(source).resize({ width: 960, withoutEnlargement: true }).webp({ quality: 70 }).toBuffer();
+  if (image.byteLength > 120_000) image = await sharp(source).resize({ width: 760, withoutEnlargement: true }).webp({ quality: 65 }).toBuffer();
+  if (image.byteLength > 120_000) throw new Error(`Thumbnail ${id} exceeds the image budget.`);
+  return image;
+}
 const gallery: Record<string, unknown>[] = JSON.parse(await readFile(resolve(resources, 'gallery.json'), 'utf8'));
 const aerial: { assets: unknown[] } = JSON.parse(await readFile(resolve(resources, 'entries.json'), 'utf8'));
 const cached = gallery.filter(candidate => typeof candidate.id === 'string' && /^[\da-f-]{36}$/iu.test(candidate.id) && Bun.file(resolve(resources, 'Gallery', `${candidate.id}.jpg`)).size > 0);
@@ -48,11 +56,7 @@ for (const candidate of recovered ? [...selected, ...cached.filter(item => !sele
   await mkdir(resolve(output, recovered ? 'recovered' : 'defaults'), { recursive: true });
   if (recovered) await cp(preview, resolve(output, localPreview.slice(1)));
   else {
-    let image = await sharp(imageSource).resize({ width: 960, withoutEnlargement: true }).webp({ quality: 80 }).toBuffer();
-    if (image.byteLength > 120_000) image = await sharp(imageSource).resize({ width: 960, withoutEnlargement: true }).webp({ quality: 70 }).toBuffer();
-    if (image.byteLength > 120_000) image = await sharp(imageSource).resize({ width: 760, withoutEnlargement: true }).webp({ quality: 65 }).toBuffer();
-    if (image.byteLength > 120_000) throw new Error(`Thumbnail ${candidate.id} exceeds the image budget.`);
-    await writeFile(resolve(output, localPreview.slice(1)), image);
+    await writeFile(resolve(output, localPreview.slice(1)), await thumbnail(imageSource, candidate.id));
   }
   rows.push({
     id: candidate.id, title: String(candidate.title), category: String(candidate.category), origin: 'recovered-wallper',
@@ -65,6 +69,26 @@ for (const candidate of recovered ? [...selected, ...cached.filter(item => !sele
     likes: typeof candidate.likes === 'number' && Number.isSafeInteger(candidate.likes) && candidate.likes >= 0 ? candidate.likes : 0,
     tags: Array.isArray(candidate.tags) ? candidate.tags.filter((tag): tag is string => typeof tag === 'string') : [], position: rows.length,
   });
+}
+// The gallery pages in batches, so these follow the lead wallpaper instead of trailing 353 others.
+if (!recovered) {
+  if (personal.presentation !== 'website-stills-only') throw new Error('Invalid personal showcase.');
+  const additions: WallpaperRow[] = [];
+  for (const item of personal.items) {
+    const source = resolve(root, 'personal-images', `${item.id}.webp`);
+    const detail = await readFile(source);
+    if (detail.byteLength > 650_000) throw new Error(`Personal image ${item.id} exceeds the image budget.`);
+    await writeFile(resolve(output, 'details', `${item.id}.webp`), detail);
+    await writeFile(resolve(output, 'defaults', `${item.id}.webp`), await thumbnail(source, item.id));
+    additions.push({
+      id: item.id, title: item.title, category: item.category, origin: 'personal',
+      previewURL: `/defaults/${item.id}.webp`, detailURL: `/details/${item.id}.webp`, remoteURL: '', sourceURL: 'https://motion.voltrum.co',
+      creator: 'Personal collection · original creator unverified', license: 'Rights unverified · website showcase preview only',
+      resolution: item.resolution, author: 'Unknown', description: '', colors: await extractColors(source), sizeMB: item.sizeMB, likes: 0, tags: item.tags, position: 0,
+    });
+  }
+  rows.splice(1, 0, ...additions);
+  rows.forEach((row, position) => { row.position = position; });
 }
 const { db, close } = openCatalog(resolve(root, recovered ? '.generated/catalog-recovered.sqlite' : '.generated/catalog.sqlite'));
 try {

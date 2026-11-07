@@ -126,8 +126,9 @@ block downloads; build locally instead of disabling system protections.
 requires an installed Developer ID identity and a notarytool keychain profile,
 provided through `SIGN_IDENTITY` and `NOTARY_PROFILE`.
 
-The TypeScript website includes all 353 available wallpaper thumbnails,
-led by Cat Pond, with Aurora removed, and a browser-local favorites Library.
+The TypeScript website includes 369 wallpaper thumbnails: Cat Pond first, then
+16 personal previews and the other 352 cached defaults, with Aurora removed, and a
+browser-local favorites Library.
 Run `cd website && bun run dev` to develop the public collection, or use
 `bun run dev:recovered` for source-image reference mode. This image-only
 selection is not rights clearance. No recovered video or Apple aerial is fetched or

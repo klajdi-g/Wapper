@@ -1,4 +1,4 @@
-export type Origin = 'original' | 'recovered-wallper' | 'apple-aerial';
+export type Origin = 'original' | 'recovered-wallper' | 'apple-aerial' | 'personal';
 
 export interface Wallpaper {
   id: string;

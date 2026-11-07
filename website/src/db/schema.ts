@@ -4,7 +4,7 @@ export const wallpapers = sqliteTable('wallpapers', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
   category: text('category').notNull(),
-  origin: text('origin', { enum: ['original', 'recovered-wallper', 'apple-aerial'] }).notNull(),
+  origin: text('origin', { enum: ['original', 'recovered-wallper', 'apple-aerial', 'personal'] }).notNull(),
   previewURL: text('preview_url').notNull(),
   detailURL: text('detail_url'),
   remoteURL: text('remote_url').notNull(),

@@ -142,11 +142,12 @@ test('deployment snapshot hashes nginx configuration together with static conten
     assert.ok(![...entries.keys()].some(name => /recovered|\.sqlite|schema\.ts/u.test(name)));
     const showcase = JSON.parse(entries.get('showcase.json').toString());
     assert.equal(showcase.items[0].title, 'Cat Pond');
-    assert.equal(showcase.items.length, 353);
+    assert.equal(showcase.items.length, 369);
+    assert.ok(showcase.items.slice(1, 17).every(item => item.origin === 'personal'), 'personal previews follow the lead wallpaper');
     for (const item of showcase.items) assert.ok(entries.has(item.previewURL.slice(1)), item.title);
-    assert.ok(showcase.items.every(item => item.origin === 'recovered-wallper' && item.remoteURL === ''));
+    assert.ok(showcase.items.every(item => ['recovered-wallper', 'personal'].includes(item.origin) && item.remoteURL === ''));
     const source = JSON.parse(await readFile(new URL('../../WallperRebuilt/Sources/WallperRebuilt/Resources/gallery.json', import.meta.url), 'utf8'));
-    assert.ok(showcase.items.every(item => item.videoPreviewURL === source.find(candidate => candidate.id === item.id)?.remoteURL));
+    assert.ok(showcase.items.every(item => item.videoPreviewURL === source.find(candidate => candidate.id === item.id)?.remoteURL), 'personal entries carry no video URL');
     assert.notEqual(digest, createHash('sha256').update(archive).update(`${config.data['nginx.conf']}\n`).digest('hex'));
     const again = spawnSync('python3', ['-c', offlinePublisher, script, directory], { encoding: 'utf8' });
     assert.equal(again.status, 0, again.stderr);
