@@ -57,10 +57,17 @@ func runSmokeTest(reportURL: URL) async {
         unapproved.id = "unapproved-policy-fixture"
         unapproved.source = .gallery
         unapproved.filename = nil
-        unapproved.remoteURL = URL(string: "https://images-assets.nasa.gov/unapproved.mp4")
-        unapproved.previewURL = URL(string: "https://images-assets.nasa.gov/unapproved.jpg")
-        unapproved.sourceURL = URL(string: "https://images.nasa.gov/details/unapproved")
+        let fixtureHash = String(repeating: "a", count: 64)
+        unapproved.remoteURL = URL(string: "\(fixtureHash).mp4")
+        unapproved.previewURL = URL(string: "\(String(repeating: "b", count: 64)).webp")
+        unapproved.sourceURL = URL(string: "https://example.org/unapproved")
         unapproved.creator = "Smoke test fixture, not an approved work"
+        unapproved.mediaHost = MediaPublicationPolicy.fixedMediaHost
+        unapproved.sha256 = fixtureHash
+        unapproved.bytes = 1024
+        unapproved.kind = "video"
+        unapproved.width = 1920
+        unapproved.height = 1080
         try check(!MediaPublicationPolicy.paused.approves(unapproved), "paused policy rejects unapproved media")
         controller.library.download(unapproved)
         try check(!controller.library.downloading.contains(unapproved.id), "unapproved media cannot start a network download")
@@ -68,7 +75,9 @@ func runSmokeTest(reportURL: URL) async {
                                      remoteURL: unapproved.remoteURL!.absoluteString, sourceURL: unapproved.sourceURL!.absoluteString,
                                      reviewer: "Smoke fixture", reviewedAt: "2026-10-29T00:00:00Z", rightsBasis: "Synthetic smoke fixture only",
                                      credit: unapproved.creator!, evidenceURLs: ["https://example.org/fixture"],
-                                     permittedUses: ["website-preview", "video-download", "native-library"])
+                                     permittedUses: ["website-preview", "video-download", "native-library"],
+                                     sha256: fixtureHash, bytes: 1024, kind: "video", width: 1920, height: 1080,
+                                     mediaHost: unapproved.mediaHost ?? "")
         var fixturePolicy = MediaPublicationPolicy(publication: "enabled", allowNativeDownloads: false, approvedMedia: [approval])
         try check(fixturePolicy.approves(unapproved), "native approval requires an exact reviewed item, independent of installer publication")
         approval.evidenceURLs = []
@@ -85,6 +94,14 @@ func runSmokeTest(reportURL: URL) async {
         approval.remoteURL += "?changed"
         fixturePolicy.approvedMedia = [approval]
         try check(!fixturePolicy.approves(unapproved), "native approval rejects changed media URLs")
+        approval.remoteURL = unapproved.remoteURL!.absoluteString
+        approval.sha256 = String(repeating: "c", count: 64)
+        fixturePolicy.approvedMedia = [approval]
+        try check(!fixturePolicy.approves(unapproved), "native approval rejects a changed checksum")
+        approval.sha256 = fixtureHash
+        approval.bytes = 2048
+        fixturePolicy.approvedMedia = [approval]
+        try check(!fixturePolicy.approves(unapproved), "native approval rejects a changed byte size")
         try check(controller.library.library.isEmpty, "new library starts empty")
         guard let fixturePath = ProcessInfo.processInfo.environment["MOTION_SMOKE_VIDEO"] else { throw RebuildError.message("Set MOTION_SMOKE_VIDEO to a local test video for playback smoke checks") }
         let fixture = URL(fileURLWithPath: fixturePath)

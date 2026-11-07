@@ -21,16 +21,29 @@ struct MediaPublicationPolicy: Decodable {
         return policy
     }
 
+    /// Named only in `website/media-host.json`, which the build copies into the resources.
+    static let fixedMediaHost: String? = {
+        guard let url = resourceURL("media-host", extension: "json"), let data = try? Data(contentsOf: url),
+              let file = try? JSONDecoder().decode(MediaHostFile.self, from: data), !file.mediaHost.isEmpty else { return nil }
+        return file.mediaHost
+    }()
+
+    /// Mirrors `validCatalogEntry` and `approves` in `website/src/lib/policy.ts`.
     func approves(_ wallpaper: Wallpaper) -> Bool {
-        guard isEnabled, !wallpaper.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              [wallpaper.previewURL, wallpaper.remoteURL, wallpaper.sourceURL].allSatisfy({ candidate in
-                  guard let url = candidate else { return false }
-                  return url.scheme == "https" && url.host != nil && url.user == nil && url.password == nil && !url.absoluteString.contains("\\")
-              }) else { return false }
+        guard isEnabled, let host = Self.fixedMediaHost, wallpaper.mediaHost == host,
+              !wallpaper.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              let source = wallpaper.sourceURL, source.scheme == "https", source.host != nil, source.user == nil, source.password == nil, !source.absoluteString.contains("\\"),
+              let hash = wallpaper.sha256, hash.count == 64, hash.allSatisfy({ "0123456789abcdef".contains($0) }),
+              let kind = wallpaper.kind, let extensions = Self.mediaExtensions[kind],
+              let bytes = wallpaper.bytes, (12...4_294_967_296).contains(bytes),
+              let width = wallpaper.width, let height = wallpaper.height, (1...32768).contains(width), (1...32768).contains(height),
+              let remote = wallpaper.remoteURL?.absoluteString, let preview = wallpaper.previewURL?.absoluteString,
+              extensions.contains(where: { remote == "\(hash).\($0)" }), Self.validPreviewKey(preview) else { return false }
         return approvedMedia.contains { approval in
-            approval.id == wallpaper.id && approval.previewURL == wallpaper.previewURL?.absoluteString &&
-            approval.remoteURL == wallpaper.remoteURL?.absoluteString && approval.sourceURL == wallpaper.sourceURL?.absoluteString &&
-            approval.credit == wallpaper.creator &&
+            approval.id == wallpaper.id && approval.previewURL == preview && approval.remoteURL == remote &&
+            approval.sourceURL == source.absoluteString && approval.credit == wallpaper.creator &&
+            approval.sha256 == hash && approval.bytes == bytes && approval.kind == kind &&
+            approval.width == width && approval.height == height && approval.mediaHost == host &&
             [approval.reviewer, approval.reviewedAt, approval.rightsBasis, approval.credit].allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } &&
             !approval.evidenceURLs.isEmpty && approval.evidenceURLs.allSatisfy { raw in
                 guard !raw.contains("\\"), raw.rangeOfCharacter(from: .whitespacesAndNewlines.union(.controlCharacters)) == nil,
@@ -40,6 +53,17 @@ struct MediaPublicationPolicy: Decodable {
             Set(["website-preview", "video-download", "native-library"]).isSubset(of: Set(approval.permittedUses))
         }
     }
+
+    private static let mediaExtensions = ["video": ["mp4", "m4v", "webm"], "image": ["png", "jpg", "jpeg", "webp", "gif"]]
+
+    private static func validPreviewKey(_ key: String) -> Bool {
+        let parts = key.split(separator: ".", omittingEmptySubsequences: false)
+        return parts.count == 2 && parts[0].count == 64 && parts[0].allSatisfy({ "0123456789abcdef".contains($0) }) && ["png", "jpg", "jpeg", "webp"].contains(String(parts[1]))
+    }
+}
+
+struct MediaHostFile: Decodable {
+    var mediaHost: String
 }
 
 struct MediaApproval: Decodable {
@@ -53,6 +77,12 @@ struct MediaApproval: Decodable {
     var credit: String
     var evidenceURLs: [String]
     var permittedUses: [String]
+    var sha256: String
+    var bytes: Int
+    var kind: String
+    var width: Int
+    var height: Int
+    var mediaHost: String
 }
 
 struct Wallpaper: Codable, Identifiable, Equatable {
@@ -73,6 +103,12 @@ struct Wallpaper: Codable, Identifiable, Equatable {
     var licenseURL: URL?
     var creator: String?
     var sourceURL: URL?
+    var mediaHost: String?
+    var sha256: String?
+    var bytes: Int?
+    var kind: String?
+    var width: Int?
+    var height: Int?
 
     var publishedDate: Date? {
         guard let publishedAt else { return nil }

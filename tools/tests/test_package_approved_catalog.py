@@ -11,7 +11,8 @@ class ApprovedCatalogTests(unittest.TestCase):
         self.root = pathlib.Path(self.directory.name)
         self.resources = self.root / "Resources"
         self.resources.mkdir()
-        self.item = {"id": "fixture", "previewURL": "https://example.org/image.jpg", "remoteURL": "https://example.org/video.mp4", "sourceURL": "https://example.org/source", "creator": "Synthetic fixture"}
+        host = json.loads((pathlib.Path(__file__).resolve().parents[2] / "website/media-host.json").read_text())["mediaHost"]
+        self.item = {"id": "fixture", "title": "Synthetic fixture", "category": "Test", "license": "Test fixture only", "creator": "Synthetic fixture", "previewURL": "b" * 64 + ".webp", "remoteURL": "a" * 64 + ".mp4", "sourceURL": "https://example.org/source", "mediaHost": host, "sha256": "a" * 64, "bytes": 1024, "kind": "video", "width": 1920, "height": 1080}
         self.approval = {**self.item, "reviewer": "Fixture reviewer", "reviewedAt": "2026-10-29T00:00:00Z", "rightsBasis": "Test fixture only", "credit": self.item["creator"], "evidenceURLs": ["https://example.org/evidence"], "permittedUses": ["website-preview", "video-download", "native-library"]}
         self.policy = {"publication": "enabled", "allowNativeDownloads": False, "approvedMedia": [self.approval]}
 
@@ -41,12 +42,17 @@ class ApprovedCatalogTests(unittest.TestCase):
         self.assertEqual(self.package(), [])
 
     def test_changed_urls_missing_native_use_and_missing_evidence_deny(self):
-        for field, value in [("remoteURL", "https://example.org/changed.mp4"), ("permittedUses", ["website-preview", "video-download"]), ("evidenceURLs", []), ("credit", "Different creator"), ("reviewer", " ")]:
+        for field, value in [("remoteURL", "c" * 64 + ".mp4"), ("sha256", "c" * 64), ("bytes", 2048), ("mediaHost", "other.example.org"), ("permittedUses", ["website-preview", "video-download"]), ("evidenceURLs", []), ("credit", "Different creator"), ("reviewer", " ")]:
             with self.subTest(field=field):
                 original = self.approval[field]
                 self.approval[field] = value
                 self.assertEqual(self.package(), [])
                 self.approval[field] = original
+
+    def test_media_host_travels_with_the_mac_resources(self):
+        self.package()
+        host = json.loads((self.resources / "media-host.json").read_text())["mediaHost"]
+        self.assertEqual(host, self.item["mediaHost"])
 
     def test_unsafe_rights_evidence_denies(self):
         for value in ["http://example.org/evidence", "https://user:secret@example.org/evidence", "https://@example.org/evidence", "https://example.org/white space", "https://example.org/back\\slash", "https://example.org/control\x00", "/local/evidence"]:

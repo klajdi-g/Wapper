@@ -159,12 +159,16 @@ test('deployment snapshot hashes nginx configuration together with static conten
 
 test('publication defaults deny and requires complete, exact, scoped media approval', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'motion-policy-test-'));
+  const mediaHost = JSON.parse(await readFile(new URL('../media-host.json', import.meta.url), 'utf8')).mediaHost;
+  const sha256 = 'a'.repeat(64);
   const candidate = {
     id: 'synthetic-test-only', title: 'Synthetic fixture, not a real work', creator: 'Test fixture author', license: 'Test fixture only', category: 'Test',
-    previewURL: 'https://example.org/test.jpg', remoteURL: 'https://example.org/test.mp4', sourceURL: 'https://example.org/test-source'
+    previewURL: `${'b'.repeat(64)}.webp`, remoteURL: `${sha256}.mp4`, sourceURL: 'https://example.org/test-source',
+    mediaHost, sha256, bytes: 1024, kind: 'video', width: 1920, height: 1080
   };
   const approval = {
     id: candidate.id, previewURL: candidate.previewURL, remoteURL: candidate.remoteURL, sourceURL: candidate.sourceURL,
+    mediaHost, sha256, bytes: candidate.bytes, kind: candidate.kind, width: candidate.width, height: candidate.height,
     reviewer: 'Test only, not a real reviewer', reviewedAt: '2026-10-29T00:00:00Z', rightsBasis: 'Synthetic test, not actual clearance',
     credit: candidate.creator, evidenceURLs: ['https://example.org/test-evidence'], permittedUses: ['website-preview', 'video-download', 'native-library']
   };
@@ -180,11 +184,19 @@ test('publication defaults deny and requires complete, exact, scoped media appro
     ['complete synthetic approval', enabled, 1],
     ...[
       { reviewer: '' }, { reviewedAt: '' }, { rightsBasis: '' }, { credit: 'Different author' }, { id: 'different-id' },
-      { remoteURL: 'https://example.org/different.mp4' }, { previewURL: 'https://example.org/different.jpg' },
+      { remoteURL: `${'c'.repeat(64)}.mp4` }, { previewURL: `${'c'.repeat(64)}.webp` },
+      { sha256: 'c'.repeat(64) }, { bytes: 2048 }, { kind: 'image' }, { width: 3840 }, { height: 2160 }, { mediaHost: 'other.example.org' },
       { sourceURL: 'https://example.org/different-source' }, { evidenceURLs: [] }, { evidenceURLs: ['http://example.org/terms'] },
       { evidenceURLs: ['https://user:secret@example.org/terms'] }, { evidenceURLs: ['https://'] }, { evidenceURLs: ['https://example.org/bad path'] },
-      { permittedUses: ['website-preview'] }, { permittedUses: 'website-preview,video-download' }, { permittedUses: [{}] }
+      { permittedUses: ['website-preview'] }, { permittedUses: ['website-preview', 'video-download'] }, { permittedUses: 'website-preview,video-download' }, { permittedUses: [{}] }
     ].map((override, index) => [`incomplete approval ${index}`, { ...enabled, approvedMedia: [{ ...approval, ...override }] }, 0])
+  ];
+  const invalidEntries = [
+    ['wrong host', { ...candidate, mediaHost: 'cdn.wallper.app' }],
+    ['full URL', { ...candidate, remoteURL: `https://cdn.wallper.app/${sha256}.mp4` }],
+    ['wrong hash format', { ...candidate, sha256: 'A'.repeat(64) }],
+    ['missing field', Object.fromEntries(Object.entries(candidate).filter(([key]) => key !== 'bytes'))],
+    ['unapproved', { ...candidate, id: 'synthetic-unapproved' }]
   ];
   try {
     const script = fileURLToPath(new URL('../../tools/package-motion-site.py', import.meta.url));
@@ -197,6 +209,13 @@ test('publication defaults deny and requires complete, exact, scoped media appro
       const entries = archiveEntries(Buffer.from(config.binaryData['site.tgz'], 'base64'));
       assert.equal(JSON.parse(entries.get('catalog.json').toString()).length, count, label);
       assert.deepEqual(JSON.parse(entries.get('release.json').toString()).downloads, [], label);
+    }
+    for (const [label, entry] of invalidEntries) {
+      const result = spawnSync('python3', ['-c', policyPublisher, script, directory, JSON.stringify(enabled), JSON.stringify([entry])], { encoding: 'utf8' });
+      assert.equal(result.status, 0, `${label}: ${result.stderr}`);
+      const resources = JSON.parse(await readFile(join(directory, 'apps/voltrum-motion/resources.json'), 'utf8'));
+      const config = resources.items.find(item => item.kind === 'ConfigMap');
+      assert.deepEqual(JSON.parse(archiveEntries(Buffer.from(config.binaryData['site.tgz'], 'base64')).get('catalog.json').toString()), [], label);
     }
   } finally {
     await rm(directory, { recursive: true, force: true });

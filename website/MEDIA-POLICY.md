@@ -35,13 +35,37 @@ Each item must be an object with these required fields:
 | `reviewedAt` | Nonempty string; use ISO 8601, but current code does not parse dates |
 | `rightsBasis` | Nonempty string documenting the permission basis and scope |
 | `evidenceURLs` | Nonempty array of absolute HTTPS URL strings with a hostname, no credentials, whitespace, backslashes, or control characters |
-| `permittedUses` | Array of strings containing both `"website-preview"` and `"video-download"` for website publication |
+| `sha256` | Exactly equals the candidate's lowercase hex SHA-256 of the media file |
+| `bytes` | Exactly equals the candidate's media size, at least 12 bytes and at most 4 GiB |
+| `kind` | `"video"` or `"image"`, exactly equals the candidate |
+| `width`, `height` | Positive integers up to 32768, exactly equal the candidate |
+| `mediaHost` | Exactly equals both the candidate and `website/media-host.json` |
+| `permittedUses` | Array of strings containing `"website-preview"`, `"video-download"`, and `"native-library"` |
 
-Native catalog loading/downloads should additionally require `"native-library"`
-in `permittedUses`, alongside the two website scopes. Equality uses the raw
-strings before browser URL normalization; no trimming, URL rewriting, numeric ID
-coercion, or fuzzy matching authorizes a candidate. Whitespace-only required
-strings fail validation. Non-object or incomplete approval records approve nothing.
+Equality uses the raw values; no trimming, URL rewriting, numeric ID coercion, or
+fuzzy matching authorizes a candidate. Whitespace-only required strings fail
+validation. Non-object or incomplete approval records approve nothing. The same rules
+live in `website/src/lib/policy.ts`, `tools/catalog_gate.py`, and
+`MediaPublicationPolicy` in Swift; change them together.
+
+## Catalog entries
+
+`website/reviewed-catalog.json` is the reviewed source list. `prepare.ts` feeds it to
+`/catalog.json` through the gate, and the packager checks each entry again. It is
+separate from the older `catalog.json` candidate list, which never reaches the site.
+Adding an entry publishes nothing without an exact approval record.
+
+An entry needs `id`, `title`, `category`, `creator`, `license`, `sourceURL`, and the
+`sha256`, `bytes`, `kind`, `width`, `height`, and `mediaHost` fields above, plus:
+
+- `remoteURL`: the media key `<sha256>.<ext>`, using the entry's own `sha256` and an
+  extension that fits its `kind`. It is relative to the media host, never a full URL.
+- `previewURL`: the key of a still image, `<sha256>.<png|jpg|jpeg|webp>`. Its name is
+  the hash of the preview file, and clients verify that too.
+
+Keys are content addressed and immutable, so a changed file is a new key and needs a
+new review. The media host has one name, in `website/media-host.json`. It is a
+working name until the host exists.
 
 These structural checks do not verify that evidence is truthful, reachable,
 current, or legally sufficient. An HTTPS link or nonempty rights label is not

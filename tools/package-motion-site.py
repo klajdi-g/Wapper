@@ -10,6 +10,9 @@ import urllib.parse
 import urllib.request
 from html.parser import HTMLParser
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from catalog_gate import approved, safe_https  # noqa: E402
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WEBSITE = ROOT / "website"
 SITE = WEBSITE / "dist/client"
@@ -25,40 +28,6 @@ media_enabled = media_policy.get("publication") == "enabled"
 media_approvals = media_policy.get("approvedMedia", []) if media_enabled else []
 if not isinstance(media_approvals, list):
     raise SystemExit("Media approvals must be an explicitly reviewed list.")
-
-
-def valid_evidence_url(value):
-    if not isinstance(value, str) or any(character.isspace() or character == "\\" or ord(character) < 32 for character in value):
-        return False
-    try:
-        parsed = urllib.parse.urlparse(value)
-        return parsed.scheme == "https" and bool(parsed.hostname) and not parsed.username and not parsed.password
-    except ValueError:
-        return False
-
-
-def approved_media(entry):
-    if not isinstance(entry, dict):
-        return False
-    for approval in media_approvals:
-        if not isinstance(approval, dict):
-            continue
-        if any(not isinstance(approval.get(key), str) or not approval[key].strip() for key in ("id", "previewURL", "remoteURL", "sourceURL", "reviewer", "reviewedAt", "rightsBasis", "credit")):
-            continue
-        evidence = approval.get("evidenceURLs", [])
-        if not isinstance(evidence, list) or not evidence or not all(valid_evidence_url(url) for url in evidence):
-            continue
-        if not all(approval.get(key) == entry.get(key) for key in ("id", "previewURL", "remoteURL", "sourceURL")):
-            continue
-        if approval["credit"] != entry.get("creator"):
-            continue
-        permitted_uses = approval.get("permittedUses", [])
-        if not isinstance(permitted_uses, list) or not all(isinstance(value, str) for value in permitted_uses):
-            continue
-        if not {"website-preview", "video-download"}.issubset(set(permitted_uses)):
-            continue
-        return True
-    return False
 
 
 def native_download_approved(entry):
@@ -78,7 +47,7 @@ def native_download_approved(entry):
 def public_download(entry):
     try:
         url = entry.get("url", "")
-        if not valid_evidence_url(url) or entry.get("platform") not in {"windows", "linux", "macos"}:
+        if not safe_https(url) or entry.get("platform") not in {"windows", "linux", "macos"}:
             return False
         if type(entry.get("bytes")) is not int or entry["bytes"] <= 0 or any(not isinstance(entry.get(key), str) or not entry[key].strip() for key in ("label", "architecture", "format", "version", "minimumSystem")):
             return False
@@ -203,9 +172,10 @@ with tarfile.open(fileobj=archive, mode="w") as bundle:
                 data = (json.dumps(media_policy, indent=2) + "\n").encode()
             if path.relative_to(SITE).as_posix() == "catalog.json":
                 candidates = json.loads(data)
-                approved = [entry for entry in candidates if approved_media(entry)]
-                data = (json.dumps(approved, indent=2) + "\n").encode()
-                print(f"Published {len(approved)} explicitly approved media records; withheld {len(candidates) - len(approved)} unreviewed candidates.")
+                candidates = candidates if isinstance(candidates, list) else []
+                published = [entry for entry in candidates if approved(media_approvals, entry)]
+                data = (json.dumps(published, indent=2) + "\n").encode()
+                print(f"Published {len(published)} explicitly approved media records; withheld {len(candidates) - len(published)} unreviewed candidates.")
             if path.relative_to(SITE).as_posix() == "release.json":
                 release = json.loads(data)
                 source_release = json.loads((WEBSITE / "release.json").read_text())

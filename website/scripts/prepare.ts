@@ -11,6 +11,7 @@ import personal from '../personal-showcase.json';
 import sharp from 'sharp';
 import { detailDescriptions } from '../src/lib/detail-copy';
 import { extractColors } from './extract-colors';
+import { readReviewedCatalog } from './reviewed-catalog';
 import showcaseVideos from '../showcase-videos.json';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -105,7 +106,7 @@ try { nativePolicy = JSON.parse(await readFile(resolve(root, '../desktop/distrib
 release.downloads = release.downloads.filter(download => nativeDownloadApproved(download, policy, nativePolicy));
 release.publicationStatus = release.downloads.length ? 'Download a published build for your platform below.' : 'No public installers are available yet. The earlier macOS previews were withdrawn.';
 await writeFile(resolve(output, 'release.json'), JSON.stringify(release, null, 2));
-await writeFile(resolve(output, 'catalog.json'), '[]\n');
+await writeFile(resolve(output, 'catalog.json'), `${JSON.stringify(recovered ? [] : await readReviewedCatalog(root), null, 2)}\n`);
 await writeFile(resolve(output, 'media-policy.json'), JSON.stringify(policy, null, 2));
 await writeFile(resolve(output, 'build-info.json'), JSON.stringify({ mode: recovered ? 'local-recovered' : 'public', catalog: 'recovered-defaults', framework: 'TanStack Start / React / TypeScript', database: 'Drizzle / SQLite' }));
 console.log(`${rows.length} showcase entries from Drizzle; ${cachedCount} cached defaults. Mode: ${recovered ? 'LOCAL REFERENCE ONLY' : 'public'}.`);

@@ -7,7 +7,7 @@ on:
         required: false
         type: string
   push:
-    paths: ['desktop/**', 'WallperRebuilt/**', 'build-wallper.sh', 'release-motion.sh', 'tools/prepare-desktop-release.py', 'tools/package-approved-catalog.py', 'website/assets/mark.svg', 'website/media-policy.json', '.github/workflows/motion-desktop.yml']
+    paths: ['desktop/**', 'WallperRebuilt/**', 'build-wallper.sh', 'release-motion.sh', 'tools/prepare-desktop-release.py', 'tools/package-approved-catalog.py', 'tools/catalog_gate.py', 'website/assets/mark.svg', 'website/media-policy.json', 'website/media-host.json', 'website/src/lib/policy.ts', '.github/workflows/motion-desktop.yml']
   pull_request:
     paths: ['desktop/**', 'WallperRebuilt/**', 'tools/**', 'release-motion.sh', '.github/workflows/motion-desktop.yml']
 permissions:

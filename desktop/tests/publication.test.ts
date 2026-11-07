@@ -33,6 +33,8 @@ test('macOS release resources must have an empty catalog and no bundled demo', a
     await writeFile(join(directory, 'media-policy.json'), JSON.stringify({ publication: 'paused', allowNativeDownloads: false, approvedMedia: [] }));
     await writeFile(join(directory, 'public-gallery.json'), '[]');
     assert.equal(run().status, 0);
+    await writeFile(join(directory, 'media-host.json'), '{"mediaHost":"fixture.invalid"}');
+    assert.equal(run().status, 0, 'the media host name travels with the Mac resources');
     await writeFile(join(directory, 'demo.mp4'), 'previously bundled demo');
     assert.notEqual(run().status, 0);
     await rm(join(directory, 'demo.mp4'));

@@ -5,7 +5,8 @@ COPY desktop/package*.json desktop/.npmrc ./
 RUN npm ci --no-audit --no-fund && node node_modules/electron/install.js
 COPY desktop/ ./
 COPY website/assets/mark.svg /motion/website/assets/mark.svg
-COPY website/media-policy.json /motion/website/media-policy.json
+COPY website/media-policy.json website/media-host.json /motion/website/
+COPY website/src/lib/policy.ts /motion/website/src/lib/policy.ts
 RUN npm run validate
 ENV XDG_SESSION_TYPE=x11 CI=1
 CMD ["xvfb-run", "-a", "sh", "-c", "openbox >/tmp/motion-openbox.log 2>&1 & npm run test:smoke"]

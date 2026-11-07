@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { filterWallpapers, parseFavorites, parseRelease, parseShowcase, safeURL } from './catalog';
-import { approves, safeEvidence } from './policy';
+import { approves, mediaHost, safeEvidence } from './policy';
 import type { Wallpaper } from './types';
 import personal from '../../personal-showcase.json';
 
@@ -75,15 +75,15 @@ describe('typed collection', () => {
 });
 
 describe('shared approval policy', () => {
-  const candidate = { id: 'synthetic', previewURL: 'https://example.org/test.jpg', remoteURL: 'https://example.org/test.mp4', sourceURL: 'https://example.org/source', creator: 'Fixture author' };
-  const approval = { ...candidate, credit: candidate.creator, reviewer: 'Synthetic fixture only', reviewedAt: '2026-10-30T00:00:00Z', rightsBasis: 'Test only', evidenceURLs: ['https://example.org/evidence'], permittedUses: ['website-preview', 'video-download'] };
+  const candidate = { id: 'synthetic', title: 'Synthetic', category: 'Test', license: 'Test only', previewURL: `${'b'.repeat(64)}.webp`, remoteURL: `${'a'.repeat(64)}.mp4`, sourceURL: 'https://example.org/source', creator: 'Fixture author', mediaHost, sha256: 'a'.repeat(64), bytes: 1024, kind: 'video', width: 1920, height: 1080 };
+  const approval = { ...candidate, credit: candidate.creator, reviewer: 'Synthetic fixture only', reviewedAt: '2026-10-30T00:00:00Z', rightsBasis: 'Test only', evidenceURLs: ['https://example.org/evidence'], permittedUses: ['website-preview', 'video-download', 'native-library'] };
   const enabled = { publication: 'enabled', approvedMedia: [approval] };
   test('default-denies missing, malformed, paused, and unknown policy states', () => {
     for (const policy of [null, [], {}, { ...enabled, publication: 'paused' }, { ...enabled, publication: 'ENABLED' }, { ...enabled, approvedMedia: {} }]) expect(approves(policy, candidate)).toBe(false);
     expect(approves(enabled, candidate)).toBe(true);
   });
   test('requires exact URLs, credit, evidence, reviewer and use scopes', () => {
-    for (const invalid of [{ reviewer: '' }, { reviewedAt: '' }, { rightsBasis: '' }, { credit: 'Other author' }, { id: 'other' }, { remoteURL: candidate.remoteURL + '?different' }, { previewURL: 'https://example.org/other.jpg' }, { sourceURL: 'https://example.org/other' }, { evidenceURLs: [] }, { evidenceURLs: ['http://example.org/evidence'] }, { permittedUses: ['website-preview'] }, { permittedUses: [42] }]) expect(approves({ ...enabled, approvedMedia: [{ ...approval, ...invalid }] }, candidate)).toBe(false);
+    for (const invalid of [{ reviewer: '' }, { reviewedAt: '' }, { rightsBasis: '' }, { credit: 'Other author' }, { id: 'other' }, { remoteURL: candidate.remoteURL + '?different' }, { previewURL: `${'c'.repeat(64)}.webp` }, { sourceURL: 'https://example.org/other' }, { evidenceURLs: [] }, { evidenceURLs: ['http://example.org/evidence'] }, { permittedUses: ['website-preview'] }, { permittedUses: [42] }]) expect(approves({ ...enabled, approvedMedia: [{ ...approval, ...invalid }] }, candidate)).toBe(false);
   });
   test('evidence rejects credentials, whitespace, backslashes and controls', () => {
     for (const value of ['https://user:secret@example.org', 'https://example.org/bad path', 'https://example.org/\\bad', 'https://example.org/\u0000', 'https://', 'https:example.org']) expect(safeEvidence(value)).toBe(false);

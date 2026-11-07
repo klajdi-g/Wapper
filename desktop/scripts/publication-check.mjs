@@ -8,7 +8,7 @@ if (policy.publication !== 'offline-only' || policy.thirdPartyMedia !== false ||
 const directory = resolve(process.argv[2] ?? fileURLToPath(new URL('../dist', import.meta.url)));
 const mac = process.argv.includes('--mac');
 const allowed = mac
-  ? new Set(['public-gallery.json', 'media-policy.json', 'AppIcon.icns'])
+  ? new Set(['public-gallery.json', 'media-policy.json', 'media-host.json', 'AppIcon.icns'])
   : new Set(['main.cjs', 'preload.cjs', 'wallpaper-preload.cjs', 'icon.ico', 'media-policy.json', 'renderer/app.js', 'renderer/app.js.LEGAL.txt', 'renderer/app.css', 'renderer/index.html', 'renderer/wallpaper.html', 'renderer/wallpaper.js', 'renderer/wallpaper.css', 'renderer/mark.svg', 'renderer/icon.png', 'renderer/tray.png']);
 const seen = new Set();
 async function audit(path) {
