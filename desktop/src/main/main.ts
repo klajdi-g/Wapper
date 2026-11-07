@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { Library, validVolume } from '../core/library';
 import { appAsset, mediaResponse } from '../core/media-response';
 import { detectBackend } from '../core/platform';
+import { allowedNetworkURL, productionEndpoints, RemoteCatalog, testEndpoints } from '../core/remote-catalog';
 import type { Snapshot } from '../shared';
 import { WallpaperEngine } from './engine';
 import { findMpvpaper } from './mpvpaper';
@@ -17,6 +18,7 @@ let window: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let engine: WallpaperEngine;
 let library: Library;
+let catalog: RemoteCatalog;
 let error: string | null = null;
 let quitting = false;
 let operations: Promise<unknown> = Promise.resolve();
@@ -43,10 +45,12 @@ function broadcast() {
   ]));
 }
 function report(cause: unknown) { error = cause instanceof Error ? cause.message : String(cause); if (engine) broadcast(); }
-function handle(channel: string, operation: (...arguments_: unknown[]) => Promise<unknown>) {
+// Network work runs outside the serialized queue so a slow server never blocks the library.
+function handle(channel: string, operation: (...arguments_: unknown[]) => Promise<unknown>, queued = true) {
   ipcMain.handle(channel, (event, ...arguments_) => {
     const source = new URL(event.senderFrame?.url || 'about:blank');
     if (!window || event.sender.id !== window.webContents.id || event.senderFrame !== window.webContents.mainFrame || source.protocol !== 'motion:' || source.hostname !== 'app' || source.pathname !== '/index.html') throw new Error('This operation is not available from that window.');
+    if (!queued) return operation(...arguments_);
     return serialize(async () => {
       try { error = null; const result = await operation(...arguments_); broadcast(); return result; }
       catch (cause) { report(cause); throw new Error(error || 'The operation failed.'); }
@@ -70,9 +74,27 @@ async function start() {
   session.defaultSession.setPermissionCheckHandler(() => false);
   session.defaultSession.setDevicePermissionHandler(() => false);
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => callback({ cancel: !['motion:', 'devtools:'].includes(new URL(details.url).protocol) }));
+  // Only the main process reaches the network, through its own in-memory session that allows the
+  // fixed catalog and media addresses and nothing else. The renderer's session stays offline.
+  const endpoints = (!app.isPackaged && testEndpoints(process.env.MOTION_TEST_CATALOG_ORIGIN)) || productionEndpoints;
+  const network = session.fromPartition('motion-network');
+  network.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
+  network.setPermissionCheckHandler(() => false);
+  network.setUserAgent(`VoltrumMotion/${app.getVersion()}`);
+  network.webRequest.onBeforeRequest((details, callback) => callback({ cancel: details.method !== 'GET' || !allowedNetworkURL(details.url, endpoints) }));
+  catalog = new RemoteCatalog(join(app.getPath('userData'), 'catalog'), (url, init) => network.fetch(url, init), endpoints, () => {
+    if (window && !window.isDestroyed()) window.webContents.send('motion:catalog', catalog.view());
+  });
+  await catalog.load();
   protocol.handle('motion', async request => {
     const url = new URL(request.url);
     if (url.hostname === 'media') return mediaResponse(request, library);
+    if (url.hostname === 'catalog') {
+      const preview = request.method === 'GET' ? catalog.previewFile(url.pathname.slice(1)) : null;
+      if (!preview) return new Response(null, { status: 404 });
+      try { return new Response(new Uint8Array(await readFile(preview.path)), { headers: { 'Content-Type': preview.type, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } }); }
+      catch { return new Response(null, { status: 404 }); }
+    }
     if (url.hostname !== 'app' || !['GET', 'HEAD'].includes(request.method)) return new Response(null, { status: 404 });
     const path = appAsset(join(__dirname, 'renderer'), url.pathname === '/' ? '/index.html' : url.pathname);
     if (!path) return new Response(null, { status: 404 });
@@ -115,6 +137,8 @@ async function start() {
   handle('motion:volume', async value => { if (!validVolume(value)) throw new Error('Invalid volume.'); library.data.volume = value; await engine.update(); await library.save(); return snapshot(); });
   handle('motion:stop', async () => { await engine.stop(); library.data.assignments = {}; await library.save(); return snapshot(); });
   handle('motion:explore', async () => { await shell.openExternal('https://motion.voltrum.co'); });
+  handle('motion:catalog', async () => catalog.view(), false);
+  handle('motion:catalog-refresh', () => catalog.refresh(), false);
   await window.loadURL('motion://app/index.html');
   try { tray = new Tray(nativeImage.createFromPath(join(__dirname, 'renderer', 'tray.png'))); tray.setToolTip('Voltrum Motion'); tray.on('click', () => { window?.show(); window?.focus(); }); } catch { tray = null; }
   broadcast();

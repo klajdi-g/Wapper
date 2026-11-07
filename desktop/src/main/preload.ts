@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { MotionAPI, Snapshot } from '../shared';
+import type { CatalogView, MotionAPI, Snapshot } from '../shared';
 const api: MotionAPI = {
   snapshot: () => ipcRenderer.invoke('motion:snapshot'),
   importMedia: () => ipcRenderer.invoke('motion:import'),
@@ -10,10 +10,17 @@ const api: MotionAPI = {
   volume: value => ipcRenderer.invoke('motion:volume', value),
   stop: () => ipcRenderer.invoke('motion:stop'),
   explore: () => ipcRenderer.invoke('motion:explore'),
+  catalog: () => ipcRenderer.invoke('motion:catalog'),
+  refreshCatalog: () => ipcRenderer.invoke('motion:catalog-refresh'),
   subscribe: callback => {
     const listener = (_event: Electron.IpcRendererEvent, state: Snapshot) => callback(state);
     ipcRenderer.on('motion:state', listener);
     return () => ipcRenderer.removeListener('motion:state', listener);
+  },
+  subscribeCatalog: callback => {
+    const listener = (_event: Electron.IpcRendererEvent, state: CatalogView) => callback(state);
+    ipcRenderer.on('motion:catalog', listener);
+    return () => ipcRenderer.removeListener('motion:catalog', listener);
   },
 };
 contextBridge.exposeInMainWorld('motion', api);
